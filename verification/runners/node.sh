@@ -25,7 +25,8 @@ for folder in "$@"; do
       npm install --no-audit --no-fund --loglevel=error
       npm run --silent typecheck
       npm run --silent build
-      npx vitest run --reporter=dot
+      # Each project runs its own test command (Vitest for Express, Jest for NestJS)
+      npm test --silent
     '; then
     echo "PASS $name"
   else
