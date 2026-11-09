@@ -12,9 +12,10 @@ from .common.text import compare_key
 
 
 def _generators() -> dict:
+    from .frameworks.django_rest import DJANGO_REST_GENERATOR
     from .frameworks.fastapi import FASTAPI_GENERATOR
 
-    return {generator["framework"]: generator for generator in (FASTAPI_GENERATOR,)}
+    return {generator["framework"]: generator for generator in (FASTAPI_GENERATOR, DJANGO_REST_GENERATOR)}
 
 
 def find_generator(framework: str) -> dict | None:
