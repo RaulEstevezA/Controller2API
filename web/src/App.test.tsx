@@ -63,6 +63,18 @@ describe('App', () => {
     expect(screen.getByRole('tab', { name: 'Project' }).getAttribute('aria-selected')).toBe('true')
   })
 
+  it('reads an example and says what it found', () => {
+    renderApp()
+    fireEvent.click(screen.getByRole('button', { name: 'Online shop' }))
+    expect(screen.getByText('TypeScript · 5 models · 29 fields')).toBeTruthy()
+  })
+
+  it('reports where the input cannot be read', () => {
+    renderApp()
+    fireEvent.change(screen.getByRole('combobox', { name: 'Format' }), { target: { value: 'json' } })
+    expect(screen.getByText('Paste or open your models to start.')).toBeTruthy()
+  })
+
   it('changes the language of the page and stores it for the whole site', () => {
     localStorage.setItem('lang', 'en')
     renderApp()

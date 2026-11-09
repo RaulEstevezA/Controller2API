@@ -9,6 +9,10 @@
   margin-top: var(--space-16);
 }
 
+.workspace__top > * {
+  min-height: 0;
+}
+
 .workspace__top {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
@@ -64,6 +68,21 @@
   .workspace__tab[aria-selected='true'] {
     background: var(--surface-raised);
     color: var(--text);
+  }
+
+  /* Count of what waits for the user on that part */
+  .workspace__tab-badge {
+    min-width: 18px;
+    padding: 0 5px;
+    border-radius: var(--radius-pill);
+    background: var(--warning-soft);
+    color: var(--warning);
+    font-size: var(--font-caption);
+  }
+
+  .workspace__tab-badge--error {
+    background: var(--danger-soft);
+    color: var(--danger);
   }
 
   .workspace {
