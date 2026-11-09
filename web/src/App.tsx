@@ -10,9 +10,10 @@ import { AppHeader } from './components/layout/AppHeader.tsx'
 import { IntroPanel } from './components/layout/IntroPanel.tsx'
 import { LinksPanel } from './components/layout/LinksPanel.tsx'
 import { Workspace } from './components/layout/Workspace.tsx'
-import { Pane } from './components/common/Pane.tsx'
 import { ModelsPane } from './components/models/ModelsPane.tsx'
 import { EndpointsPane } from './components/endpoints/EndpointsPane.tsx'
+import { ProjectPane } from './components/project/ProjectPane.tsx'
+import { generateProject } from './core/generators/registry.ts'
 import { resolveApi } from './core/api/spec.ts'
 import { pendingDecisions } from './core/design/edit.ts'
 import { findExample, type ExampleId } from './examples/index.ts'
@@ -40,6 +41,7 @@ function App() {
   useUndoShortcuts(designState.history)
   const spec = useMemo(() => (schema && design ? resolveApi(schema, design, settings) : null), [schema, design, settings])
   const pending = design ? pendingDecisions(design).length : 0
+  const files = useMemo(() => (spec ? generateProject(spec, settings) : []), [spec, settings])
 
   function loadExample(id: ExampleId) {
     const example = findExample(id)
@@ -66,11 +68,7 @@ function App() {
             endpoints: (
               <EndpointsPane schema={schema} design={design} settings={settings} issues={spec?.issues ?? []} state={designState} />
             ),
-            project: (
-              <Pane title={t.workspaceParts.project}>
-                <p className="pane-empty">{t.projectEmpty}</p>
-              </Pane>
-            ),
+            project: <ProjectPane spec={spec} settings={settings} files={files} onSettingsChange={updateSettings} />,
           }}
         />
         <LinksPanel />

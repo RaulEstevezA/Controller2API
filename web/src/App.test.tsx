@@ -86,6 +86,14 @@ describe('App', () => {
     expect(screen.getByText('3 resources · 18 endpoints')).toBeTruthy()
   })
 
+  it('writes the project and shows its files', () => {
+    renderApp()
+    fireEvent.click(screen.getByRole('button', { name: 'Online shop' }))
+    expect(screen.getByRole('button', { name: /^Download \.zip \(\d+ files\)$/ })).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'main.py' }))
+    expect(screen.getByText('app/main.py')).toBeTruthy()
+  })
+
   it('reports where the input cannot be read', () => {
     renderApp()
     fireEvent.change(screen.getByRole('combobox', { name: 'Format' }), { target: { value: 'json' } })
