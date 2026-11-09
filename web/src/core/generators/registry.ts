@@ -11,6 +11,7 @@ import { expressGenerator } from './frameworks/express/index.ts'
 import { fastApiGenerator } from './frameworks/fastapi/index.ts'
 import { nestJsGenerator } from './frameworks/nestjs/index.ts'
 import { springBootGenerator } from './frameworks/springBoot/index.ts'
+import { compareText } from './common/text.ts'
 
 const GENERATORS: Partial<Record<FrameworkId, Generator>> = {
   fastapi: fastApiGenerator,
@@ -36,5 +37,5 @@ export function generateProject(spec: ApiSpec, settings: ProjectSettings): Gener
   const generator = findGenerator(settings.framework)
   if (!generator) return []
   const openApi = openApiYaml(spec, generator.serverUrl)
-  return generator.generate({ spec, settings, openApi }).sort((a, b) => a.path.localeCompare(b.path))
+  return generator.generate({ spec, settings, openApi }).sort((a, b) => compareText(a.path, b.path))
 }

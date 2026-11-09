@@ -4,6 +4,7 @@
  */
 import { toCamelCase, toPascalCase } from '../../../model/naming.ts'
 import type { JsonValue } from '../../common/samples.ts'
+import { compareText } from '../../common/text.ts'
 
 const RESERVED = new Set([
   'break',
@@ -131,7 +132,7 @@ export class TsImports {
   render(): string {
     const modules = [...new Set([...this.values.keys(), ...this.types.keys()])]
     const relative = (module: string) => module.startsWith('.')
-    const order = (a: string, b: string) => Number(relative(a)) - Number(relative(b)) || a.localeCompare(b)
+    const order = (a: string, b: string) => Number(relative(a)) - Number(relative(b)) || compareText(a, b)
     return modules
       .sort(order)
       .map((module) => {

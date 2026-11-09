@@ -5,6 +5,7 @@
 import type { SpecType } from '../../../api/spec.ts'
 import { toPascalCase, toSnakeCase } from '../../../model/naming.ts'
 import type { JsonValue } from '../../common/samples.ts'
+import { compareText } from '../../common/text.ts'
 
 const KEYWORDS = new Set([
   'False',
@@ -130,7 +131,7 @@ export class PyImports {
     ])
     const line = ([module, names]: [string, string[]]) =>
       names.length === 0 ? `import ${module}` : `from ${module} import ${names.join(', ')}`
-    const sorted = (items: [string, string[]][]) => items.sort((a, b) => a[0].localeCompare(b[0])).map(line)
+    const sorted = (items: [string, string[]][]) => items.sort((a, b) => compareText(a[0], b[0])).map(line)
     const blocks = [
       sorted(groups.filter(([module]) => standard.has(module))),
       sorted(groups.filter(([module]) => !standard.has(module) && !isProject(module))),

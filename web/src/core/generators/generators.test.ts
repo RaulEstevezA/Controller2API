@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest'
 import { FRAMEWORKS, databasesFor, type ProjectSettings } from '../compatibility/stack.ts'
 import { openApiYaml } from '../openapi/build.ts'
 import { example } from '../test/fixtures.ts'
+import { compareText } from './common/text.ts'
 import { findGenerator, generateProject } from './registry.ts'
 
 const EXAMPLES = ['store', 'library', 'catalog'] as const
@@ -73,7 +74,7 @@ describe('generated projects', () => {
       const main = files.find((file) => file.path === 'app/main.py')!.content
       for (const resource of spec.resources)
         expect(main).toContain(`include_router(${resource.name.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase()}_router)`)
-      expect(files.map((file) => file.path)).toEqual([...files.map((file) => file.path)].sort((a, b) => a.localeCompare(b)))
+      expect(files.map((file) => file.path)).toEqual([...files.map((file) => file.path)].sort(compareText))
     }
   })
 

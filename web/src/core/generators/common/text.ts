@@ -33,3 +33,14 @@ export function indent(text: string, spaces: number): string {
 export function fileText(text: string): string {
   return `${text.replace(/\s+$/, '')}\n`
 }
+
+/**
+ * Orders two texts the same way on every system: ignoring case first, then by character code. Used
+ * instead of `localeCompare`, whose order depends on the language of the browser.
+ */
+export function compareText(a: string, b: string): number {
+  const x = a.toLowerCase()
+  const y = b.toLowerCase()
+  if (x !== y) return x < y ? -1 : 1
+  return a < b ? -1 : a > b ? 1 : 0
+}
