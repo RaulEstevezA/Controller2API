@@ -119,7 +119,18 @@ def singularize(word: str) -> str:
 
 
 # Words whose plural is the same word
-_SAME_PLURAL = {"data", "metadata", "news", "series", "species", "info", "information", "media", "equipment", "feedback"}
+_SAME_PLURAL = {
+    "data",
+    "metadata",
+    "news",
+    "series",
+    "species",
+    "info",
+    "information",
+    "media",
+    "equipment",
+    "feedback",
+}
 
 
 def pluralize(word: str) -> str:

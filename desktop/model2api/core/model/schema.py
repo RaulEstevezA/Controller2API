@@ -68,7 +68,10 @@ def all_fields(schema: ModelSchema, model: ModelDef, seen: set[str] | None = Non
 def needs_value(field: FieldDef) -> bool:
     """A target field that must receive a value: it cannot be missing or null and has no default."""
     return (
-        not field.get("optional") and not field.get("nullable") and "defaultValue" not in field and not field.get("generated")
+        not field.get("optional")
+        and not field.get("nullable")
+        and "defaultValue" not in field
+        and not field.get("generated")
     )
 
 
