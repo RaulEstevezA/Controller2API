@@ -6,12 +6,18 @@
 /** A line, or `false` / `null` / `undefined` for a line that does not apply. */
 export type Line = string | false | null | undefined
 
-/** Joins the lines that apply with line breaks. */
-export function lines(...items: (Line | Line[])[]): string {
-  return items
-    .flat()
-    .filter((item): item is string => typeof item === 'string')
-    .join('\n')
+/** Lines, possibly grouped in nested lists. */
+export type Lines = Line | Lines[]
+
+/** Joins the lines that apply with line breaks, at any depth of nesting. */
+export function lines(...items: Lines[]): string {
+  const result: string[] = []
+  const add = (item: Lines) => {
+    if (Array.isArray(item)) item.forEach(add)
+    else if (typeof item === 'string') result.push(item)
+  }
+  items.forEach(add)
+  return result.join('\n')
 }
 
 /** Indents every non-empty line of a block. */
