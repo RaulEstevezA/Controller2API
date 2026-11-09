@@ -34,6 +34,18 @@ export const VERIFIED: readonly VerifiedStack[] = [
   { framework: 'springBoot', architecture: 'layered', persistence: 'jpa', database: 'postgresql', auth: 'jwt', date: '2026-11-09' },
   { framework: 'springBoot', architecture: 'modular', persistence: 'jpa', database: 'mysql', auth: 'none', date: '2026-11-09' },
   { framework: 'springBoot', architecture: 'layered', persistence: 'jpa', database: 'mariadb', auth: 'apiKey', date: '2026-11-09' },
+  { framework: 'djangoRest', architecture: 'layered', persistence: 'djangoOrm', database: 'sqlite', auth: 'none', date: '2026-11-09' },
+  { framework: 'djangoRest', architecture: 'modular', persistence: 'djangoOrm', database: 'sqlite', auth: 'jwt', date: '2026-11-09' },
+  {
+    framework: 'djangoRest',
+    architecture: 'layered',
+    persistence: 'djangoOrm',
+    database: 'postgresql',
+    auth: 'apiKey',
+    date: '2026-11-09',
+  },
+  { framework: 'djangoRest', architecture: 'modular', persistence: 'djangoOrm', database: 'mysql', auth: 'none', date: '2026-11-09' },
+  { framework: 'djangoRest', architecture: 'layered', persistence: 'djangoOrm', database: 'mariadb', auth: 'jwt', date: '2026-11-09' },
 ]
 
 /** - `verified`: this exact stack passed
