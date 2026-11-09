@@ -141,6 +141,14 @@ export function databasesFor(framework: FrameworkId, persistence: PersistenceId)
   return findFramework(framework).persistence.find((item) => item.id === persistence)?.databases ?? []
 }
 
+/** The well-known reasons some combinations of a framework are not offered, for the interface. */
+export function knownGaps(framework: FrameworkId): string[] {
+  // A gap names its framework, or else a persistence: it concerns the frameworks that offer it
+  const offers = (persistence: PersistenceId | undefined) =>
+    findFramework(framework).persistence.some((option) => option.id === persistence)
+  return KNOWN_GAPS.filter((item) => (item.framework ? item.framework === framework : offers(item.persistence))).map((item) => item.note)
+}
+
 /** A well-known reason a combination is not offered, for the interface (`hibernateSqlite`…). */
 export function knownGap(framework: FrameworkId, persistence: PersistenceId | null, database: DatabaseId | null): string | null {
   const gap = KNOWN_GAPS.find(
