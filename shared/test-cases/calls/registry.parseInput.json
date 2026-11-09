@@ -261,7 +261,7 @@
    "error": {
     "code": "syntax",
     "params": {
-     "message": "DOMParser is not defined"
+     "message": "1:10: unexpected close tag."
     }
    }
   }
@@ -3279,13 +3279,94 @@
    "xml"
   ],
   "result": {
-   "ok": false,
-   "error": {
-    "code": "syntax",
-    "params": {
-     "message": "DOMParser is not defined"
-    }
-   }
+   "ok": true,
+   "schema": {
+    "format": "model-schema",
+    "version": 1,
+    "origin": {
+     "format": "xml"
+    },
+    "models": [
+     {
+      "name": "Order",
+      "kind": "object",
+      "fields": [
+       {
+        "name": "id",
+        "type": {
+         "kind": "primitive",
+         "name": "integer"
+        },
+        "nullable": false,
+        "optional": false
+       },
+       {
+        "name": "customer",
+        "type": {
+         "kind": "model",
+         "name": "Customer"
+        },
+        "nullable": false,
+        "optional": false
+       },
+       {
+        "name": "items",
+        "type": {
+         "kind": "array",
+         "items": {
+          "kind": "model",
+          "name": "Item"
+         }
+        },
+        "nullable": false,
+        "optional": false
+       },
+       {
+        "name": "total",
+        "type": {
+         "kind": "primitive",
+         "name": "float"
+        },
+        "nullable": false,
+        "optional": false
+       }
+      ]
+     },
+     {
+      "name": "Customer",
+      "kind": "object",
+      "fields": [
+       {
+        "name": "name",
+        "type": {
+         "kind": "primitive",
+         "name": "string"
+        },
+        "nullable": false,
+        "optional": false
+       }
+      ]
+     },
+     {
+      "name": "Item",
+      "kind": "object",
+      "fields": [
+       {
+        "name": "sku",
+        "type": {
+         "kind": "primitive",
+         "name": "string"
+        },
+        "nullable": false,
+        "optional": false
+       }
+      ]
+     }
+    ],
+    "enums": [],
+    "root": "Order"
+   },
+   "warnings": []
   }
  },
  {
@@ -54274,13 +54355,97 @@
    "xml"
   ],
   "result": {
-   "ok": false,
-   "error": {
-    "code": "syntax",
-    "params": {
-     "message": "DOMParser is not defined"
-    }
-   }
+   "ok": true,
+   "schema": {
+    "format": "model-schema",
+    "version": 1,
+    "origin": {
+     "format": "xml"
+    },
+    "models": [
+     {
+      "name": "Order",
+      "kind": "object",
+      "fields": [
+       {
+        "name": "id",
+        "type": {
+         "kind": "primitive",
+         "name": "integer"
+        },
+        "nullable": false,
+        "optional": false
+       },
+       {
+        "name": "customer",
+        "type": {
+         "kind": "primitive",
+         "name": "string"
+        },
+        "nullable": false,
+        "optional": false
+       },
+       {
+        "name": "total",
+        "type": {
+         "kind": "primitive",
+         "name": "float"
+        },
+        "nullable": false,
+        "optional": false
+       },
+       {
+        "name": "lines",
+        "type": {
+         "kind": "array",
+         "items": {
+          "kind": "model",
+          "name": "Line"
+         }
+        },
+        "nullable": false,
+        "optional": false
+       },
+       {
+        "name": "note",
+        "type": {
+         "kind": "primitive",
+         "name": "string"
+        },
+        "nullable": false,
+        "optional": false
+       }
+      ]
+     },
+     {
+      "name": "Line",
+      "kind": "object",
+      "fields": [
+       {
+        "name": "sku",
+        "type": {
+         "kind": "primitive",
+         "name": "string"
+        },
+        "nullable": false,
+        "optional": false
+       },
+       {
+        "name": "value",
+        "type": {
+         "kind": "primitive",
+         "name": "integer"
+        },
+        "nullable": false,
+        "optional": false
+       }
+      ]
+     }
+    ],
+    "enums": [],
+    "root": "Order"
+   },
+   "warnings": []
   }
  },
  {
@@ -54289,13 +54454,34 @@
    "xml"
   ],
   "result": {
-   "ok": false,
-   "error": {
-    "code": "syntax",
-    "params": {
-     "message": "DOMParser is not defined"
-    }
-   }
+   "ok": true,
+   "schema": {
+    "format": "model-schema",
+    "version": 1,
+    "origin": {
+     "format": "xml"
+    },
+    "models": [
+     {
+      "name": "Person",
+      "kind": "object",
+      "fields": [
+       {
+        "name": "name",
+        "type": {
+         "kind": "primitive",
+         "name": "string"
+        },
+        "nullable": false,
+        "optional": false
+       }
+      ]
+     }
+    ],
+    "enums": [],
+    "root": "Person"
+   },
+   "warnings": []
   }
  },
  {
@@ -54304,13 +54490,46 @@
    "xml"
   ],
   "result": {
-   "ok": false,
-   "error": {
-    "code": "syntax",
-    "params": {
-     "message": "DOMParser is not defined"
-    }
-   }
+   "ok": true,
+   "schema": {
+    "format": "model-schema",
+    "version": 1,
+    "origin": {
+     "format": "xml"
+    },
+    "models": [
+     {
+      "name": "Root",
+      "kind": "object",
+      "fields": [
+       {
+        "name": "a",
+        "type": {
+         "kind": "array",
+         "items": {
+          "kind": "primitive",
+          "name": "integer"
+         }
+        },
+        "nullable": false,
+        "optional": false
+       },
+       {
+        "name": "b",
+        "type": {
+         "kind": "primitive",
+         "name": "any"
+        },
+        "nullable": true,
+        "optional": false
+       }
+      ]
+     }
+    ],
+    "enums": [],
+    "root": "Root"
+   },
+   "warnings": []
   }
  },
  {
@@ -54319,13 +54538,52 @@
    "xml"
   ],
   "result": {
-   "ok": false,
-   "error": {
-    "code": "syntax",
-    "params": {
-     "message": "DOMParser is not defined"
-    }
-   }
+   "ok": true,
+   "schema": {
+    "format": "model-schema",
+    "version": 1,
+    "origin": {
+     "format": "xml"
+    },
+    "models": [
+     {
+      "name": "User",
+      "kind": "object",
+      "fields": [
+       {
+        "name": "active",
+        "type": {
+         "kind": "primitive",
+         "name": "boolean"
+        },
+        "nullable": false,
+        "optional": false
+       },
+       {
+        "name": "age",
+        "type": {
+         "kind": "primitive",
+         "name": "integer"
+        },
+        "nullable": false,
+        "optional": false
+       },
+       {
+        "name": "value",
+        "type": {
+         "kind": "primitive",
+         "name": "string"
+        },
+        "nullable": false,
+        "optional": false
+       }
+      ]
+     }
+    ],
+    "enums": [],
+    "root": "User"
+   },
+   "warnings": []
   }
  },
  {
@@ -54338,7 +54596,7 @@
    "error": {
     "code": "syntax",
     "params": {
-     "message": "DOMParser is not defined"
+     "message": "1:16: unexpected close tag."
     }
    }
   }
@@ -54353,7 +54611,7 @@
    "error": {
     "code": "syntax",
     "params": {
-     "message": "DOMParser is not defined"
+     "message": "1:11: documents may contain only one root."
     }
    }
   }
@@ -54364,13 +54622,34 @@
    "xml"
   ],
   "result": {
-   "ok": false,
-   "error": {
-    "code": "syntax",
-    "params": {
-     "message": "DOMParser is not defined"
-    }
-   }
+   "ok": true,
+   "schema": {
+    "format": "model-schema",
+    "version": 1,
+    "origin": {
+     "format": "xml"
+    },
+    "models": [
+     {
+      "name": "Zip",
+      "kind": "object",
+      "fields": [
+       {
+        "name": "value",
+        "type": {
+         "kind": "primitive",
+         "name": "string"
+        },
+        "nullable": false,
+        "optional": false
+       }
+      ]
+     }
+    ],
+    "enums": [],
+    "root": "Zip"
+   },
+   "warnings": []
   }
  },
  {

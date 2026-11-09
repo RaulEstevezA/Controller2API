@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 /**
  * The cases in shared/test-cases/calls/, which the desktop version's tests read too (shared/README.md):
  * each `<module>.<function>.json` holds the arguments of a core function and the result it must give.
