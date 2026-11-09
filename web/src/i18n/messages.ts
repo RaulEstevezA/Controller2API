@@ -5,6 +5,8 @@
  * checks. To add a text, add it to both. Texts that depend on a value are functions.
  */
 
+import type { WorkspacePart } from '../app/workspaceParts.ts'
+
 /** Languages of the interface, in the order the language switcher shows them. */
 export const languages = ['en', 'es'] as const
 
@@ -33,6 +35,11 @@ const en = {
   sourceCode: 'Source code',
   allTools: 'All tools',
   license: 'MIT License',
+  workspaceLabel: 'Workspace',
+  workspaceParts: { models: 'Models', endpoints: 'Endpoints', project: 'Project' } satisfies Record<WorkspacePart, string>,
+  modelsEmpty: 'The models you paste or open will appear here.',
+  endpointsEmpty: 'The proposed resources and endpoints will appear here once the models are read.',
+  projectEmpty: 'The files of the generated project will appear here.',
 }
 
 /** Every text of the interface in one language. */
@@ -61,6 +68,11 @@ const es: Messages = {
   sourceCode: 'Código fuente',
   allTools: 'Todas las herramientas',
   license: 'Licencia MIT',
+  workspaceLabel: 'Área de trabajo',
+  workspaceParts: { models: 'Modelos', endpoints: 'Endpoints', project: 'Proyecto' },
+  modelsEmpty: 'Los modelos que pegues o abras aparecerán aquí.',
+  endpointsEmpty: 'Los recursos y endpoints propuestos aparecerán aquí cuando se lean los modelos.',
+  projectEmpty: 'Los archivos del proyecto generado aparecerán aquí.',
 }
 
 /** Texts by language. */

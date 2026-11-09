@@ -43,6 +43,26 @@ describe('App', () => {
     expect(within(screen.getByRole('contentinfo')).getByText('MIT License')).toBeTruthy()
   })
 
+  it('shows the models, the endpoints and the project, also as tabs for narrow screens', () => {
+    renderApp()
+    for (const name of ['Models', 'Endpoints', 'Project']) {
+      expect(screen.getByRole('region', { name })).toBeTruthy()
+      expect(screen.getByRole('tab', { name })).toBeTruthy()
+    }
+  })
+
+  it('moves between the tabs with the keyboard', () => {
+    renderApp()
+    const models = screen.getByRole('tab', { name: 'Models' })
+    models.focus()
+    fireEvent.keyDown(models, { key: 'ArrowRight' })
+    const endpoints = screen.getByRole('tab', { name: 'Endpoints' })
+    expect(endpoints.getAttribute('aria-selected')).toBe('true')
+    expect(document.activeElement).toBe(endpoints)
+    fireEvent.keyDown(endpoints, { key: 'End' })
+    expect(screen.getByRole('tab', { name: 'Project' }).getAttribute('aria-selected')).toBe('true')
+  })
+
   it('changes the language of the page and stores it for the whole site', () => {
     localStorage.setItem('lang', 'en')
     renderApp()
