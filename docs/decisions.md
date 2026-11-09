@@ -16,3 +16,9 @@ Choices that shape the project, with the reason, so they are not undone by accid
 | A stack is shown as verified only after `verification/` has built, run and called a generated project with it | Producing files is not proof that they work (spec, quality and tests) |
 | Inputs are not stored unless the user turns on "Remember in this browser" | personal_web_style stores preferences, not user data; the option makes the exception explicit and reversible |
 | Cloudflare Web Analytics only counts visits | It is the site-wide beacon of personal_web_style `PUBLISHING.md`; it does not see the models or the generated code, and nothing about it is shown in the interface |
+| Only stacks that a generator writes and the verification ran are offered; Prisma and Mongoose are not yet | A combination shown in the interface must work. Prisma 7 changed its configuration model and Mongoose needs its own verification on MongoDB; they come back when both are written and verified |
+| No clean or hexagonal architecture yet | The spec asks for it "when appropriate"; offering it before a generator writes it well would only add layers |
+| Generated tests are part of every project and are what the verification runs | The same tests check the generator and later help the developer, instead of tests that only Model2API sees |
+| Django projects ship without migrations; the README says to run `makemigrations` | Hand-written migrations could drift from the models; Django writes them exactly |
+| TypeORM stores dates as ISO text and objects as JSON text | The same columns work on PostgreSQL, MySQL, MariaDB and sql.js (the tests' database), and the API sends text anyway |
+| Date-times the server sets are kept to microseconds and read back as UTC | Every database keeps microseconds at most; the answer of a creation and a later read must give the same value |
