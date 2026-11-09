@@ -170,3 +170,25 @@ def ts_doc(text: str) -> str:
     """A documentation comment: the first lines of a module."""
     body = [trim_end(f" * {line}") for line in text.split("\n")]
     return "\n".join(["/**", *body, " */"])
+
+
+# The body of list() in the in-memory repositories of Express and NestJS: filters, order (items without a value
+# last) and a window of items
+MEMORY_LIST_BODY = [
+    "    const value = (item: unknown, field: string) => (item as Record<string, unknown>)[field]",
+    "    let items = [...this.items.values()].filter((item) => Object.entries(query.filters).every(([field, expected]) => value(item, field) === expected))",
+    "    if (query.sort) {",
+    "      const { field, descending } = query.sort",
+    "      // Items without a value go last, whatever the order",
+    "      const present = items.filter((item) => value(item, field) != null)",
+    "      present.sort((a, b) => {",
+    "        const left = value(a, field) as string | number",
+    "        const right = value(b, field) as string | number",
+    "        const order = left < right ? -1 : left > right ? 1 : 0",
+    "        return descending ? -order : order",
+    "      })",
+    "      items = [...present, ...items.filter((item) => value(item, field) == null)]",
+    "    }",
+    "    const end = query.limit === undefined ? undefined : query.offset + query.limit",
+    "    return { items: items.slice(query.offset, end).map((item) => structuredClone(item)), total: items.length }",
+]

@@ -1,9 +1,11 @@
-"""Tests of the Express project (Vitest + Supertest). They call every enabled endpoint the way a client would, with
+"""Tests of the Express project (Vitest + Supertest), and with another flavor of the NestJS project (Jest +
+Supertest). They call every enabled endpoint the way a client would, with
 the same cases as every other framework (common/testing.py). Mirrors
 web/src/core/generators/frameworks/express/tests.ts.
 """
 
 import re
+from dataclasses import dataclass
 
 from ....js import number_text
 from ...common.samples import sample_body, updatable_field
@@ -25,7 +27,54 @@ from ...common.testing import (
 )
 from ...common.text import file_text, lines
 from ...languages.typescript.typescript import ts_access, ts_doc, ts_literal, ts_string
-from .context import ExpressContext, names
+from .context import names
+
+
+@dataclass(frozen=True)
+class TestFlavor:
+    """What differs between the tests of the TypeScript frameworks: Express (Vitest) and NestJS (Jest)."""
+
+    # Folder of the tests, and the extension of local imports
+    folder: str
+    local: str
+    # The variable requests go to, its type, and the import of that type in the helpers
+    client: str
+    client_type: str
+    client_import: str
+    # How a status is expected (Vitest can show the response text)
+    status: str
+    # Imports of the helpers after supertest, and the first line of the setup
+    helper_imports: tuple[str, ...]
+    setup_first: tuple[str, ...]
+    # Whether the setup always ends with export {}
+    setup_export: bool
+    # Imports, declarations and hooks of a test file, and its extension
+    test_imports: tuple[str, ...]
+    test_declarations: tuple[str, ...]
+    test_hooks: tuple[str, ...]
+    test_suffix: str
+
+
+EXPRESS_FLAVOR = TestFlavor(
+    folder="tests",
+    local=".js",
+    client="app",
+    client_type="Express",
+    client_import="import type { Express } from 'express'",
+    status="expect(response.status, response.text)",
+    helper_imports=("import { expect } from 'vitest'",),
+    setup_first=(),
+    setup_export=False,
+    test_imports=(
+        "import type { Express } from 'express'",
+        "import request from 'supertest'",
+        "import { beforeEach, describe, expect, it } from 'vitest'",
+        "import { createApp } from '../src/app.js'",
+    ),
+    test_declarations=("  let app: Express",),
+    test_hooks=("  beforeEach(() => {", "    app = createApp()", "  })"),
+    test_suffix=".test.ts",
+)
 
 
 def url(endpoint: dict, resource: dict) -> str:
@@ -44,7 +93,7 @@ def article(text: str) -> str:
     return f"an {text}" if _VOWEL.match(text) else f"a {text}"
 
 
-def _helpers_file(context: ExpressContext) -> dict:
+def _helpers_file(context, flavor: TestFlavor) -> dict:
     spec = context.spec
     blocks: list[str] = []
     for resource in spec["resources"]:
@@ -58,23 +107,23 @@ def _helpers_file(context: ExpressContext) -> dict:
         for reference in first["references"]:
             target = next(item for item in spec["resources"] if item["name"] == reference["resource"])
             fills.append(
-                f"  body{subscript(reference['path'])} = (await create{names(target)['type']}(app, headers))"
+                f"  body{subscript(reference['path'])} = (await create{names(target)['type']}({flavor.client}, headers))"
                 f"[{ts_string(key_wire(target))}]"
             )
         one = article(resource["singular"])
         blocks.append(
             lines(
                 f"/** A valid body to create {one}, with the items it refers to created first. */",
-                f"export async function {name['one']}Payload(app: Express, headers: Headers, variant = 0): Promise<Body> {{",
+                f"export async function {name['one']}Payload({flavor.client}: {flavor.client_type}, headers: Headers, variant = 0): Promise<Body> {{",
                 f"  const body: Body = variant === 0 ? {ts_literal(first['body'])} : {ts_literal(second['body'])}",
                 fills,
                 "  return body",
                 "}",
                 "",
                 f"/** Creates {one} and returns it as the API answers. */",
-                f"export async function create{name['type']}(app: Express, headers: Headers, variant = 0): Promise<Body> {{",
-                f"  const response = await request(app).post({ts_string(create['path'])}).set(headers).send(await {name['one']}Payload(app, headers, variant))",
-                f"  expect(response.status, response.text).toBe({number_text(create['status'])})",
+                f"export async function create{name['type']}({flavor.client}: {flavor.client_type}, headers: Headers, variant = 0): Promise<Body> {{",
+                f"  const response = await request({flavor.client}).post({ts_string(create['path'])}).set(headers).send(await {name['one']}Payload({flavor.client}, headers, variant))",
+                f"  {flavor.status}.toBe({number_text(create['status'])})",
                 "  return response.body",
                 "}",
             )
@@ -86,10 +135,10 @@ def _helpers_file(context: ExpressContext) -> dict:
             "Credentials for the tests, builders of valid request bodies, and helpers that create items through the API."
         ),
         "",
-        "import type { Express } from 'express'",
+        flavor.client_import,
         auth == "jwt" and "import jwt from 'jsonwebtoken'",
         "import request from 'supertest'",
-        "import { expect } from 'vitest'",
+        list(flavor.helper_imports),
         "",
         "// eslint-disable-next-line @typescript-eslint/no-explicit-any",
         "export type Body = Record<string, any>",
@@ -119,26 +168,28 @@ def _helpers_file(context: ExpressContext) -> dict:
         "",
         "\n\n".join(blocks),
     )
-    return {"path": "tests/helpers.ts", "content": file_text(content)}
+    return {"path": f"{flavor.folder}/helpers.ts", "content": file_text(content)}
 
 
-def _setup_file(context: ExpressContext) -> dict:
+def _setup_file(context, flavor: TestFlavor) -> dict:
     auth = context.settings["auth"]
     content = lines(
         ts_doc("Test environment: the credentials the API accepts while the tests run."),
         "",
-        auth == "apiKey" and ["import { TEST_API_KEY } from './helpers.js'", "", "process.env.API_KEYS = TEST_API_KEY"],
+        list(flavor.setup_first),
+        auth == "apiKey"
+        and [f"import {{ TEST_API_KEY }} from './helpers{flavor.local}'", "", "process.env.API_KEYS = TEST_API_KEY"],
         auth == "jwt"
         and [
-            "import { TEST_JWT_SECRET } from './helpers.js'",
+            f"import {{ TEST_JWT_SECRET }} from './helpers{flavor.local}'",
             "",
             "process.env.JWT_SECRET = TEST_JWT_SECRET",
             "delete process.env.JWT_AUDIENCE",
             "delete process.env.JWT_ISSUER",
         ],
-        auth == "none" and "export {}",
+        "export {}" if flavor.setup_export else auth == "none" and "export {}",
     )
-    return {"path": "tests/setup.ts", "content": file_text(content)}
+    return {"path": f"{flavor.folder}/setup.ts", "content": file_text(content)}
 
 
 def _words(name: str) -> str:
@@ -148,7 +199,7 @@ def _words(name: str) -> str:
 _CAMEL = re.compile(r"([a-z0-9])([A-Z])")
 
 
-def _resource_tests(context: ExpressContext, resource: dict) -> dict:
+def _resource_tests(context, resource: dict, flavor: TestFlavor) -> dict:
     spec = context.spec
     name = names(resource)
     type_name = name["type"]
@@ -171,7 +222,7 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
             test(
                 f"{_words(endpoint['name'])} answers 501 until the storage is written",
                 [
-                    f"    const response = await request(app).get({ts_string(fixed_path(endpoint, resource, missing_key(resource)))}).set(headers)",
+                    f"    const response = await request({flavor.client}).get({ts_string(fixed_path(endpoint, resource, missing_key(resource)))}).set(headers)",
                     "    expect(response.status).toBe(501)",
                     "    expect(response.body.error.code).toBe('not_implemented')",
                 ],
@@ -187,9 +238,9 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
             test(
                 f"creates {one}",
                 [
-                    f"    const payload = await {payload_of}(app, headers)",
-                    f"    const response = await request(app).post({ts_string(create['path'])}).set(headers).send(payload)",
-                    f"    expect(response.status, response.text).toBe({number_text(create['status'])})",
+                    f"    const payload = await {payload_of}({flavor.client}, headers)",
+                    f"    const response = await request({flavor.client}).post({ts_string(create['path'])}).set(headers).send(payload)",
+                    f"    {flavor.status}.toBe({number_text(create['status'])})",
                     f"    expect({ts_access('response.body', key)}).toBeDefined()",
                     [
                         f"    expect({ts_access('response.body', wire)}).toEqual({ts_access('payload', wire)})"
@@ -202,9 +253,9 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
                 test(
                     f"rejects {one} without {required['wire']}",
                     [
-                        f"    const payload = await {payload_of}(app, headers)",
+                        f"    const payload = await {payload_of}({flavor.client}, headers)",
                         f"    delete payload[{ts_string(required['wire'])}]",
-                        f"    const response = await request(app).post({ts_string(create['path'])}).set(headers).send(payload)",
+                        f"    const response = await request({flavor.client}).post({ts_string(create['path'])}).set(headers).send(payload)",
                         "    expect(response.status).toBe(400)",
                         "    expect(response.body.error.code).toBe('validation_error')",
                         f"    expect(response.body.error.details.some((detail: {{ field: string }}) => detail.field === {ts_string(required['wire'])})).toBe(true)",
@@ -214,10 +265,10 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
                 test(
                     f"rejects a second {resource['singular']} with the same key",
                     [
-                        f"    const created = await create{type_name}(app, headers)",
-                        f"    const payload = await {payload_of}(app, headers)",
+                        f"    const created = await create{type_name}({flavor.client}, headers)",
+                        f"    const payload = await {payload_of}({flavor.client}, headers)",
                         f"    payload[{ts_string(key)}] = created[{ts_string(key)}]",
-                        f"    const response = await request(app).post({ts_string(create['path'])}).set(headers).send(payload)",
+                        f"    const response = await request({flavor.client}).post({ts_string(create['path'])}).set(headers).send(payload)",
                         "    expect(response.status).toBe(409)",
                     ],
                 )
@@ -226,17 +277,17 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
                 test(
                     f"gets {one}",
                     [
-                        f"    const created = await create{type_name}(app, headers)",
+                        f"    const created = await create{type_name}({flavor.client}, headers)",
                         f"    const key = created[{ts_string(key)}]",
-                        f"    const response = await request(app).get({url(get, resource)}).set(headers)",
-                        "    expect(response.status, response.text).toBe(200)",
+                        f"    const response = await request({flavor.client}).get({url(get, resource)}).set(headers)",
+                        f"    {flavor.status}.toBe(200)",
                         "    expect(response.body).toEqual(created)",
                     ],
                 )
             test(
                 f"answers 404 for a missing {resource['singular']}",
                 [
-                    f"    const response = await request(app).get({ts_string(fixed_path(get, resource, missing_key(resource)))}).set(headers)",
+                    f"    const response = await request({flavor.client}).get({ts_string(fixed_path(get, resource, missing_key(resource)))}).set(headers)",
                     "    expect(response.status).toBe(404)",
                     "    expect(response.body.error.code).toBe('not_found')",
                 ],
@@ -247,10 +298,10 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
             test(
                 f"lists {resource['plural']}",
                 [
-                    can_create and f"    await create{type_name}(app, headers)",
-                    can_create and distinct and f"    await create{type_name}(app, headers, 1)",
-                    f"    const response = await request(app).get({ts_string(listing['path'])}).set(headers)",
-                    "    expect(response.status, response.text).toBe(200)",
+                    can_create and f"    await create{type_name}({flavor.client}, headers)",
+                    can_create and distinct and f"    await create{type_name}({flavor.client}, headers, 1)",
+                    f"    const response = await request({flavor.client}).get({ts_string(listing['path'])}).set(headers)",
+                    f"    {flavor.status}.toBe(200)",
                     [f"    expect(response.body.total).toBe({count})", "    expect(response.body.page).toBe(1)"]
                     if listing["pagination"]
                     else f"    expect(response.body).toHaveLength({count})",
@@ -260,10 +311,10 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
                 test(
                     f"lists {resource['plural']} by page",
                     [
-                        f"    await create{type_name}(app, headers)",
-                        f"    await create{type_name}(app, headers, 1)",
-                        f"    const response = await request(app).get({ts_string(listing['path'])}).query({{ page: 2, size: 1 }}).set(headers)",
-                        "    expect(response.status, response.text).toBe(200)",
+                        f"    await create{type_name}({flavor.client}, headers)",
+                        f"    await create{type_name}({flavor.client}, headers, 1)",
+                        f"    const response = await request({flavor.client}).get({ts_string(listing['path'])}).query({{ page: 2, size: 1 }}).set(headers)",
+                        f"    {flavor.status}.toBe(200)",
                         "    expect(response.body.total).toBe(2)",
                         "    expect(response.body.items).toHaveLength(1)",
                         "    expect(response.body.page).toBe(2)",
@@ -273,7 +324,7 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
                 test(
                     "rejects a page that does not exist",
                     [
-                        f"    const response = await request(app).get({ts_string(listing['path'])}).query({{ page: 0 }}).set(headers)",
+                        f"    const response = await request({flavor.client}).get({ts_string(listing['path'])}).query({{ page: 0 }}).set(headers)",
                         "    expect(response.status).toBe(400)",
                     ],
                 )
@@ -283,12 +334,12 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
             test(
                 f"replaces {one}",
                 [
-                    f"    const created = await create{type_name}(app, headers)",
+                    f"    const created = await create{type_name}({flavor.client}, headers)",
                     f"    const key = created[{ts_string(key)}]",
-                    f"    const payload = await {payload_of}(app, headers, 1)",
+                    f"    const payload = await {payload_of}({flavor.client}, headers, 1)",
                     resource["key"]["generated"] is None and f"    payload[{ts_string(key)}] = key",
-                    f"    const response = await request(app).put({url(replace, resource)}).set(headers).send(payload)",
-                    "    expect(response.status, response.text).toBe(200)",
+                    f"    const response = await request({flavor.client}).put({url(replace, resource)}).set(headers).send(payload)",
+                    f"    {flavor.status}.toBe(200)",
                     [
                         f"    expect({ts_access('response.body', wire)}).toEqual({ts_access('payload', wire)})"
                         for wire in comparable_fields(resource, second)
@@ -303,10 +354,10 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
             test(
                 f"updates part of {one}",
                 [
-                    f"    const created = await create{type_name}(app, headers)",
+                    f"    const created = await create{type_name}({flavor.client}, headers)",
                     f"    const key = created[{ts_string(key)}]",
-                    f"    const response = await request(app).patch({url(update, resource)}).set(headers).send({{ {ts_string(field['wire'])}: {ts_literal(value)} }})",
-                    "    expect(response.status, response.text).toBe(200)",
+                    f"    const response = await request({flavor.client}).patch({url(update, resource)}).set(headers).send({{ {ts_string(field['wire'])}: {ts_literal(value)} }})",
+                    f"    {flavor.status}.toBe(200)",
                     f"    expect({ts_access('response.body', field['wire'])}).toEqual({ts_literal(value)})",
                 ],
             )
@@ -314,9 +365,9 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
                 test(
                     f"rejects null for {field['wire']}",
                     [
-                        f"    const created = await create{type_name}(app, headers)",
+                        f"    const created = await create{type_name}({flavor.client}, headers)",
                         f"    const key = created[{ts_string(key)}]",
-                        f"    const response = await request(app).patch({url(update, resource)}).set(headers).send({{ {ts_string(field['wire'])}: null }})",
+                        f"    const response = await request({flavor.client}).patch({url(update, resource)}).set(headers).send({{ {ts_string(field['wire'])}: null }})",
                         "    expect(response.status).toBe(400)",
                     ],
                 )
@@ -325,11 +376,12 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
             test(
                 f"deletes {one}",
                 [
-                    f"    const created = await create{type_name}(app, headers)",
+                    f"    const created = await create{type_name}({flavor.client}, headers)",
                     f"    const key = created[{ts_string(key)}]",
-                    f"    const response = await request(app).delete({url(remove, resource)}).set(headers)",
-                    f"    expect(response.status, response.text).toBe({number_text(remove['status'])})",
-                    get and f"    expect((await request(app).get({url(get, resource)}).set(headers)).status).toBe(404)",
+                    f"    const response = await request({flavor.client}).delete({url(remove, resource)}).set(headers)",
+                    f"    {flavor.status}.toBe({number_text(remove['status'])})",
+                    get
+                    and f"    expect((await request({flavor.client}).get({url(get, resource)}).set(headers)).status).toBe(404)",
                 ],
             )
         for endpoint in resource["endpoints"]:
@@ -343,17 +395,17 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
             elif endpoint["input"] == "partial":
                 send = ".send({})"
             else:
-                send = f".send(await {payload_of}(app, headers))"
+                send = f".send(await {payload_of}({flavor.client}, headers))"
             target = url(endpoint, resource) if needs_item else ts_string(fixed_path(endpoint, resource, "sample"))
             test(
                 f"{_words(endpoint['name'])} answers 501 until it is written",
                 [
                     needs_item
                     and [
-                        f"    const created = await create{type_name}(app, headers)",
+                        f"    const created = await create{type_name}({flavor.client}, headers)",
                         f"    const key = created[{ts_string(key)}]",
                     ],
-                    f"    const response = await request(app).{endpoint['method'].lower()}({target}).set(headers){send}",
+                    f"    const response = await request({flavor.client}).{endpoint['method'].lower()}({target}).set(headers){send}",
                     "    // TODO: replace this test when the operation is written",
                     "    expect(response.status).toBe(501)",
                 ],
@@ -363,7 +415,7 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
         test(
             f"{_words(guarded['name'])} needs credentials",
             [
-                f"    const response = await request(app).get({ts_string(fixed_path(guarded, resource, missing_key(resource)))})",
+                f"    const response = await request({flavor.client}).get({ts_string(fixed_path(guarded, resource, missing_key(resource)))})",
                 "    expect(response.status).toBe(401)",
                 "    expect(response.body.error.code).toBe('unauthorized')",
             ],
@@ -374,37 +426,33 @@ def _resource_tests(context: ExpressContext, resource: dict) -> dict:
         test(
             f"{_words(with_roles['name'])} needs a role",
             [
-                f"    const response = await request(app).get({ts_string(fixed_path(with_roles, resource, missing_key(resource)))}).set(headersWithoutRoles)",
+                f"    const response = await request({flavor.client}).get({ts_string(fixed_path(with_roles, resource, missing_key(resource)))}).set(headersWithoutRoles)",
                 "    expect(response.status).toBe(403)",
             ],
         )
     content = lines(
         ts_doc(f"Tests of the {resource['plural']} endpoints."),
         "",
-        "import type { Express } from 'express'",
-        "import request from 'supertest'",
-        "import { beforeEach, describe, expect, it } from 'vitest'",
-        "import { createApp } from '../src/app.js'",
-        f"import {{ {', '.join(sorted(used))} }} from './helpers.js'",
+        list(flavor.test_imports),
+        f"import {{ {', '.join(sorted(used))} }} from './helpers{flavor.local}'",
         "",
         f"describe({ts_string(resource['plural'])}, () => {{",
-        "  let app: Express",
+        list(flavor.test_declarations),
         "",
         "  // A new application per test: every test starts with empty storage",
-        "  beforeEach(() => {",
-        "    app = createApp()",
-        "  })",
+        list(flavor.test_hooks),
         "",
         "\n\n".join(tests) if tests else "  it('has no endpoints', () => {})",
         "})",
     )
     file_name = _CAMEL.sub(r"\1-\2", name["many"]).lower()
-    return {"path": f"tests/{file_name}.test.ts", "content": file_text(content)}
+    return {"path": f"{flavor.folder}/{file_name}{flavor.test_suffix}", "content": file_text(content)}
 
 
-def test_files(context: ExpressContext) -> list[dict]:
+def test_files(context, flavor: TestFlavor = EXPRESS_FLAVOR) -> list[dict]:
+    """The test files of a TypeScript project: Express by default, NestJS with its flavor."""
     return [
-        _setup_file(context),
-        _helpers_file(context),
-        *(_resource_tests(context, resource) for resource in context.spec["resources"]),
+        _setup_file(context, flavor),
+        _helpers_file(context, flavor),
+        *(_resource_tests(context, resource, flavor) for resource in context.spec["resources"]),
     ]

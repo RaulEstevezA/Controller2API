@@ -8,7 +8,7 @@ implementation of the chosen persistence. Mirrors web/src/core/generators/framew
 import re
 
 from ...common.text import file_text, lines
-from ...languages.typescript.typescript import TsImports, ts_doc, ts_string
+from ...languages.typescript.typescript import MEMORY_LIST_BODY, TsImports, ts_doc, ts_string
 from .context import ExpressContext, import_path, key_field, key_type, names
 
 _IDENTIFIER = re.compile(r"^[A-Za-z_$][A-Za-z0-9_$]*$")
@@ -96,22 +96,7 @@ def repository_file(context: ExpressContext, resource: dict) -> dict:
             generated == "increment" and "  private nextKey = 1",
             "",
             f"  async list(query: ListQuery): Promise<ListResult<{record}>> {{",
-            "    const value = (item: unknown, field: string) => (item as Record<string, unknown>)[field]",
-            "    let items = [...this.items.values()].filter((item) => Object.entries(query.filters).every(([field, expected]) => value(item, field) === expected))",
-            "    if (query.sort) {",
-            "      const { field, descending } = query.sort",
-            "      // Items without a value go last, whatever the order",
-            "      const present = items.filter((item) => value(item, field) != null)",
-            "      present.sort((a, b) => {",
-            "        const left = value(a, field) as string | number",
-            "        const right = value(b, field) as string | number",
-            "        const order = left < right ? -1 : left > right ? 1 : 0",
-            "        return descending ? -order : order",
-            "      })",
-            "      items = [...present, ...items.filter((item) => value(item, field) == null)]",
-            "    }",
-            "    const end = query.limit === undefined ? undefined : query.offset + query.limit",
-            "    return { items: items.slice(query.offset, end).map((item) => structuredClone(item)), total: items.length }",
+            MEMORY_LIST_BODY,
             "  }",
             "",
             f"  async get(key: {key}): Promise<{record} | undefined> {{",
