@@ -14,8 +14,12 @@ describe('verification', () => {
       verification({ framework: 'fastapi', architecture: 'modular', persistence: 'sqlalchemy', database: 'postgresql', auth: 'apiKey' }),
     ).toBe('parts')
     expect(verification({ framework: 'nestjs', architecture: 'modular', persistence: 'memory', database: null, auth: 'none' })).toBe(
-      'unverified',
+      'verified',
     )
+    // No scenario has run FastAPI on MongoDB
+    expect(
+      verification({ framework: 'fastapi', architecture: 'layered', persistence: 'sqlalchemy', database: 'mongodb', auth: 'none' }),
+    ).toBe('unverified')
   })
 
   it('only lists stacks the matrix offers', () => {

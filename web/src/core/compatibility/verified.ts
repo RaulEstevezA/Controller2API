@@ -46,6 +46,12 @@ export const VERIFIED: readonly VerifiedStack[] = [
   },
   { framework: 'djangoRest', architecture: 'modular', persistence: 'djangoOrm', database: 'mysql', auth: 'none', date: '2026-11-09' },
   { framework: 'djangoRest', architecture: 'layered', persistence: 'djangoOrm', database: 'mariadb', auth: 'jwt', date: '2026-11-09' },
+  { framework: 'nestjs', architecture: 'modular', persistence: 'memory', database: null, auth: 'none', date: '2026-11-09' },
+  { framework: 'nestjs', architecture: 'modular', persistence: 'memory', database: null, auth: 'jwt', date: '2026-11-09' },
+  { framework: 'nestjs', architecture: 'modular', persistence: 'none', database: null, auth: 'apiKey', date: '2026-11-09' },
+  { framework: 'nestjs', architecture: 'modular', persistence: 'typeorm', database: 'postgresql', auth: 'jwt', date: '2026-11-09' },
+  { framework: 'nestjs', architecture: 'modular', persistence: 'typeorm', database: 'mysql', auth: 'none', date: '2026-11-09' },
+  { framework: 'nestjs', architecture: 'modular', persistence: 'typeorm', database: 'mariadb', auth: 'apiKey', date: '2026-11-09' },
 ]
 
 /** - `verified`: this exact stack passed
