@@ -15,7 +15,17 @@ export default defineConfig(({ command, isPreview }) => ({
       output: {
         // Libraries in their own files: they change less often than Model2API, so browsers keep them cached
         codeSplitting: {
-          groups: [{ name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ }],
+          groups: [
+            { name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ },
+            {
+              name: 'codemirror',
+              test: /node_modules[\\/](@codemirror[\\/](state|view|commands|language)|@lezer[\\/](common|highlight|lr)|style-mod|w3c-keyname|crelt)[\\/]/,
+            },
+            { name: 'yaml', test: /node_modules[\\/]yaml[\\/]/ },
+            // Model2API's own core, by stage: they change together, but each stays a reasonable size
+            { name: 'importers', test: /src[\\/]core[\\/](importers|model|analysis)[\\/]/ },
+            { name: 'generators', test: /src[\\/]core[\\/]generators[\\/]/ },
+          ],
         },
       },
     },
