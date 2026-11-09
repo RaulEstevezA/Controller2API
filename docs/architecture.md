@@ -86,7 +86,7 @@ verification/               Builds, runs and calls the generated projects with t
 ## Patterns
 
 - **Registry** for every variable case: importers (`importers/registry.ts`), generators (`generators/registry.ts`). Adding a format or a framework is a new module and one line in its registry.
-- **Strategy** for interchangeable algorithms inside a generator: architecture (layered, modular, hexagonal), persistence (each ORM or ODM, or none) and authentication (none, JWT, API key). A framework generator composes the strategies it supports; the compatibility matrix decides which ones are offered.
+- **Strategy** for interchangeable algorithms inside a generator: architecture (layered or modular; hexagonal is not written yet), persistence (an ORM, in memory, or interfaces to implement) and authentication (none, JWT, API key). A framework generator composes the strategies it supports; the compatibility matrix decides which ones are offered.
 - **Composition over inheritance.** Frameworks of the same language reuse `generators/languages/<language>/` by calling it, not by extending a base generator.
 - **Immutable values.** Edits return a new design; undo and redo keep the previous values.
 
