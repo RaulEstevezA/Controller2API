@@ -1,0 +1,185 @@
+/* Global styles of the web version: design tokens, base elements and the building blocks shared by every
+   component (window, panel, buttons, badges, empty state). Components keep their own styles in their CSS file.
+
+   The tokens are copied from personal_web_style (tokens/): the palette and scales shared with the portfolio
+   and the other tools. Change them there first, then copy them here. */
+@import url('./styles/tokens/colors.css');
+@import url('./styles/tokens/typography.css');
+@import url('./styles/tokens/spacing.css');
+@import url('./styles/tokens/borders.css');
+@import url('./styles/tokens/shadows.css');
+
+/* ---------- Base (personal_web_style css/base.css) ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  font: var(--font-body) / var(--leading-base) var(--sans);
+  color: var(--text);
+  background: var(--page-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--page-bg);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font: inherit;
+}
+
+::selection {
+  background: var(--text-selection);
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Text for screen readers only */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Window and panel (components/cards.md) ---------- */
+
+.window {
+  border: var(--border-line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--window-shadow);
+}
+
+.panel {
+  padding: var(--panel-padding);
+  border: var(--border-line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+/* ---------- Buttons (components/buttons.md) ---------- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1.15rem;
+  border: var(--border-line);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+  color: var(--btn-text);
+  font-size: var(--font-control);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-base);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.button:hover {
+  text-decoration: none;
+}
+
+.button:hover:not(:disabled) {
+  border-color: var(--muted);
+  background: var(--border);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* One per group of actions: the action that completes the flow of that area */
+.button--primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.button--primary:hover:not(:disabled) {
+  border-color: var(--accent-text);
+  background: var(--accent-text);
+}
+
+/* Option of a group, selected with aria-pressed; a button whose form is open */
+.button[aria-pressed='true'],
+.button[aria-expanded='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-controls);
+}
+
+/* ---------- Badges (components/badges.md) ---------- */
+
+/* Status badge in a list: neutral by default */
+.badge {
+  display: inline-block;
+  padding: 0 6px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: var(--weight-semibold);
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.badge--warning {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+/* ---------- Empty states (patterns/empty-and-loading-states.md) ---------- */
+
+/* A pane that depends on another input: says what is missing */
+.pane-empty {
+  padding: var(--space-16);
+  color: var(--muted);
+  font-size: var(--font-small);
+}
