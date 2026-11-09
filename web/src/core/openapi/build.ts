@@ -19,6 +19,9 @@ export const ERROR_CODES: Record<number, { code: string; description: string }> 
   501: { code: 'not_implemented', description: 'The logic of this operation is not written yet' },
 }
 
+/** Codes of errors any request can meet, which no operation documents one by one. */
+export const GENERAL_ERROR_CODES = ['method_not_allowed', 'internal_error']
+
 /** Query parameters of a paginated list, with the limits every generator enforces. */
 export const PAGE_SIZE = { default: 20, max: 100 }
 
@@ -143,7 +146,7 @@ function errorSchema(): Json {
         type: 'object',
         required: ['code', 'message'],
         properties: {
-          code: { type: 'string', enum: Object.values(ERROR_CODES).map((item) => item.code) },
+          code: { type: 'string', enum: [...Object.values(ERROR_CODES).map((item) => item.code), ...GENERAL_ERROR_CODES] },
           message: { type: 'string' },
           details: {
             type: 'array',
