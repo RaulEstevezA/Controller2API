@@ -2,7 +2,7 @@
 /**
  * Interface tests of the whole screen: what a visitor sees when the tool opens.
  */
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App.tsx'
 import { I18nProvider } from './i18n/I18nProvider.tsx'
@@ -27,6 +27,13 @@ describe('App', () => {
   it('links the name in the header to the website', () => {
     renderApp()
     expect(screen.getByRole('link', { name: 'Raúl Estévez' }).getAttribute('href')).toBe('https://raulesteveza.github.io/')
+  })
+
+  it('links to the source code and to the other tools', () => {
+    renderApp()
+    const links = screen.getByRole('region', { name: 'Downloads and links' })
+    expect(within(links).getByRole('link', { name: 'Source code' }).getAttribute('href')).toBe('https://github.com/RaulEstevezA/Model2API')
+    expect(within(links).getByRole('link', { name: 'All tools' }).getAttribute('href')).toBe('https://raulesteveza.github.io/tools/')
   })
 
   it('changes the language of the page and stores it for the whole site', () => {

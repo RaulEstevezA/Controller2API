@@ -22,6 +22,16 @@ const en = {
     'Your code is analyzed, never run.',
     'Nothing is saved unless you choose to.',
   ],
+  linksLabel: 'Downloads and links',
+  downloadDesktop: 'Download for desktop',
+  downloadFor: (platform: string) => `Download for ${platform}`,
+  otherPlatforms: 'Other platforms',
+  otherArchitecture: (architecture: string) => `${architecture} version`,
+  downloadNote: 'Desktop version for Windows, macOS and Linux. It is not signed, so the first time your system will show a warning.',
+  howToOpen: 'How to open it',
+  howToOpenUrl: 'https://github.com/RaulEstevezA/Model2API/blob/main/desktop/README_en.md#opening-it-the-first-time',
+  sourceCode: 'Source code',
+  allTools: 'All tools',
 }
 
 /** Every text of the interface in one language. */
@@ -39,6 +49,16 @@ const es: Messages = {
     'Tu código se analiza, nunca se ejecuta.',
     'No se guarda nada salvo que tú lo decidas.',
   ],
+  linksLabel: 'Descargas y enlaces',
+  downloadDesktop: 'Descargar para escritorio',
+  downloadFor: (platform) => `Descargar para ${platform}`,
+  otherPlatforms: 'Otras plataformas',
+  otherArchitecture: (architecture) => `Versión ${architecture}`,
+  downloadNote: 'Versión de escritorio para Windows, macOS y Linux. No está firmada, así que la primera vez el sistema mostrará un aviso.',
+  howToOpen: 'Cómo abrirla',
+  howToOpenUrl: 'https://github.com/RaulEstevezA/Model2API/blob/main/desktop/README_es.md#abrirla-la-primera-vez',
+  sourceCode: 'Código fuente',
+  allTools: 'Todas las herramientas',
 }
 
 /** Texts by language. */
