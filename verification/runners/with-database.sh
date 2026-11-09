@@ -50,6 +50,10 @@ for _ in $(seq 1 60); do
 done
 # The server may accept pings before it accepts the application user
 sleep 3
+# Django creates a test_* database for its tests: the user may create databases in this throwaway server
+if [ "$database" != postgresql ]; then
+  docker exec "$container" sh -c "mysql -uroot -p$password -e \"GRANT ALL PRIVILEGES ON *.* TO 'api'@'%'; FLUSH PRIVILEGES;\" 2>/dev/null || mariadb -uroot -p$password -e \"GRANT ALL PRIVILEGES ON *.* TO 'api'@'%'; FLUSH PRIVILEGES;\"" >/dev/null 2>&1
+fi
 
 export DOCKER_NETWORK="$network"
 export TEST_DATABASE_URL="$url_python"
