@@ -69,4 +69,7 @@ def test_calls(path):
         pytest.skip(f"{FUNCTIONS[path.stem]} is not ported yet")
     for index, case in enumerate(json.loads(path.read_text(encoding="utf-8"))):
         expected = comparable(case["result"])
-        assert comparable(as_json(function(*case["args"]))) == expected, f"{path.stem} #{index}: {case['args']!r:.300}"
+        result = comparable(as_json(function(*case["args"])))
+        assert result == expected, f"{path.stem} #{index}: {case['args']!r:.300}"
+        # Key order matters too: the contract and the project files are written in it
+        assert json.dumps(result) == json.dumps(expected), f"{path.stem} #{index}: same values, other key order"
