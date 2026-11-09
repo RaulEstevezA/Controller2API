@@ -1,6 +1,6 @@
 # Architecture
 
-Model2API turns data models into the code of a REST API. Everything runs locally in the browser; there is no backend. The user's code is read by hand-written parsers and is never executed, and every proposal comes from explicit, deterministic rules that can be explained.
+Model2API turns data models into the code of a REST API. Everything runs locally, in the browser or in the desktop version; there is no backend. The user's code is read by hand-written parsers and is never executed, and every proposal comes from explicit, deterministic rules that can be explained.
 
 ```text
 Input text ──► Importer ──► Model ──► Analysis ──► Proposal ──► API design ──► Generator ──► files ──► Export
@@ -50,8 +50,8 @@ web/                        The web application (React + TypeScript + Vite)
     │   │   ├── common/     Generator contract, file tree, code writer, TODO markers
     │   │   ├── languages/  What frameworks of one language share: type mapping, naming,
     │   │   │               imports, dependency files (python/, typescript/, java/)
-    │   │   └── frameworks/ One generator per framework (fastapi/, django-rest/, express/,
-    │   │                   nestjs/, spring-boot/), each with its architectures and persistence
+    │   │   └── frameworks/ One generator per framework (fastapi/, djangoRest/, express/,
+    │   │                   nestjs/, springBoot/), each with its architectures and persistence
     │   ├── export/         ZIP writer and file downloads as plain data
     │   ├── project/        Model2API project files: versioned format, save and open
     │   └── interop/        Models received from Mapper, Model2DB and other tools
@@ -66,6 +66,18 @@ web/                        The web application (React + TypeScript + Vite)
     ├── i18n/               English and Spanish texts, including every reason and note
     ├── examples/           Built-in examples with invented data, also used as test fixtures
     └── styles/tokens/      Design tokens copied from personal_web_style
+desktop/                    The desktop version (Python + PySide6)
+├── model2api/
+│   ├── core/               Mirrors web/src/core/ module by module, with snake_case names
+│   ├── ui/                 The window: the state App.tsx and its hooks hold on the web
+│   └── assets/             Icon (same SVG as web/public/favicon.svg)
+├── packaging/              PyInstaller spec, launcher, .icns and .ico built from the icon
+└── tests/                  Desktop tests, including the shared cases
+shared/
+└── test-cases/             Language-neutral cases both versions must pass
+    ├── calls/              Arguments and results of core functions, as JSON
+    ├── outputs/            Files every generator writes for every built-in example
+    └── variants/           Examples with decisions and settings, and the files they produce
 verification/               Builds, runs and calls the generated projects with their real tools
 ├── scenarios/              Example + stack combinations to verify
 └── runners/                One runner per language toolchain (Python, Node, Java)
@@ -87,6 +99,32 @@ verification/               Builds, runs and calls the generated projects with t
 - **Verified means verified.** A stack combination is shown as verified only when `verification/` has built, run and called a generated project with it.
 - **Local first.** Inputs stay in memory. Only preferences are stored, plus the workspace when the user turns on "Remember in this browser".
 
+## Desktop version
+
+`desktop/` is the same tool as a Python (PySide6) application, as in the other tools of the suite. `desktop/model2api/core/` mirrors `web/src/core/` file by file: the web uses camelCase names (`djangoRest/`), the desktop snake_case (`django_rest/`). Models and designs are plain dictionaries with the same keys as the TypeScript JSON, so both versions can be compared as JSON.
+
+The web version writes the expected results to `shared/test-cases/` and the desktop tests must give the same ones, so a change in the core is made in both versions.
+
 ## Interface
 
-The page follows the tool layout of personal_web_style (`layouts/tool-page.md`): presentation window, workspace, links and footer, in a single screen.
+The page follows the tool layout of personal_web_style (`layouts/tool-page.md`) and the screen of Model2DB, in a single screen:
+
+```text
+Header          Raúl Estévez                                                  EN  ES
+Presentation    icon  Model2API  [Processed locally] · subtitle · description · privacy
+Project bar     Save · Open · Remember in this browser
+Workspace       ┌ Models ─────────────┐ ┌ Endpoints ───────────────────────────┐
+                │ input, detected     │ │ resources and endpoints, editable,   │
+                │ models and issues   │ │ pending decisions, undo / redo       │
+                └─────────────────────┘ └──────────────────────────────────────┘
+                ┌ Project ───────────────────────────────────────────────────────┐
+                │ framework, architecture, persistence, auth · file tree · code   │
+                │ Copy · Download file · OpenAPI · Download .zip                  │
+                └─────────────────────────────────────────────────────────────────┘
+Links           Download for … · Source code · All tools
+Footer          MIT License · Source code · Raúl Estévez
+```
+
+- Header and workspace share the same width (1440px) and horizontal padding (24px, 16px below 600px), so "Raúl Estévez" lines up with the left edge of the first column and the language switcher with the right edge of the last one. Header text keeps the size and style of the rest of the site: name in weight 600 at the base size, language codes at 0.9rem weight 500.
+- Below 1100px the three panes become tabs (Models · Endpoints · Project), each with its count of pending decisions or errors.
+- The result is computed as the design changes; there is no "Generate" button.
