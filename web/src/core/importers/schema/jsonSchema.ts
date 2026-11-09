@@ -227,9 +227,38 @@ function buildModel(name: string, schema: Json, context: Context) {
       if (typeof property.description === 'string') field.description = property.description
       if (property.readOnly === true) field.generated = true
       if (typeof property.format === 'string') field.originalType = `${String(property.type ?? '')}(${property.format})`
+      const constraints = constraintKeywords(property)
+      if (constraints) field.metadata = constraints
       model.fields.push(field)
     }
   }
+}
+
+/** Validation keywords JSON Schema can declare on a property. */
+const CONSTRAINT_KEYWORDS = [
+  'minLength',
+  'maxLength',
+  'minimum',
+  'maximum',
+  'exclusiveMinimum',
+  'exclusiveMaximum',
+  'multipleOf',
+  'pattern',
+  'format',
+  'minItems',
+  'maxItems',
+  'uniqueItems',
+] as const
+
+/** The validation keywords of a property, kept as they are in the field's metadata so the analysis of
+ * validations can read them; `null` when it declares none. */
+function constraintKeywords(property: Json): Record<string, string | number | boolean> | null {
+  const found: Record<string, string | number | boolean> = {}
+  for (const keyword of CONSTRAINT_KEYWORDS) {
+    const value = property[keyword]
+    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') found[keyword] = value
+  }
+  return Object.keys(found).length > 0 ? found : null
 }
 
 /** Models of a schema document. `definitions` lists where the named schemas are, by the prefix their

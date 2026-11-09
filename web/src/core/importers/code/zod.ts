@@ -2,7 +2,7 @@
  * Reads Zod schemas (`z.object({...})`) declared in TypeScript or JavaScript into models.
  */
 import { toPascalCase, uniqueName } from '../../model/naming.ts'
-import type { Literal } from '../../model/schema.ts'
+import type { Annotation, Literal } from '../../model/schema.ts'
 import type { Cursor, Token } from './lexer.ts'
 import { parseLiteral, type RawDeclarations, type RawField, type RawModel, type RawType } from './raw.ts'
 
@@ -15,7 +15,31 @@ interface ZodValue {
   optional: boolean
   defaultValue?: Literal
   description?: string
+  /** Checks that restrict the value (`.min(2)`, `.email()`), kept as `z.<method>` annotations so the
+   * validation analysis reads them like any other annotation. */
+  checks?: Annotation[]
 }
+
+/** Zod methods that restrict a value without changing its shape. */
+const CHECKS = new Set([
+  'min',
+  'max',
+  'length',
+  'email',
+  'url',
+  'uuid',
+  'regex',
+  'positive',
+  'nonnegative',
+  'negative',
+  'nonpositive',
+  'gt',
+  'gte',
+  'lt',
+  'lte',
+  'nonempty',
+  'datetime',
+])
 
 const STRING_LIKE = new Set([
   'string',
@@ -145,6 +169,7 @@ export class ZodReader {
       const value = this.value(`${owner}${toPascalCase(key.value)}`)
       const field: RawField = { name: key.value, type: value.type, optional: value.optional, nullable: value.nullable }
       if (value.defaultValue !== undefined) field.defaultValue = value.defaultValue
+      if (value.checks?.length) field.annotations = value.checks
       const description = value.description ?? key.doc
       if (description) field.description = description
       fields.push(field)
@@ -309,7 +334,9 @@ export class ZodReader {
         return inner
       }
       default:
-        // Text with a format (z.email(), z.uuid(), z.iso.datetime()): at run time it is a string
+        // Text with a format (z.email(), z.uuid(), z.iso.datetime()): at run time it is a string, and the
+        // format is kept as a check
+        if (CHECKS.has(method)) return { ...plain('string'), checks: [{ name: `z.${method}`, args: '' }] }
         return plain(STRING_LIKE.has(method) || ['datetime', 'time', 'duration'].includes(method) ? 'string' : 'unknown')
     }
   }
@@ -345,6 +372,7 @@ export class ZodReader {
           result = { ...result, nullable: true, optional: true }
           break
         case 'array':
+          // Checks written before `.array()` restrict the items, not the list
           result = { type: { name: '[]', args: result.type ? [result.type] : [] }, nullable: false, optional: false }
           break
         case 'default':
@@ -359,7 +387,8 @@ export class ZodReader {
           break
         }
         default:
-          // Checks and refinements (min, max, email, regex, refine, transform…) do not change the shape
+          // Checks keep their arguments; other refinements (refine, transform…) do not change the shape
+          if (CHECKS.has(method)) result = { ...result, checks: [...(result.checks ?? []), { name: `z.${method}`, args }] }
           break
       }
     }
