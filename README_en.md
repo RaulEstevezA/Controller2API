@@ -15,7 +15,7 @@ Paste or open the models  →  Review the proposed endpoints  →  Choose the fr
 2. **Proposes the API**: a resource per model with its operations (`GET /products`, `GET /products/{id}`, `POST`, `PUT`, `PATCH`, `DELETE`), each with its parameters, bodies, responses, status codes and errors.
 3. **Explains every proposal and never decides an ambiguity**: what it is not sure about waits for you, and the generated code leaves a `TODO` where the decision goes.
 4. **Lets you change everything**: turn endpoints on and off, edit routes, add business endpoints that are not CRUD, configure pagination, filters, sorting, validation and permissions, with undo and redo.
-5. **Writes idiomatic code for the framework you choose**, with the architecture that fits it (layered, modular by feature, or clean / hexagonal where it makes sense) and no layers it does not need.
+5. **Writes idiomatic code for the framework you choose**, with the architecture that fits it (by layers, or one folder per resource) and no layers it does not need. A clean or hexagonal architecture is not offered yet.
 6. **Checks combinations**: only framework, persistence and authentication options that work together are offered, and a combination is shown as verified only after a generated project with it has been built, run and called.
 
 ## Frameworks

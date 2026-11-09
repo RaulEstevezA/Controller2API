@@ -15,7 +15,7 @@ Pegar o abrir los modelos  →  Revisar los endpoints propuestos  →  Elegir el
 2. **Propone la API**: un recurso por modelo con sus operaciones (`GET /products`, `GET /products/{id}`, `POST`, `PUT`, `PATCH`, `DELETE`), cada una con sus parámetros, cuerpos, respuestas, códigos de estado y errores.
 3. **Explica cada propuesta y nunca decide una ambigüedad**: lo que no tiene claro te espera, y el código generado deja un `TODO` donde va la decisión.
 4. **Te deja cambiarlo todo**: activar y desactivar endpoints, editar rutas, añadir endpoints de negocio que no son CRUD, configurar paginación, filtros, orden, validaciones y permisos, con deshacer y rehacer.
-5. **Escribe código idiomático del framework que elijas**, con la arquitectura que le encaja (por capas, modular por funcionalidades o limpia / hexagonal cuando tiene sentido) y sin capas que no necesita.
+5. **Escribe código idiomático del framework que elijas**, con la arquitectura que le encaja (por capas o una carpeta por recurso) y sin capas que no necesita. Todavía no se ofrece una arquitectura limpia o hexagonal.
 6. **Comprueba las combinaciones**: solo ofrece opciones de framework, persistencia y autenticación que funcionan juntas, y una combinación solo aparece como verificada después de compilar, arrancar y llamar a un proyecto generado con ella.
 
 ## Frameworks
