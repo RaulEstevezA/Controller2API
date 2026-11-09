@@ -3,9 +3,9 @@
  * the same schemas (read, create, partial update), the same query parameters, the same status codes and
  * the same error body, so the contract and the code of any framework agree.
  */
-import { stringify } from 'yaml'
 import type { Constraints } from '../analysis/constraints.ts'
 import type { ApiSpec, SpecEndpoint, SpecField, SpecResource, SpecType } from '../api/spec.ts'
+import { toYaml, type YamlValue } from './yaml.ts'
 
 type Json = Record<string, unknown>
 
@@ -308,5 +308,5 @@ export function buildOpenApi(spec: ApiSpec, serverUrl: string): Json {
 
 /** The contract as YAML, the format the generated projects ship. */
 export function openApiYaml(spec: ApiSpec, serverUrl: string): string {
-  return stringify(buildOpenApi(spec, serverUrl), { lineWidth: 0, aliasDuplicateObjects: false })
+  return toYaml(buildOpenApi(spec, serverUrl) as YamlValue)
 }
