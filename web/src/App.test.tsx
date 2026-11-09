@@ -69,6 +69,23 @@ describe('App', () => {
     expect(screen.getByText('TypeScript · 5 models · 29 fields')).toBeTruthy()
   })
 
+  it('proposes the resources and endpoints of the models', () => {
+    renderApp()
+    fireEvent.click(screen.getByRole('button', { name: 'Online shop' }))
+    expect(screen.getByRole('region', { name: 'Customer' })).toBeTruthy()
+    expect(screen.getByText('3 resources · 18 endpoints')).toBeTruthy()
+    expect(screen.getAllByText('/customers/{id}').length).toBeGreaterThan(0)
+  })
+
+  it('applies an edit and undoes it', () => {
+    renderApp()
+    fireEvent.click(screen.getByRole('button', { name: 'Online shop' }))
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Generate DELETE /customers/{id}' }))
+    expect(screen.getByText('3 resources · 17 endpoints')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'Undo' }))
+    expect(screen.getByText('3 resources · 18 endpoints')).toBeTruthy()
+  })
+
   it('reports where the input cannot be read', () => {
     renderApp()
     fireEvent.change(screen.getByRole('combobox', { name: 'Format' }), { target: { value: 'json' } })

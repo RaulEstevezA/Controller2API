@@ -50,8 +50,9 @@ function routeShape(path: string): string {
 
 const ITEM_OPERATIONS = new Set(['get', 'replace', 'update', 'delete'])
 
-/** Fields a list can filter or sort by: included values that are text, numbers, dates, booleans or enums. */
-function filterableFields(resource: ResourceDesign, schema: ModelSchema): Set<string> {
+/** Fields a list can filter or sort by: included values that are text, numbers, dates, booleans or enums,
+ * and references to one other resource. */
+export function filterableFields(resource: ResourceDesign, schema: ModelSchema): Set<string> {
   const model = findModel(schema, resource.model)
   const filterable = new Set<string>()
   for (const field of resource.fields) {
