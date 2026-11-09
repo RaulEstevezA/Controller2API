@@ -1,7 +1,7 @@
 /**
  * The technology choices of a generated project (framework, architecture, persistence, database and
  * authentication) and the matrix of which ones work together. Only combinations a generator really
- * writes are offered; every other one carries the reason it is not.
+ * writes are offered.
  *
  * To support a new framework, add it to `FRAMEWORKS` with the options its generator implements, and
  * register the generator (generators/registry.ts).
@@ -96,14 +96,6 @@ export const FRAMEWORKS: readonly FrameworkInfo[] = [
   },
 ]
 
-/** Fixed reasons for well-known combinations that are not offered, so the interface can explain them. */
-const KNOWN_GAPS: { framework?: FrameworkId; persistence?: PersistenceId; database?: DatabaseId; note: string }[] = [
-  { framework: 'springBoot', database: 'sqlite', note: 'hibernateSqlite' },
-  { framework: 'nestjs', persistence: 'prisma', note: 'notGenerated' },
-  { persistence: 'prisma', database: 'mariadb', note: 'prismaMariadb' },
-  { framework: 'djangoRest', persistence: 'memory', note: 'djangoNeedsOrm' },
-]
-
 export interface ProjectSettings {
   /** Name of the project: folder, package and title (`shop-api`) */
   name: string
@@ -137,25 +129,6 @@ export function findFramework(id: FrameworkId): FrameworkInfo {
 /** The databases a persistence of a framework supports; empty when it needs none. */
 export function databasesFor(framework: FrameworkId, persistence: PersistenceId): readonly DatabaseId[] {
   return findFramework(framework).persistence.find((item) => item.id === persistence)?.databases ?? []
-}
-
-/** The well-known reasons some combinations of a framework are not offered, for the interface. */
-export function knownGaps(framework: FrameworkId): string[] {
-  // A gap names its framework, or else a persistence: it concerns the frameworks that offer it
-  const offers = (persistence: PersistenceId | undefined) =>
-    findFramework(framework).persistence.some((option) => option.id === persistence)
-  return KNOWN_GAPS.filter((item) => (item.framework ? item.framework === framework : offers(item.persistence))).map((item) => item.note)
-}
-
-/** A well-known reason a combination is not offered, for the interface (`hibernateSqlite`…). */
-export function knownGap(framework: FrameworkId, persistence: PersistenceId | null, database: DatabaseId | null): string | null {
-  const gap = KNOWN_GAPS.find(
-    (item) =>
-      (!item.framework || item.framework === framework) &&
-      (!item.persistence || item.persistence === persistence) &&
-      (!item.database || item.database === database),
-  )
-  return gap?.note ?? null
 }
 
 /**

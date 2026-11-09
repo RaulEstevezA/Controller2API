@@ -2,7 +2,7 @@
  * Tests of the compatibility matrix and of the normalization of settings.
  */
 import { describe, expect, it } from 'vitest'
-import { DEFAULT_SETTINGS, FRAMEWORKS, databasesFor, knownGap, knownGaps, normalizeSettings, slug } from './stack.ts'
+import { DEFAULT_SETTINGS, FRAMEWORKS, databasesFor, normalizeSettings, slug } from './stack.ts'
 
 describe('normalizeSettings', () => {
   it('keeps settings the framework supports', () => {
@@ -39,13 +39,9 @@ describe('matrix', () => {
     }
   })
 
-  it('lists the databases of each persistence and explains known gaps', () => {
+  it('lists the databases of each persistence', () => {
     expect(databasesFor('fastapi', 'sqlalchemy')).toEqual(['postgresql', 'mysql', 'mariadb', 'sqlite'])
     expect(databasesFor('fastapi', 'memory')).toEqual([])
-    expect(knownGap('springBoot', 'jpa', 'sqlite')).toBe('hibernateSqlite')
-    expect(knownGap('fastapi', 'sqlalchemy', 'postgresql')).toBeNull()
-    expect(knownGaps('springBoot')).toEqual(['hibernateSqlite'])
-    expect(knownGaps('fastapi')).toEqual([])
   })
 
   it('writes names as slugs', () => {
