@@ -23,5 +23,7 @@ export default defineConfig(({ command, isPreview }) => ({
   test: {
     // Core tests run in Node; interface tests opt into jsdom with a comment at the top of the file
     environment: 'node',
+    // Node 25 has its own experimental localStorage, which hides the browser one of jsdom
+    execArgv: ['--no-experimental-webstorage'],
   },
 }))
