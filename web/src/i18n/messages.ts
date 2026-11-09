@@ -71,7 +71,7 @@ const en = {
   processedLocally: 'Processed locally',
   tagline: 'Turn data models into the code of a REST API you can run',
   introDescription:
-    'Paste or open your models: classes and DTOs in Python, TypeScript, JavaScript, Java, C#, Kotlin or Dart, JSON, JSON Schema or OpenAPI. Model2API proposes the resources and endpoints of the API, explains each proposal and waits for you where it is not sure. Choose the framework (FastAPI, Django REST Framework, Express, NestJS or Spring Boot), the architecture, the persistence and the authentication, then copy each file or download the whole project, with its tests, its OpenAPI contract and a README to run it.',
+    'Paste or open your models. Model2API proposes the endpoints of the API, explains each proposal and lets you change them. Choose the framework and download a project ready to run, with its tests and OpenAPI contract.',
   linksLabel: 'Downloads and links',
   downloadDesktop: 'Download for desktop',
   downloadFor: (platform: string) => `Download for ${platform}`,
@@ -438,7 +438,7 @@ const es: Messages = {
   processedLocally: 'Procesado en local',
   tagline: 'Convierte modelos de datos en el código de una API REST que puedes ejecutar',
   introDescription:
-    'Pega o abre tus modelos: clases y DTOs en Python, TypeScript, JavaScript, Java, C#, Kotlin o Dart, JSON, JSON Schema u OpenAPI. Model2API propone los recursos y endpoints de la API, explica cada propuesta y te espera donde no está seguro. Elige el framework (FastAPI, Django REST Framework, Express, NestJS o Spring Boot), la arquitectura, la persistencia y la autenticación, y copia cada archivo o descarga el proyecto completo, con sus pruebas, su contrato OpenAPI y un README para ejecutarlo.',
+    'Pega o abre tus modelos. Model2API propone los endpoints de la API, explica cada propuesta y te deja cambiarlos. Elige el framework y descarga un proyecto listo para ejecutar, con sus pruebas y su contrato OpenAPI.',
   linksLabel: 'Descargas y enlaces',
   downloadDesktop: 'Descargar para escritorio',
   downloadFor: (platform) => `Descargar para ${platform}`,
