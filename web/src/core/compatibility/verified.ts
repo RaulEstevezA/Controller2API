@@ -25,6 +25,9 @@ export const VERIFIED: readonly VerifiedStack[] = [
   { framework: 'fastapi', architecture: 'layered', persistence: 'sqlalchemy', database: 'postgresql', auth: 'jwt', date: '2026-11-09' },
   { framework: 'fastapi', architecture: 'modular', persistence: 'sqlalchemy', database: 'mysql', auth: 'none', date: '2026-11-09' },
   { framework: 'fastapi', architecture: 'layered', persistence: 'sqlalchemy', database: 'mariadb', auth: 'apiKey', date: '2026-11-09' },
+  { framework: 'express', architecture: 'layered', persistence: 'memory', database: null, auth: 'none', date: '2026-11-09' },
+  { framework: 'express', architecture: 'modular', persistence: 'memory', database: null, auth: 'jwt', date: '2026-11-09' },
+  { framework: 'express', architecture: 'layered', persistence: 'none', database: null, auth: 'apiKey', date: '2026-11-09' },
 ]
 
 /** - `verified`: this exact stack passed
