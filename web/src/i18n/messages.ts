@@ -32,6 +32,7 @@ const en = {
   howToOpenUrl: 'https://github.com/RaulEstevezA/Model2API/blob/main/desktop/README_en.md#opening-it-the-first-time',
   sourceCode: 'Source code',
   allTools: 'All tools',
+  license: 'MIT License',
 }
 
 /** Every text of the interface in one language. */
@@ -59,6 +60,7 @@ const es: Messages = {
   howToOpenUrl: 'https://github.com/RaulEstevezA/Model2API/blob/main/desktop/README_es.md#abrirla-la-primera-vez',
   sourceCode: 'Código fuente',
   allTools: 'Todas las herramientas',
+  license: 'Licencia MIT',
 }
 
 /** Texts by language. */

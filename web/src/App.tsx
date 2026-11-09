@@ -1,6 +1,7 @@
 /**
  * Root component: composes the screen of the tool. It holds no domain rules; those live in `core/`.
  */
+import { AppFooter } from './components/layout/AppFooter.tsx'
 import { AppHeader } from './components/layout/AppHeader.tsx'
 import { IntroPanel } from './components/layout/IntroPanel.tsx'
 import { LinksPanel } from './components/layout/LinksPanel.tsx'
@@ -15,6 +16,7 @@ function App() {
         <IntroPanel />
         <LinksPanel />
       </main>
+      <AppFooter />
     </div>
   )
 }

@@ -26,7 +26,9 @@ describe('App', () => {
 
   it('links the name in the header to the website', () => {
     renderApp()
-    expect(screen.getByRole('link', { name: 'Raúl Estévez' }).getAttribute('href')).toBe('https://raulesteveza.github.io/')
+    expect(within(screen.getByRole('banner')).getByRole('link', { name: 'Raúl Estévez' }).getAttribute('href')).toBe(
+      'https://raulesteveza.github.io/',
+    )
   })
 
   it('links to the source code and to the other tools', () => {
@@ -34,6 +36,11 @@ describe('App', () => {
     const links = screen.getByRole('region', { name: 'Downloads and links' })
     expect(within(links).getByRole('link', { name: 'Source code' }).getAttribute('href')).toBe('https://github.com/RaulEstevezA/Model2API')
     expect(within(links).getByRole('link', { name: 'All tools' }).getAttribute('href')).toBe('https://raulesteveza.github.io/tools/')
+  })
+
+  it('ends with the license in the footer', () => {
+    renderApp()
+    expect(within(screen.getByRole('contentinfo')).getByText('MIT License')).toBeTruthy()
   })
 
   it('changes the language of the page and stores it for the whole site', () => {
