@@ -153,6 +153,13 @@ button {
   gap: var(--gap-controls);
 }
 
+/* Small button inside a row (confirm, edit), radius 4px */
+.button--small {
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  font-size: var(--font-label);
+}
+
 /* ---------- Badges (components/badges.md) ---------- */
 
 /* Status badge in a list: neutral by default */
@@ -170,6 +177,22 @@ button {
   white-space: nowrap;
 }
 
+.badge--success {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.badge--accent {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.badge--danger {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
 .badge--warning {
   background: var(--warning-soft);
   color: var(--warning);
@@ -182,4 +205,160 @@ button {
   padding: var(--space-16);
   color: var(--muted);
   font-size: var(--font-small);
+}
+
+/* ---------- Forms (components/forms.md) ---------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  color: var(--muted);
+  font-size: var(--font-label);
+}
+
+.input,
+.select {
+  min-width: 0;
+  padding: var(--control-padding);
+  border: var(--border-line);
+  border-radius: var(--radius-sm);
+  background: var(--page-bg);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--font-small);
+}
+
+.input--mono {
+  font-family: var(--mono);
+}
+
+.select {
+  cursor: pointer;
+}
+
+.input:focus-visible,
+.select:focus-visible {
+  border-color: var(--accent);
+}
+
+.input:disabled,
+.select:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+/* Checkboxes drawn by the page, as in Api2Class: they look the same in every browser */
+input[type='checkbox'] {
+  display: inline-grid;
+  place-content: center;
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  border: 1px solid var(--muted);
+  border-radius: var(--radius-xs);
+  background: var(--page-bg);
+  cursor: pointer;
+  appearance: none;
+}
+
+input[type='checkbox']::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  background: var(--on-accent);
+  clip-path: polygon(14% 44%, 0 59%, 39% 100%, 100% 21%, 85% 7%, 38% 70%);
+  transform: scale(0);
+}
+
+input[type='checkbox']:checked {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+input[type='checkbox']:checked::before {
+  transform: scale(1);
+}
+
+input[type='checkbox']:hover:not(:checked) {
+  border-color: var(--text);
+}
+
+/* Checkbox with its text */
+.check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  color: var(--text);
+  font-size: var(--font-small);
+  cursor: pointer;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+/* ---------- Alerts (components/alerts.md) ---------- */
+
+/* Review box: a decision or a risk before acting */
+.review-box {
+  padding: 8px 12px;
+  border: 1px solid var(--warning);
+  border-radius: var(--radius);
+  background: var(--warning-soft);
+  color: var(--warning);
+  font-size: var(--font-label);
+}
+
+.review-box--danger {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--text);
+}
+
+.review-box summary {
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.review-box--danger summary {
+  color: var(--danger);
+}
+
+.review-box ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin: var(--space-8) 0 0;
+  padding-left: 18px;
+}
+
+/* A link-like button inside a review box: moves the focus to what the item is about */
+.review-box__link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font-family: var(--mono);
+  font-size: inherit;
+  font-weight: var(--weight-semibold);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Message after an action */
+.notice {
+  padding: 10px 16px;
+  border: 1px solid var(--success);
+  border-radius: var(--radius);
+  background: var(--success-soft);
+  color: var(--success);
+  font-size: var(--font-small);
+}
+
+.notice--error {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
 }
