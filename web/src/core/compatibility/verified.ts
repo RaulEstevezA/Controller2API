@@ -1,0 +1,53 @@
+/**
+ * Stacks whose generated projects have been built, run and called with their real tools
+ * (verification/run.sh, in Docker). The interface shows a stack as verified only when it is listed here.
+ *
+ * Update this list after running the verification: one entry per scenario that passed, with its date.
+ */
+import type { ArchitectureId, AuthId, DatabaseId, FrameworkId, PersistenceId, ProjectSettings } from './stack.ts'
+
+export interface VerifiedStack {
+  framework: FrameworkId
+  architecture: ArchitectureId
+  persistence: PersistenceId
+  database: DatabaseId | null
+  auth: AuthId
+  /** Day the scenario passed */
+  date: string
+}
+
+export const VERIFIED: readonly VerifiedStack[] = [
+  { framework: 'fastapi', architecture: 'layered', persistence: 'memory', database: null, auth: 'none', date: '2026-11-09' },
+  { framework: 'fastapi', architecture: 'modular', persistence: 'memory', database: null, auth: 'jwt', date: '2026-11-09' },
+  { framework: 'fastapi', architecture: 'layered', persistence: 'none', database: null, auth: 'apiKey', date: '2026-11-09' },
+  { framework: 'fastapi', architecture: 'layered', persistence: 'sqlalchemy', database: 'sqlite', auth: 'apiKey', date: '2026-11-09' },
+  { framework: 'fastapi', architecture: 'modular', persistence: 'sqlalchemy', database: 'sqlite', auth: 'none', date: '2026-11-09' },
+  { framework: 'fastapi', architecture: 'layered', persistence: 'sqlalchemy', database: 'postgresql', auth: 'jwt', date: '2026-11-09' },
+  { framework: 'fastapi', architecture: 'modular', persistence: 'sqlalchemy', database: 'mysql', auth: 'none', date: '2026-11-09' },
+  { framework: 'fastapi', architecture: 'layered', persistence: 'sqlalchemy', database: 'mariadb', auth: 'apiKey', date: '2026-11-09' },
+]
+
+/** - `verified`: this exact stack passed
+ * - `parts`: the persistence and database, the architecture and the authentication each passed with this
+ *   framework, but not together
+ * - `unverified`: some part never ran */
+export type Verification = 'verified' | 'parts' | 'unverified'
+
+/** How far a stack has been verified. */
+export function verification(
+  settings: Pick<ProjectSettings, 'framework' | 'architecture' | 'persistence' | 'database' | 'auth'>,
+): Verification {
+  const same = VERIFIED.filter((item) => item.framework === settings.framework)
+  const exact = same.some(
+    (item) =>
+      item.architecture === settings.architecture &&
+      item.persistence === settings.persistence &&
+      item.database === settings.database &&
+      item.auth === settings.auth,
+  )
+  if (exact) return 'verified'
+  const storage = same.some((item) => item.persistence === settings.persistence && item.database === settings.database)
+  const architecture = same.some((item) => item.architecture === settings.architecture)
+  const auth = same.some((item) => item.auth === settings.auth)
+  return storage && architecture && auth ? 'parts' : 'unverified'
+}
