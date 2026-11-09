@@ -6,10 +6,12 @@ import type { ApiSpec } from '../api/spec.ts'
 import type { FrameworkId, ProjectSettings } from '../compatibility/stack.ts'
 import { openApiYaml } from '../openapi/build.ts'
 import type { GeneratedFile, Generator } from './common/types.ts'
+import { expressGenerator } from './frameworks/express/index.ts'
 import { fastApiGenerator } from './frameworks/fastapi/index.ts'
 
 const GENERATORS: Partial<Record<FrameworkId, Generator>> = {
   fastapi: fastApiGenerator,
+  express: expressGenerator,
 }
 
 /** The generator of a framework, or undefined while it is not written. */

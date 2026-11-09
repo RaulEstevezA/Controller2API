@@ -40,12 +40,11 @@ describe('matrix', () => {
   })
 
   it('lists the databases of each persistence and explains known gaps', () => {
-    expect(databasesFor('express', 'mongoose')).toEqual(['mongodb'])
+    expect(databasesFor('fastapi', 'sqlalchemy')).toEqual(['postgresql', 'mysql', 'mariadb', 'sqlite'])
     expect(databasesFor('fastapi', 'memory')).toEqual([])
     expect(knownGap('springBoot', 'jpa', 'sqlite')).toBe('hibernateSqlite')
     expect(knownGap('fastapi', 'sqlalchemy', 'postgresql')).toBeNull()
     expect(knownGaps('springBoot')).toEqual(['hibernateSqlite'])
-    expect(knownGaps('express')).toEqual(['prismaMariadb'])
     expect(knownGaps('fastapi')).toEqual([])
   })
 

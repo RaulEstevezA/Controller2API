@@ -67,8 +67,6 @@ export const FRAMEWORKS: readonly FrameworkInfo[] = [
     persistence: [
       { id: 'memory', databases: [] },
       { id: 'none', databases: [] },
-      { id: 'prisma', databases: ['postgresql', 'mysql', 'sqlite'] },
-      { id: 'mongoose', databases: ['mongodb'] },
     ],
     auth: ['none', 'apiKey', 'jwt'],
   },

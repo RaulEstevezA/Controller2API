@@ -46,6 +46,15 @@ describe('generated projects', () => {
         const { spec, settings: resolved } = example(id, settings)
         const files = generateProject(spec, resolved)
         const paths = new Set(files.map((file) => file.path))
+        for (const file of files.filter((item) => item.path.endsWith('.ts'))) {
+          for (const match of file.content.matchAll(/from '(\.{1,2}\/[^']+)\.js'/g)) {
+            const target = [...file.path.split('/').slice(0, -1), ...match[1].split('/')].reduce<string[]>(
+              (parts, part) => (part === '..' ? parts.slice(0, -1) : part === '.' ? parts : [...parts, part]),
+              [],
+            )
+            expect(paths.has(`${target.join('/')}.ts`), `${id}: ${file.path} imports ${match[1]}`).toBe(true)
+          }
+        }
         for (const file of files.filter((item) => item.path.endsWith('.py'))) {
           for (const module of pythonImports(file.content)) {
             const path = module.replace(/\./g, '/')
