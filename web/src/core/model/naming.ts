@@ -96,6 +96,22 @@ export function singularize(word: string): string {
   return word.slice(0, -1)
 }
 
+/** Words whose plural is the same word. */
+const SAME_PLURAL = new Set(['data', 'metadata', 'news', 'series', 'species', 'info', 'information', 'media', 'equipment', 'feedback'])
+
+/** English plural of one word, keeping its case: `Category` → `Categories`, `address` → `addresses`.
+ * Used to name the resources of an API (`/categories`). */
+export function pluralize(word: string): string {
+  const lower = word.toLowerCase()
+  if (SAME_PLURAL.has(lower)) return word
+  const irregular = Object.entries(IRREGULAR).find(([, singular]) => singular === lower)
+  if (irregular) return word.slice(0, 1) + irregular[0].slice(1)
+  const upper = word === word.toUpperCase() && /[A-Z]/.test(word)
+  if (/[^aeiou]y$/.test(lower)) return word.slice(0, -1) + (upper ? 'IES' : 'ies')
+  if (/(s|x|z|ch|sh)$/.test(lower)) return word + (upper ? 'ES' : 'es')
+  return word + (upper ? 'S' : 's')
+}
+
 /** Makes a name usable as an identifier: never empty, not starting with a digit and not a reserved word. */
 export function safeIdentifier(name: string, reserved: ReadonlySet<string>, fallback: string): string {
   if (name === '') return fallback

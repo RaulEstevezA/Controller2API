@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { nameWords, singularize, toCamelCase, toPascalCase, toScreamingSnakeCase, toSnakeCase } from './naming.ts'
+import { nameWords, pluralize, singularize, toCamelCase, toPascalCase, toScreamingSnakeCase, toSnakeCase } from './naming.ts'
 import { allFields, defaultRoot, describeType, emptySchema, needsValue, primitive, type FieldDef, type ModelSchema } from './schema.ts'
 
 const field = (name: string, overrides: Partial<FieldDef> = {}): FieldDef => ({
@@ -26,6 +26,21 @@ describe('naming', () => {
     expect(singularize('items')).toBe('item')
     expect(singularize('addresses')).toBe('address')
     expect(singularize('status')).toBe('status')
+  })
+})
+
+describe('pluralize', () => {
+  it('writes English plurals, keeping the case', () => {
+    expect(['Category', 'address', 'box', 'person', 'day', 'data', 'Status', 'ORDER'].map(pluralize)).toEqual([
+      'Categories',
+      'addresses',
+      'boxes',
+      'people',
+      'days',
+      'data',
+      'Statuses',
+      'ORDERS',
+    ])
   })
 })
 
