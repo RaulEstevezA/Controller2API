@@ -78,7 +78,7 @@ export const FRAMEWORKS: readonly FrameworkInfo[] = [
     persistence: [
       { id: 'memory', databases: [] },
       { id: 'none', databases: [] },
-      { id: 'typeorm', databases: ['postgresql', 'mysql', 'mariadb', 'sqlite'] },
+      { id: 'typeorm', databases: ['postgresql', 'mysql', 'mariadb'] },
     ],
     auth: ['none', 'apiKey', 'jwt'],
   },

@@ -9,6 +9,7 @@ import type { GeneratedFile, Generator } from './common/types.ts'
 import { djangoRestGenerator } from './frameworks/djangoRest/index.ts'
 import { expressGenerator } from './frameworks/express/index.ts'
 import { fastApiGenerator } from './frameworks/fastapi/index.ts'
+import { nestJsGenerator } from './frameworks/nestjs/index.ts'
 import { springBootGenerator } from './frameworks/springBoot/index.ts'
 
 const GENERATORS: Partial<Record<FrameworkId, Generator>> = {
@@ -16,6 +17,7 @@ const GENERATORS: Partial<Record<FrameworkId, Generator>> = {
   express: expressGenerator,
   springBoot: springBootGenerator,
   djangoRest: djangoRestGenerator,
+  nestjs: nestJsGenerator,
 }
 
 /** The generator of a framework, or undefined while it is not written. */
