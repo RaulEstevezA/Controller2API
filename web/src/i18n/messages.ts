@@ -72,12 +72,6 @@ const en = {
   tagline: 'Turn data models into the code of a REST API you can run',
   introDescription:
     'Paste or open your models: classes and DTOs in Python, TypeScript, JavaScript, Java, C#, Kotlin or Dart, JSON, JSON Schema or OpenAPI. Model2API proposes the resources and endpoints of the API, explains each proposal and waits for you where it is not sure. Choose the framework (FastAPI, Django REST Framework, Express, NestJS or Spring Boot), the architecture, the persistence and the authentication, then copy each file or download the whole project, with its tests, its OpenAPI contract and a README to run it.',
-  privacyTitle: 'Your models stay on your computer',
-  privacyPoints: [
-    'Nothing you paste or open is sent to a server.',
-    'Your code is analyzed, never run.',
-    'Nothing is saved unless you choose to.',
-  ],
   linksLabel: 'Downloads and links',
   downloadDesktop: 'Download for desktop',
   downloadFor: (platform: string) => `Download for ${platform}`,
@@ -445,12 +439,6 @@ const es: Messages = {
   tagline: 'Convierte modelos de datos en el código de una API REST que puedes ejecutar',
   introDescription:
     'Pega o abre tus modelos: clases y DTOs en Python, TypeScript, JavaScript, Java, C#, Kotlin o Dart, JSON, JSON Schema u OpenAPI. Model2API propone los recursos y endpoints de la API, explica cada propuesta y te espera donde no está seguro. Elige el framework (FastAPI, Django REST Framework, Express, NestJS o Spring Boot), la arquitectura, la persistencia y la autenticación, y copia cada archivo o descarga el proyecto completo, con sus pruebas, su contrato OpenAPI y un README para ejecutarlo.',
-  privacyTitle: 'Tus modelos se quedan en tu equipo',
-  privacyPoints: [
-    'Nada de lo que pegas o abres se envía a un servidor.',
-    'Tu código se analiza, nunca se ejecuta.',
-    'No se guarda nada salvo que tú lo decidas.',
-  ],
   linksLabel: 'Descargas y enlaces',
   downloadDesktop: 'Descargar para escritorio',
   downloadFor: (platform) => `Descargar para ${platform}`,

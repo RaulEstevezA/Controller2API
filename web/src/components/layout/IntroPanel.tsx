@@ -1,6 +1,6 @@
 /**
- * Presentation of the tool: icon and name, what it does, how it treats the user's models, and the
- * examples to start from. Styled like the website's windows (personal_web_style layouts/tool-page.md).
+ * Presentation of the tool: icon and name, what it does and the examples to start
+ * from. Styled like the website's windows (personal_web_style layouts/tool-page.md).
  */
 import { EXAMPLES, type ExampleId } from '../../examples/index.ts'
 import { useI18n } from '../../i18n/useI18n.ts'
@@ -23,16 +23,6 @@ export function IntroPanel({ onExample }: { onExample: (id: ExampleId) => void }
         </div>
         <p className="intro__subtitle">{t.tagline}</p>
         <p className="intro__description">{t.introDescription}</p>
-        <div className="intro__privacy" role="note" aria-labelledby="privacy-title">
-          <p id="privacy-title" className="intro__privacy-title">
-            {t.privacyTitle}
-          </p>
-          <ul className="intro__privacy-list">
-            {t.privacyPoints.map((point) => (
-              <li key={point}>{point}</li>
-            ))}
-          </ul>
-        </div>
       </div>
       <div className="intro__side">
         <div className="intro__examples" role="group" aria-labelledby="examples-label">

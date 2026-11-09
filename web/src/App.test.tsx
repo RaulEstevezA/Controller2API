@@ -29,7 +29,6 @@ describe('App', () => {
   it('presents the tool with its name as the main heading', () => {
     renderApp()
     expect(screen.getByRole('heading', { level: 1, name: 'Model2API' })).toBeTruthy()
-    expect(screen.getByRole('note', { name: 'Your models stay on your computer' })).toBeTruthy()
   })
 
   it('links the name in the header to the website', () => {
