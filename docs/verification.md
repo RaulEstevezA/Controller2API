@@ -1,6 +1,6 @@
 # Verification
 
-Producing files is not proof that they work. Every stack the interface shows as verified has had a generated project built, run and called with its own tools, in Docker, by the scripts of `verification/`.
+Producing files is not proof that they work. Every stack Model2API offers has had a generated project built, run and called with its own tools, in Docker, by the scripts of `verification/`.
 
 ## What a run checks
 
@@ -29,11 +29,13 @@ Downloads (pip, npm, Maven) are cached in Docker volumes, so later runs are fast
 
 ## After a run
 
-Add every scenario that passed to `web/src/core/compatibility/verified.ts`, with its date. The interface shows:
+Add every scenario that passed to `web/src/core/compatibility/verified.ts`, with its date. That file is the record of what has run; it tells apart:
 
 - **Verified**: this exact stack passed.
 - **Verified by parts**: its storage and database, its architecture and its authentication each passed with this framework, but not together.
 - **Not verified**: some part never ran.
+
+Only offer a new option in `compatibility/stack.ts` once it has passed.
 
 ## What it found
 

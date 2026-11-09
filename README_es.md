@@ -28,7 +28,7 @@ Pegar o abrir los modelos  →  Revisar los endpoints propuestos  →  Elegir el
 | NestJS | Un módulo por recurso | En memoria, interfaces por implementar, TypeORM (PostgreSQL, MySQL, MariaDB) | Ninguna, clave de API, JWT con roles |
 | Spring Boot (Java 21) | Por capas, un paquete por recurso | En memoria, interfaces por implementar, JPA / Hibernate (PostgreSQL, MySQL, MariaDB) | Ninguna, clave de API, JWT con roles (Spring Security) |
 
-Cada proyecto incluye sus propias pruebas, que llaman a todos los endpoints. Todos los frameworks, almacenamientos, bases de datos y autenticaciones de la tabla se han verificado compilando, ejecutando y probando proyectos generados en Docker; la interfaz indica qué combinaciones exactas ([docs/verification.md](./docs/verification.md)).
+Cada proyecto incluye sus propias pruebas, que llaman a todos los endpoints. Todos los frameworks, almacenamientos, bases de datos y autenticaciones de la tabla se han verificado compilando, ejecutando y probando proyectos generados en Docker ([docs/verification.md](./docs/verification.md)).
 
 Los proyectos generados se escriben en inglés. Son un punto de partida que hay que revisar, no la promesa de un servicio listo para producción.
 

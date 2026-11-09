@@ -12,7 +12,7 @@ Notable changes to Model2API, the web and the desktop version together. The form
 - Web: checks the design before writing code (routes that clash, paths without the key, filters on fields that cannot be filtered…); an endpoint with an error is left out and the reason is shown.
 - Web: writes the OpenAPI 3.1 contract of the API, the same for every framework.
 - Web: writes projects for FastAPI, Django REST Framework, Express, NestJS and Spring Boot, by layers or one folder per resource, with storage in memory, as interfaces to implement, or with SQLAlchemy, the Django ORM, TypeORM or JPA on PostgreSQL, MySQL, MariaDB or SQLite; authentication with an API key or JWT with roles; one error format; validations with each framework's own tools; tests that call every endpoint; README and `.env.example`.
-- Web: shows which stacks have been verified by building, running and testing generated projects in Docker, and why the combinations that are not offered are not.
+- Web: only offers stacks that have been verified by building, running and testing generated projects in Docker.
 - Web: browse, copy and download each generated file, the OpenAPI contract, or the whole project as a .zip.
 - Web: three built-in examples, project files to save and open, and "Remember in this browser".
 - Web: the page of the tool, in English and Spanish, following the layout of the other tools.

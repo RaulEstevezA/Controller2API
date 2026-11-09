@@ -96,7 +96,7 @@ verification/               Builds, runs and calls the generated projects with t
 - **No invented decisions.** What the input declares is kept as it is. A proposal the rules are not sure about stays pending, is never applied on its own, and the generated code leaves a `TODO` in its place.
 - **Business logic is marked, not invented.** Non-CRUD endpoints get the full structure and a clearly marked place for the developer's logic.
 - **No needless layers.** A generator writes only the layers the chosen architecture needs.
-- **Verified means verified.** A stack combination is shown as verified only when `verification/` has built, run and called a generated project with it.
+- **Verified means verified.** A stack combination is recorded as verified only when `verification/` has built, run and called a generated project with it.
 - **Local first.** Inputs stay in memory. Only preferences are stored, plus the workspace when the user turns on "Remember in this browser".
 
 ## Desktop version
