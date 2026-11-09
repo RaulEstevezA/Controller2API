@@ -7,50 +7,33 @@
  * the referenced items first.
  */
 import type { SpecEndpoint, SpecResource } from '../../../api/spec.ts'
-import { shapeFields } from '../../../openapi/build.ts'
 import { sampleBody, updatableField, type JsonValue, type SampleReference } from '../../common/samples.ts'
+import {
+  TEST_API_KEY,
+  TEST_JWT_SECRET,
+  comparableFields,
+  creatable,
+  findEndpoint,
+  fixedPath,
+  keyWire,
+  missingKey,
+  pathWithKey,
+  sampleKeysDiffer,
+} from '../../common/testing.ts'
 import type { GeneratedFile } from '../../common/types.ts'
 import { fileText, lines } from '../../common/text.ts'
 import { pyDocstring, pyLiteral, pyString } from '../../languages/python/python.ts'
 import { names, type FastApiContext } from './context.ts'
 
-export const TEST_API_KEY = 'test-api-key'
-export const TEST_JWT_SECRET = 'test-secret-with-at-least-32-bytes!'
-
-/** A key no stored item has, by key type. */
-function missingKey(resource: SpecResource): string {
-  if (resource.key.type.scalar === 'integer') return '999999'
-  if (resource.key.type.scalar === 'uuid') return '00000000-0000-0000-0000-000000000000'
-  return 'missing-key'
-}
-
 /** A Python string for a path with a fixed key value: `"/customers/999999"`. */
 function fixedUrl(endpoint: SpecEndpoint, resource: SpecResource, value: string): string {
-  let path = endpoint.path
-  for (const param of endpoint.pathParams) path = path.replace(`{${param.name}}`, param.name === resource.key.param ? value : 'sample')
-  return pyString(path)
+  return pyString(fixedPath(endpoint, resource, value))
 }
 
 /** A Python f-string for a path with the key (and any other parameter) filled in. */
 function url(endpoint: SpecEndpoint, resource: SpecResource, key: string): string {
-  let path = endpoint.path
-  for (const param of endpoint.pathParams) path = path.replace(`{${param.name}}`, param.name === resource.key.param ? `{${key}}` : 'sample')
+  const path = pathWithKey(endpoint, resource).replace('{key}', `{${key}}`)
   return path.includes('{') ? `f${pyString(path)}` : pyString(path)
-}
-
-function find(resource: SpecResource, operation: SpecEndpoint['operation']): SpecEndpoint | undefined {
-  return resource.endpoints.find((endpoint) => endpoint.operation === operation)
-}
-
-/** Whether tests can create items of a resource: a create endpoint, a valid body and creatable references. */
-export function creatable(context: FastApiContext, resource: SpecResource, seen = new Set<string>()): boolean {
-  if (!find(resource, 'create') || sampleBody(context.spec, resource, 0).problem) return false
-  if (seen.has(resource.name)) return true
-  const next = new Set([...seen, resource.name])
-  return sampleBody(context.spec, resource, 0).sample.references.every((reference) => {
-    const target = context.spec.resources.find((item) => item.name === reference.resource)
-    return target !== undefined && creatable(context, target, next)
-  })
 }
 
 /** Python subscripts for a place in a body: `["lines"][0]["productId"]`. */
@@ -61,9 +44,9 @@ function subscript(path: SampleReference['path']): string {
 function helpersFile(context: FastApiContext): GeneratedFile {
   const blocks: string[] = []
   for (const resource of context.spec.resources) {
-    if (!creatable(context, resource)) continue
+    if (!creatable(context.spec, resource)) continue
     const variable = names(resource)
-    const create = find(resource, 'create')!
+    const create = findEndpoint(resource, 'create')!
     const first = sampleBody(context.spec, resource, 0).sample
     const second = sampleBody(context.spec, resource, 1).sample
     const fills = first.references.map((reference) => {
@@ -98,10 +81,6 @@ function helpersFile(context: FastApiContext): GeneratedFile {
     blocks.length > 0 ? blocks.join('\n\n\n') : '# No resource can be created through the API, so no helper is needed',
   )
   return { path: 'tests/helpers.py', content: fileText(content) }
-}
-
-function keyWire(resource: SpecResource): string {
-  return resource.fields.find((field) => field.name === resource.key.field)!.wire
 }
 
 function article(text: string): string {
@@ -178,28 +157,16 @@ function conftestFile(context: FastApiContext): GeneratedFile {
   return { path: 'tests/conftest.py', content: fileText(text) }
 }
 
-function readableScalars(resource: SpecResource, body: Record<string, JsonValue>): string[] {
-  const readable = new Set(shapeFields(resource.fields, 'read').map((field) => field.wire))
-  return resource.fields
-    .filter((field) => readable.has(field.wire) && !field.reference && field.wire in body)
-    .filter(
-      (field) =>
-        (field.type.kind === 'scalar' && ['string', 'integer', 'boolean'].includes(field.type.scalar) && !field.constraints.format) ||
-        field.type.kind === 'enum',
-    )
-    .map((field) => field.wire)
-}
-
 function resourceTests(context: FastApiContext, resource: SpecResource): GeneratedFile {
   const variable = names(resource)
   const key = keyWire(resource)
   const tests: string[] = []
-  const canCreate = creatable(context, resource)
+  const canCreate = creatable(context.spec, resource)
   const helpers = new Set<string>()
   const problem = sampleBody(context.spec, resource, 0).problem
-  const get = find(resource, 'get')
-  const create = find(resource, 'create')
-  const list = find(resource, 'list')
+  const get = findEndpoint(resource, 'get')
+  const create = findEndpoint(resource, 'create')
+  const list = findEndpoint(resource, 'list')
 
   if (context.pending) {
     for (const endpoint of [list, get].filter(Boolean) as SpecEndpoint[]) {
@@ -227,7 +194,7 @@ function resourceTests(context: FastApiContext, resource: SpecResource): Generat
       helpers.add(`create_${variable.one}`)
       helpers.add(`${variable.one}_payload`)
       const sent = sampleBody(context.spec, resource, 0).sample.body
-      const checks = readableScalars(resource, sent).map((wire) => `    assert created[${pyString(wire)}] == payload[${pyString(wire)}]`)
+      const checks = comparableFields(resource, sent).map((wire) => `    assert created[${pyString(wire)}] == payload[${pyString(wire)}]`)
       tests.push(
         lines(
           `def test_create_${variable.one}(client: TestClient, headers: dict[str, str]) -> None:`,
@@ -290,7 +257,7 @@ function resourceTests(context: FastApiContext, resource: SpecResource): Generat
       )
     }
     if (list) {
-      const distinct = sampleKeyDiffers(context, resource)
+      const distinct = sampleKeysDiffer(context.spec, resource)
       tests.push(
         lines(
           `def test_${pyNameOf(list)}(client: TestClient, headers: dict[str, str]) -> None:`,
@@ -332,7 +299,7 @@ function resourceTests(context: FastApiContext, resource: SpecResource): Generat
         )
       }
     }
-    const replace = find(resource, 'replace')
+    const replace = findEndpoint(resource, 'replace')
     if (replace && canCreate) {
       tests.push(
         lines(
@@ -343,13 +310,13 @@ function resourceTests(context: FastApiContext, resource: SpecResource): Generat
           resource.key.generated === null && `    payload[${pyString(key)}] = key`,
           `    response = client.put(${url(replace, resource, 'key')}, json=payload, headers=headers)`,
           '    assert response.status_code == 200, response.text',
-          readableScalars(resource, sampleBody(context.spec, resource, 1).sample.body)
+          comparableFields(resource, sampleBody(context.spec, resource, 1).sample.body)
             .filter((wire) => wire !== key)
             .map((wire) => `    assert response.json()[${pyString(wire)}] == payload[${pyString(wire)}]`),
         ),
       )
     }
-    const update = find(resource, 'update')
+    const update = findEndpoint(resource, 'update')
     const field = updatableField(resource)
     if (update && canCreate && field) {
       const value = sampleBody(context.spec, resource, 1).sample.body[field.wire] ?? null
@@ -375,7 +342,7 @@ function resourceTests(context: FastApiContext, resource: SpecResource): Generat
         )
       }
     }
-    const remove = find(resource, 'delete')
+    const remove = findEndpoint(resource, 'delete')
     if (remove && canCreate) {
       tests.push(
         lines(
@@ -442,16 +409,6 @@ function resourceTests(context: FastApiContext, resource: SpecResource): Generat
     tests.length > 0 ? tests.join('\n\n\n') : `def test_${variable.many}_have_no_endpoints() -> None:\n    pass`,
   )
   return { path: `tests/test_${variable.many}.py`, content: fileText(content) }
-}
-
-/** Whether the two sample bodies give different client-provided keys, so two items can be created. */
-function sampleKeyDiffers(context: FastApiContext, resource: SpecResource): boolean {
-  if (resource.key.generated !== null) return true
-  const key = keyWire(resource)
-  return (
-    JSON.stringify(sampleBody(context.spec, resource, 0).sample.body[key]) !==
-    JSON.stringify(sampleBody(context.spec, resource, 1).sample.body[key])
-  )
 }
 
 function pyNameOf(endpoint: SpecEndpoint): string {
