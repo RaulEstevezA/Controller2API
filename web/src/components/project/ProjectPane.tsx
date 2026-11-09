@@ -1,5 +1,5 @@
 /**
- * Project pane: the stack of the generated project, how far it has been verified, the tree of generated
+ * Project pane: the stack of the generated project, the tree of generated
  * files with a viewer, and the ways to take them: copy, download one file, the OpenAPI contract or the
  * whole project as a .zip. Everything is written in the browser.
  */
@@ -11,7 +11,6 @@ import {
   FRAMEWORKS,
   databasesFor,
   findFramework,
-  knownGaps,
   type ArchitectureId,
   type AuthId,
   type DatabaseId,
@@ -19,7 +18,6 @@ import {
   type PersistenceId,
   type ProjectSettings,
 } from '../../core/compatibility/stack.ts'
-import { verification } from '../../core/compatibility/verified.ts'
 import { createZip } from '../../core/export/zip.ts'
 import type { GeneratedFile } from '../../core/generators/common/types.ts'
 import { findGenerator } from '../../core/generators/registry.ts'
@@ -39,8 +37,6 @@ export interface ProjectPaneProps {
   onSettingsChange: (change: Partial<ProjectSettings>) => void
 }
 
-const VERIFICATION_BADGE = { verified: 'badge--success', parts: 'badge--accent', unverified: 'badge--warning' } as const
-
 export function ProjectPane({ spec, settings, files, onSettingsChange }: ProjectPaneProps) {
   const { t } = useI18n()
   const [chosen, setChosen] = useState<string | null>(null)
@@ -50,7 +46,6 @@ export function ProjectPane({ spec, settings, files, onSettingsChange }: Project
   const databases = databasesFor(settings.framework, settings.persistence)
   // The chosen file while it exists; the README otherwise, so the pane always shows something useful
   const file = files.find((item) => item.path === chosen) ?? files.find((item) => item.path === 'README.md') ?? files[0] ?? null
-  const state = verification(settings)
   const todos = files.reduce((total, item) => total + (item.content.match(/\bTODO\b/g)?.length ?? 0), 0)
   const generator = findGenerator(settings.framework)
 
@@ -204,15 +199,6 @@ export function ProjectPane({ spec, settings, files, onSettingsChange }: Project
               />
             </label>
           )}
-        </div>
-        <div className="project__notes">
-          <p>
-            <span className={`badge ${VERIFICATION_BADGE[state]}`}>{t.verificationBadge[state]}</span> {t.verificationText[state]}
-          </p>
-          {knownGaps(settings.framework).map((gap) => (
-            <p key={gap}>{t.gaps[gap] ?? gap}</p>
-          ))}
-          <p>{t.persistenceNote[settings.persistence]}</p>
         </div>
         {!generator ? (
           <p className="pane-empty">{t.notWrittenYet(framework.label)}</p>

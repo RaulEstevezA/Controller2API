@@ -21,7 +21,6 @@ import type {
 } from '../core/api/types.ts'
 import type { DesignIssue } from '../core/validation/design.ts'
 import type { ArchitectureId, AuthId, DatabaseId, LanguageId, PersistenceId } from '../core/compatibility/stack.ts'
-import type { Verification } from '../core/compatibility/verified.ts'
 import type { ProjectError } from '../core/project/project.ts'
 import type { ParseIssue } from '../core/importers/types.ts'
 import type { ExampleId } from '../examples/index.ts'
@@ -367,16 +366,6 @@ const en = {
     typeorm: 'TypeORM',
     jpa: 'JPA / Hibernate',
   } satisfies Record<PersistenceId, string>,
-  persistenceNote: {
-    memory: 'Data lives in memory while the API runs and is lost when it stops: replace the repositories to use a database.',
-    none: 'Each repository is an interface whose methods answer 501 until you write them.',
-    sqlalchemy: 'Missing tables are created at startup; for a real database use migrations (Model2DB writes them).',
-    djangoOrm: 'Django models; create their migrations with makemigrations, as the README explains.',
-    prisma: 'A Prisma schema; run its migration before starting the API.',
-    mongoose: 'Mongoose schemas on MongoDB.',
-    typeorm: 'TypeORM entities; tables are synchronized at startup while you develop.',
-    jpa: 'JPA entities and Spring Data repositories; Hibernate creates missing tables while you develop.',
-  } satisfies Record<PersistenceId, string>,
   databaseLabel: 'Database',
   databases: { postgresql: 'PostgreSQL', mysql: 'MySQL', mariadb: 'MariaDB', sqlite: 'SQLite', mongodb: 'MongoDB' } satisfies Record<
     DatabaseId,
@@ -386,21 +375,6 @@ const en = {
   auth: { none: 'None: every endpoint is public', apiKey: 'API key (X-API-Key)', jwt: 'JWT bearer token' } satisfies Record<AuthId, string>,
   defaultAccessLabel: 'By default, endpoints are for',
   javaPackageLabel: 'Java package',
-  verificationBadge: { verified: 'Verified', parts: 'Verified by parts', unverified: 'Not verified' } satisfies Record<
-    Verification,
-    string
-  >,
-  verificationText: {
-    verified: 'A project with exactly this stack was built, run and called with its real tools (Docker).',
-    parts: 'Its storage, architecture and authentication each passed with this framework, but not this exact combination.',
-    unverified: 'No generated project with this stack has been run yet: review it with care.',
-  } satisfies Record<Verification, string>,
-  gaps: {
-    hibernateSqlite: 'SQLite is not offered: Hibernate has no official dialect for it.',
-    notGenerated: 'Prisma is not offered with NestJS: its TypeORM projects are.',
-    prismaMariadb: 'Prisma is not offered with MariaDB: Prisma names MySQL as its supported database.',
-    djangoNeedsOrm: 'Django REST Framework always stores through the Django ORM.',
-  } as Record<string, string>,
   fileTreeLabel: 'Generated files',
   fileLabel: (path: string) => `Content of ${path}`,
   copy: 'Copy',
@@ -726,35 +700,12 @@ const es: Messages = {
     typeorm: 'TypeORM',
     jpa: 'JPA / Hibernate',
   },
-  persistenceNote: {
-    memory:
-      'Los datos viven en memoria mientras la API funciona y se pierden al pararla: sustituye los repositorios para usar una base de datos.',
-    none: 'Cada repositorio es una interfaz cuyos métodos responden 501 hasta que los escribas.',
-    sqlalchemy: 'Las tablas que faltan se crean al arrancar; para una base de datos real usa migraciones (Model2DB las escribe).',
-    djangoOrm: 'Modelos de Django; crea sus migraciones con makemigrations, como explica el README.',
-    prisma: 'Un esquema de Prisma; ejecuta su migración antes de arrancar la API.',
-    mongoose: 'Esquemas de Mongoose sobre MongoDB.',
-    typeorm: 'Entidades de TypeORM; las tablas se sincronizan al arrancar mientras desarrollas.',
-    jpa: 'Entidades JPA y repositorios de Spring Data; Hibernate crea las tablas que faltan mientras desarrollas.',
-  },
   databaseLabel: 'Base de datos',
   databases: { postgresql: 'PostgreSQL', mysql: 'MySQL', mariadb: 'MariaDB', sqlite: 'SQLite', mongodb: 'MongoDB' },
   authLabel: 'Autenticación',
   auth: { none: 'Ninguna: todos los endpoints son públicos', apiKey: 'Clave de API (X-API-Key)', jwt: 'Token JWT (bearer)' },
   defaultAccessLabel: 'Por defecto, los endpoints son para',
   javaPackageLabel: 'Paquete Java',
-  verificationBadge: { verified: 'Verificada', parts: 'Verificada por partes', unverified: 'Sin verificar' },
-  verificationText: {
-    verified: 'Un proyecto con exactamente esta combinación se ha compilado, ejecutado y llamado con sus herramientas reales (Docker).',
-    parts: 'Su almacenamiento, su arquitectura y su autenticación han pasado cada uno con este framework, pero no esta combinación exacta.',
-    unverified: 'Todavía no se ha ejecutado ningún proyecto generado con esta combinación: revísalo con cuidado.',
-  },
-  gaps: {
-    hibernateSqlite: 'No se ofrece SQLite: Hibernate no tiene un dialecto oficial para ella.',
-    notGenerated: 'No se ofrece Prisma con NestJS: sí sus proyectos con TypeORM.',
-    prismaMariadb: 'No se ofrece Prisma con MariaDB: Prisma indica MySQL como base de datos compatible.',
-    djangoNeedsOrm: 'Django REST Framework siempre almacena con el ORM de Django.',
-  },
   fileTreeLabel: 'Archivos generados',
   fileLabel: (path) => `Contenido de ${path}`,
   copy: 'Copiar',
