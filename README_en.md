@@ -3,7 +3,7 @@
 Model2API turns data models into the code of a REST API you review before it is written, and then writes it: a project with its resources and endpoints, validation, error handling, persistence, authentication, tests, OpenAPI contract and a README to run it. Everything happens on your side, in the browser: what you paste or open is never sent anywhere, and code is analyzed, never run.
 
 > [!IMPORTANT]
-> Model2API is under development and not published yet. What already works is listed in the [changelog](./CHANGELOG.md); the rest of this page describes what the tool is being built to do.
+> Model2API is not published on the website yet. Everything on this page works; the desktop version is in preparation.
 
 ```text
 Paste or open the models  →  Review the proposed endpoints  →  Choose the framework and options  →  Download the project
@@ -11,7 +11,7 @@ Paste or open the models  →  Review the proposed endpoints  →  Choose the fr
 
 ## What it does
 
-1. **Reads the models**: classes and DTOs in Python (dataclasses, Pydantic), TypeScript, JavaScript, Java (classes, records), C#, Kotlin and Dart, JSON, JSON Schema and OpenAPI, or models received from Api2Class, Mapper and Model2DB. What the input declares (required fields, lengths, ranges, formats, enums, defaults, keys, relations) is kept as it is.
+1. **Reads the models**: classes and DTOs in Python (dataclasses, Pydantic), TypeScript, JavaScript, Java (classes, records), C#, Kotlin and Dart, JSON, JSON Schema and OpenAPI, or any of the 23 formats Mapper reads (also Go, Rust, PHP, Swift, Scala, GraphQL, Protocol Buffers, Prisma, Smithy, YAML, XML and CSV). What the input declares (required fields, lengths, ranges, formats, enums, defaults, keys, relations) is kept as it is.
 2. **Proposes the API**: a resource per model with its operations (`GET /products`, `GET /products/{id}`, `POST`, `PUT`, `PATCH`, `DELETE`), each with its parameters, bodies, responses, status codes and errors.
 3. **Explains every proposal and never decides an ambiguity**: what it is not sure about waits for you, and the generated code leaves a `TODO` where the decision goes.
 4. **Lets you change everything**: turn endpoints on and off, edit routes, add business endpoints that are not CRUD, configure pagination, filters, sorting, validation and permissions, with undo and redo.
@@ -20,18 +20,22 @@ Paste or open the models  →  Review the proposed endpoints  →  Choose the fr
 
 ## Frameworks
 
-| Language | Frameworks |
-|---|---|
-| Python | FastAPI, Django REST Framework |
-| TypeScript | Express, NestJS |
-| Java | Spring Boot |
+| Framework | Architecture | Storage | Authentication |
+|---|---|---|---|
+| FastAPI | By layers, one folder per resource | In memory, interfaces to implement, SQLAlchemy 2 (PostgreSQL, MySQL, MariaDB, SQLite) | None, API key, JWT with roles |
+| Django REST Framework | One app, one app per resource | Django ORM (PostgreSQL, MySQL, MariaDB, SQLite) | None, API key, JWT with roles |
+| Express (TypeScript) | By layers, one folder per resource | In memory, interfaces to implement | None, API key, JWT with roles |
+| NestJS | One module per resource | In memory, interfaces to implement, TypeORM (PostgreSQL, MySQL, MariaDB) | None, API key, JWT with roles |
+| Spring Boot (Java 21) | By layers, one package per resource | In memory, interfaces to implement, JPA / Hibernate (PostgreSQL, MySQL, MariaDB) | None, API key, JWT with roles (Spring Security) |
+
+Each project ships its own tests, which call every endpoint. Every framework, storage, database and authentication above has been verified by building, running and testing generated projects in Docker; the interface says which exact combinations ([docs/verification.md](./docs/verification.md)).
 
 Generated projects are written in English. They are a starting point to review, not a promise of a production-ready service.
 
 ## Versions
 
 - **Web**: React + TypeScript + Vite, in the browser.
-- **Desktop**: Python + PySide6, the same tool as an installable app. Both versions pass the same cases in `shared/test-cases/`.
+- **Desktop** (in preparation): Python + PySide6, the same tool as an installable app, checked against the same cases in `shared/test-cases/`.
 
 ## Development
 
@@ -45,7 +49,7 @@ npm run check    # types, lint, format and tests
 npm run build    # production build, served from /tools/Model2API/
 ```
 
-How the code is organized, and why: [docs/architecture.md](./docs/architecture.md) and [docs/decisions.md](./docs/decisions.md).
+How the code is organized, and why: [docs/architecture.md](./docs/architecture.md) and [docs/decisions.md](./docs/decisions.md). How the generated projects are verified: [docs/verification.md](./docs/verification.md).
 
 ## Suggestions
 

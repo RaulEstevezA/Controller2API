@@ -3,7 +3,7 @@
 Model2API convierte modelos de datos en el código de una API REST que revisas antes de que se escriba, y después lo escribe: un proyecto con sus recursos y endpoints, validación, gestión de errores, persistencia, autenticación, pruebas, contrato OpenAPI y un README para ejecutarlo. Todo ocurre en tu lado, en el navegador: lo que pegas o abres no se envía a ningún sitio, y el código se analiza, nunca se ejecuta.
 
 > [!IMPORTANT]
-> Model2API está en desarrollo y todavía no se ha publicado. Lo que ya funciona está en el [changelog](./CHANGELOG.md); el resto de esta página describe lo que la herramienta va a hacer.
+> Model2API todavía no se ha publicado en la web. Todo lo que describe esta página funciona; la versión de escritorio está en preparación.
 
 ```text
 Pegar o abrir los modelos  →  Revisar los endpoints propuestos  →  Elegir el framework y las opciones  →  Descargar el proyecto
@@ -11,7 +11,7 @@ Pegar o abrir los modelos  →  Revisar los endpoints propuestos  →  Elegir el
 
 ## Qué hace
 
-1. **Lee los modelos**: clases y DTOs en Python (dataclasses, Pydantic), TypeScript, JavaScript, Java (clases, records), C#, Kotlin y Dart, JSON, JSON Schema y OpenAPI, o modelos recibidos de Api2Class, Mapper y Model2DB. Lo que la entrada declara (campos obligatorios, longitudes, rangos, formatos, enums, valores por defecto, claves, relaciones) se toma tal cual.
+1. **Lee los modelos**: clases y DTOs en Python (dataclasses, Pydantic), TypeScript, JavaScript, Java (clases, records), C#, Kotlin y Dart, JSON, JSON Schema y OpenAPI, o cualquiera de los 23 formatos que lee Mapper (también Go, Rust, PHP, Swift, Scala, GraphQL, Protocol Buffers, Prisma, Smithy, YAML, XML y CSV). Lo que la entrada declara (campos obligatorios, longitudes, rangos, formatos, enums, valores por defecto, claves, relaciones) se toma tal cual.
 2. **Propone la API**: un recurso por modelo con sus operaciones (`GET /products`, `GET /products/{id}`, `POST`, `PUT`, `PATCH`, `DELETE`), cada una con sus parámetros, cuerpos, respuestas, códigos de estado y errores.
 3. **Explica cada propuesta y nunca decide una ambigüedad**: lo que no tiene claro te espera, y el código generado deja un `TODO` donde va la decisión.
 4. **Te deja cambiarlo todo**: activar y desactivar endpoints, editar rutas, añadir endpoints de negocio que no son CRUD, configurar paginación, filtros, orden, validaciones y permisos, con deshacer y rehacer.
@@ -20,18 +20,22 @@ Pegar o abrir los modelos  →  Revisar los endpoints propuestos  →  Elegir el
 
 ## Frameworks
 
-| Lenguaje | Frameworks |
-|---|---|
-| Python | FastAPI, Django REST Framework |
-| TypeScript | Express, NestJS |
-| Java | Spring Boot |
+| Framework | Arquitectura | Almacenamiento | Autenticación |
+|---|---|---|---|
+| FastAPI | Por capas, una carpeta por recurso | En memoria, interfaces por implementar, SQLAlchemy 2 (PostgreSQL, MySQL, MariaDB, SQLite) | Ninguna, clave de API, JWT con roles |
+| Django REST Framework | Una app, una app por recurso | Django ORM (PostgreSQL, MySQL, MariaDB, SQLite) | Ninguna, clave de API, JWT con roles |
+| Express (TypeScript) | Por capas, una carpeta por recurso | En memoria, interfaces por implementar | Ninguna, clave de API, JWT con roles |
+| NestJS | Un módulo por recurso | En memoria, interfaces por implementar, TypeORM (PostgreSQL, MySQL, MariaDB) | Ninguna, clave de API, JWT con roles |
+| Spring Boot (Java 21) | Por capas, un paquete por recurso | En memoria, interfaces por implementar, JPA / Hibernate (PostgreSQL, MySQL, MariaDB) | Ninguna, clave de API, JWT con roles (Spring Security) |
+
+Cada proyecto incluye sus propias pruebas, que llaman a todos los endpoints. Todos los frameworks, almacenamientos, bases de datos y autenticaciones de la tabla se han verificado compilando, ejecutando y probando proyectos generados en Docker; la interfaz indica qué combinaciones exactas ([docs/verification.md](./docs/verification.md)).
 
 Los proyectos generados se escriben en inglés. Son un punto de partida que hay que revisar, no la promesa de un servicio listo para producción.
 
 ## Versiones
 
 - **Web**: React + TypeScript + Vite, en el navegador.
-- **Escritorio**: Python + PySide6, la misma herramienta como aplicación instalable. Las dos versiones pasan los mismos casos de `shared/test-cases/`.
+- **Escritorio** (en preparación): Python + PySide6, la misma herramienta como aplicación instalable, comprobada con los mismos casos de `shared/test-cases/`.
 
 ## Desarrollo
 
@@ -45,7 +49,7 @@ npm run check    # tipos, lint, formato y tests
 npm run build    # build de producción, servido desde /tools/Model2API/
 ```
 
-Cómo está organizado el código, y por qué: [docs/architecture.md](./docs/architecture.md) y [docs/decisions.md](./docs/decisions.md).
+Cómo está organizado el código, y por qué: [docs/architecture.md](./docs/architecture.md) y [docs/decisions.md](./docs/decisions.md). Cómo se verifican los proyectos generados: [docs/verification.md](./docs/verification.md).
 
 ## Sugerencias
 
