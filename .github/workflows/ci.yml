@@ -1,0 +1,43 @@
+# Checks the web version: types, lint, format, tests and build.
+#
+# Runs on every push to main and pull request that changes the web version, and by hand
+# (Actions → CI → Run workflow). The desktop version gets its own job once it exists.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    paths:
+      - 'web/**'
+      - '.github/workflows/ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm test
+      - run: npm run build
