@@ -20,8 +20,12 @@ export interface ApiDesignState {
   history: Pick<History<unknown>, 'undo' | 'redo' | 'canUndo' | 'canRedo'>
 }
 
-export function useApiDesign(schema: ModelSchema | null): ApiDesignState {
-  const history = useHistory<ApiDesign | null>(null)
+/**
+ * @param schema The models the design is about, or null while there are none.
+ * @param initial A design to start from (the work kept in this browser), reconciled with the models.
+ */
+export function useApiDesign(schema: ModelSchema | null, initial: ApiDesign | null = null): ApiDesignState {
+  const history = useHistory<ApiDesign | null>(initial)
   const { present, push, reset: restart, undo, redo, canUndo, canRedo } = history
   const design = useMemo(() => (schema ? reconcile(present, schema) : null), [schema, present])
   const change = useCallback(

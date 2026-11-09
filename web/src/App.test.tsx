@@ -3,11 +3,19 @@
  * Interface tests of the whole screen: what a visitor sees when the tool opens.
  */
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App.tsx'
 import { I18nProvider } from './i18n/I18nProvider.tsx'
 
-afterEach(cleanup)
+beforeEach(() => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
+  cleanup()
+  localStorage.clear()
+})
 
 function renderApp() {
   return render(
@@ -92,6 +100,19 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: /^Download \.zip \(\d+ files\)$/ })).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: 'main.py' }))
     expect(screen.getByText('app/main.py')).toBeTruthy()
+  })
+
+  it('keeps the work in this browser only when asked, and restores it', () => {
+    const first = renderApp()
+    fireEvent.click(screen.getByRole('button', { name: 'Library' }))
+    expect(localStorage.getItem('model2api.workspace')).toBeNull()
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Remember in this browser' }))
+    vi.advanceTimersByTime(700)
+    expect(JSON.parse(localStorage.getItem('model2api.workspace')!).format).toBe('model2api-project')
+    first.unmount()
+    renderApp()
+    expect(screen.getByText('Your work kept in this browser has been restored.')).toBeTruthy()
+    expect(screen.getByRole('region', { name: 'Book' })).toBeTruthy()
   })
 
   it('reports where the input cannot be read', () => {

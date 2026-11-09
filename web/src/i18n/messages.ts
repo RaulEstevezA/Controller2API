@@ -22,6 +22,7 @@ import type {
 import type { DesignIssue } from '../core/validation/design.ts'
 import type { ArchitectureId, AuthId, DatabaseId, LanguageId, PersistenceId } from '../core/compatibility/stack.ts'
 import type { Verification } from '../core/compatibility/verified.ts'
+import type { ProjectError } from '../core/project/project.ts'
 import type { ParseIssue } from '../core/importers/types.ts'
 import type { ExampleId } from '../examples/index.ts'
 
@@ -414,6 +415,25 @@ const en = {
   downloadOpenApi: 'OpenAPI',
   downloadZip: (count: number) => `Download .zip (${en$(count)} ${plural(count, 'file', 'files')})`,
   todoCount: (count: number) => `${en$(count)} TODO ${plural(count, 'mark', 'marks')} left for you`,
+  // Projects
+  projectActions: 'Project file',
+  openProject: 'Open project',
+  saveProject: 'Save project',
+  remember: 'Remember in this browser',
+  rememberHint:
+    'Keeps your models, decisions and settings in this browser only, so you can continue another day. Nothing is sent anywhere.',
+  clearSaved: 'Delete the saved work',
+  clearSavedConfirm: 'The work kept in this browser will be deleted. Continue?',
+  restored: 'Your work kept in this browser has been restored.',
+  savedCleared: 'The work kept in this browser has been deleted.',
+  projectLoaded: (name: string) => `“${name}” opened.`,
+  projectError: (error: ProjectError) =>
+    ({
+      notJson: 'The file is not a Model2API project: it is not JSON.',
+      notProject: 'The file is not a Model2API project.',
+      newerVersion: 'The project was saved by a newer version of Model2API.',
+      noInput: 'The project holds no models.',
+    })[error],
 }
 
 /** Every text of the interface in one language. */
@@ -755,6 +775,23 @@ const es: Messages = {
   downloadOpenApi: 'OpenAPI',
   downloadZip: (count) => `Descargar .zip (${es$(count)} ${plural(count, 'archivo', 'archivos')})`,
   todoCount: (count) => `${es$(count)} ${plural(count, 'marca', 'marcas')} TODO para ti`,
+  projectActions: 'Archivo de proyecto',
+  openProject: 'Abrir proyecto',
+  saveProject: 'Guardar proyecto',
+  remember: 'Recordar en este navegador',
+  rememberHint: 'Guarda tus modelos, decisiones y ajustes solo en este navegador, para seguir otro día. No se envía nada a ningún sitio.',
+  clearSaved: 'Borrar el trabajo guardado',
+  clearSavedConfirm: 'Se borrará el trabajo guardado en este navegador. ¿Continuar?',
+  restored: 'Se ha recuperado el trabajo guardado en este navegador.',
+  savedCleared: 'Se ha borrado el trabajo guardado en este navegador.',
+  projectLoaded: (name) => `«${name}» abierto.`,
+  projectError: (error) =>
+    ({
+      notJson: 'El archivo no es un proyecto de Model2API: no es JSON.',
+      notProject: 'El archivo no es un proyecto de Model2API.',
+      newerVersion: 'El proyecto se guardó con una versión más reciente de Model2API.',
+      noInput: 'El proyecto no contiene modelos.',
+    })[error],
 }
 
 /** Texts by language. */
