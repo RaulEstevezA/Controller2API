@@ -282,6 +282,7 @@ _PERSISTENCE_EN = {
     "eloquent": "Eloquent",
     "doctrine": "Doctrine ORM",
     "efCore": "Entity Framework Core",
+    "exposed": "Exposed",
 }
 
 _DATABASES = {
@@ -291,7 +292,14 @@ _DATABASES = {
     "sqlite": "SQLite",
     "mongodb": "MongoDB",
 }
-_LANGUAGES = {"python": "Python", "typescript": "TypeScript", "java": "Java", "php": "PHP", "csharp": "C#"}
+_LANGUAGES = {
+    "python": "Python",
+    "typescript": "TypeScript",
+    "java": "Java",
+    "php": "PHP",
+    "csharp": "C#",
+    "kotlin": "Kotlin",
+}
 
 EN = SimpleNamespace(
     language_label="Language",
@@ -449,7 +457,7 @@ EN = SimpleNamespace(
     auth_label="Authentication",
     auth={"none": "None: every endpoint is public", "apiKey": "API key (X-API-Key)", "jwt": "JWT bearer token"},
     default_access_label="By default, endpoints are for",
-    java_package_label="Java package",
+    java_package_label="JVM package",
     file_tree_label="Generated files",
     file_label=lambda path: f"Content of {path}",
     copy="Copy",
@@ -630,7 +638,7 @@ ES = SimpleNamespace(
         "jwt": "Token JWT (bearer)",
     },
     default_access_label="Por defecto, los endpoints son para",
-    java_package_label="Paquete Java",
+    java_package_label="Paquete JVM",
     file_tree_label="Archivos generados",
     file_label=lambda path: f"Contenido de {path}",
     copy="Copiar",

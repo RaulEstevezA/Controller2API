@@ -16,6 +16,7 @@ def _generators() -> dict:
     from .frameworks.django_rest import DJANGO_REST_GENERATOR
     from .frameworks.express import EXPRESS_GENERATOR
     from .frameworks.fastapi import FASTAPI_GENERATOR
+    from .frameworks.ktor import KTOR_GENERATOR
     from .frameworks.laravel import LARAVEL_GENERATOR
     from .frameworks.nestjs import NESTJS_GENERATOR
     from .frameworks.spring_boot import SPRING_BOOT_GENERATOR
@@ -30,6 +31,7 @@ def _generators() -> dict:
         LARAVEL_GENERATOR,
         SYMFONY_GENERATOR,
         ASPNET_CORE_GENERATOR,
+        KTOR_GENERATOR,
     )
     return {generator["framework"]: generator for generator in every}
 

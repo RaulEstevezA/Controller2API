@@ -282,7 +282,7 @@ class ProjectPane(Pane):
                     ),
                 )
             )
-        if framework["language"] == "java":
+        if framework["language"] in ("java", "kotlin"):
             cells.append(
                 (t.java_package_label, CommitLine(settings["javaPackage"], lambda text: self._set(javaPackage=text)))
             )

@@ -100,6 +100,18 @@ FRAMEWORKS: tuple[dict, ...] = (
         ),
         "auth": ("none", "apiKey", "jwt"),
     },
+    {
+        "id": "ktor",
+        "label": "Ktor",
+        "language": "kotlin",
+        "architectures": ("layered", "modular"),
+        "persistence": (
+            {"id": "memory", "databases": ()},
+            {"id": "none", "databases": ()},
+            {"id": "exposed", "databases": ("postgresql", "mysql", "mariadb", "sqlite")},
+        ),
+        "auth": ("none", "apiKey", "jwt"),
+    },
 )
 
 DEFAULT_SETTINGS = {
