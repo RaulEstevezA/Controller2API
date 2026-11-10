@@ -9,7 +9,8 @@ import { valuesFile } from '../../languages/php/storage.ts'
 import { exceptionFiles, listingFiles } from '../../languages/php/support.ts'
 import { migrationFile, modelFile, repositoryFiles } from './persistence.ts'
 import { composerFile, envExampleFile, gitignoreFile, phpunitFile, readmeFile } from './project.ts'
-import { enumFiles, requestFiles } from './requests.ts'
+import { enumFiles } from '../../languages/php/model.ts'
+import { requestFiles } from './requests.ts'
 import { testFiles } from './tests.ts'
 import { serviceFile } from '../../languages/php/service.ts'
 import { baseControllerFile, controllerFile, resourceFile, routesFile } from './web.ts'
@@ -32,7 +33,7 @@ export const laravelGenerator: Generator = {
       providerFile(context),
       baseControllerFile(),
       routesFile(context),
-      ...enumFiles(context),
+      ...enumFiles(context, context.layout.enums()),
       migrationFile(context),
     ]
     for (const resource of spec.resources) {

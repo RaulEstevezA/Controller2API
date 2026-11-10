@@ -21,6 +21,8 @@ export interface PhpProject {
   namespace(resource: SpecResource, kind: 'repository' | 'service'): string
   /** Path of the file of a class (PSR-4) */
   classPath(namespace: string, name: string): string
+  /** The expression of the current time the server writes: UTC, ISO 8601 with milliseconds */
+  now: string
   /** How the in-memory storage writes a new UUID, and the classes it needs */
   uuid: { expression: string; imports: string[] }
   /** The tests: namespace and folder of the test classes, their base class and the trait with the test data */

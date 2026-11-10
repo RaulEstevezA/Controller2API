@@ -5,12 +5,12 @@
  * Presence follows openapi.yaml: a required field must be present (it may be "" or [] if its rules allow
  * them), an optional one may be left out, and null is accepted only where the field is nullable.
  */
-import type { SpecField, SpecObject, SpecResource, SpecType } from '../../../api/spec.ts'
+import type { SpecField, SpecResource, SpecType } from '../../../api/spec.ts'
 import { shapeFields } from '../../../openapi/build.ts'
-import type { JsonValue } from '../../common/samples.ts'
 import type { GeneratedFile } from '../../common/types.ts'
 import { fileText, lines } from '../../common/text.ts'
-import { PhpImports, phpClass, phpDoc, phpHeader, phpLiteral, phpRegex, phpString } from '../../languages/php/php.ts'
+import { PhpImports, phpClass, phpDoc, phpHeader, phpRegex, phpString } from '../../languages/php/php.ts'
+import { fieldDefaults } from '../../languages/php/model.ts'
 import { article, classPath, names, qualified, type LaravelContext } from './context.ts'
 
 /** Patterns of the text formats Laravel has no rule for, as in the other generators. */
@@ -30,30 +30,6 @@ interface RuleSet {
   /** Paths whose content is free */
   open: string[]
   imports: PhpImports
-}
-
-/** The PHP enum of a spec enum, with a case per value. */
-export function enumFiles(context: LaravelContext): GeneratedFile[] {
-  const namespace = context.layout.enums()
-  return context.spec.enums.map((item) => {
-    const used = new Set<string>()
-    const cases = item.values.map((value) => {
-      const base = phpClass(String(value))
-      let name = base
-      for (let n = 2; used.has(name); n++) name = `${base}${n}`
-      used.add(name)
-      return `    case ${name} = ${item.valueType === 'integer' ? value : phpString(String(value))};`
-    })
-    const content = lines(
-      ...phpHeader(namespace, new PhpImports(namespace)),
-      phpDoc(`Values of ${item.name}, with the value each one has in JSON.`),
-      `enum ${phpClass(item.name)}: ${item.valueType === 'integer' ? 'int' : 'string'}`,
-      '{',
-      cases,
-      '}',
-    )
-    return { path: classPath(namespace, phpClass(item.name)), content: fileText(content) }
-  })
 }
 
 /** The rules of a value of a type, without presence and nullability. */
@@ -190,42 +166,6 @@ function addInner(context: LaravelContext, type: SpecType, path: string, set: Ru
   }
 }
 
-/** PHP statements that give the fields left out of an object their defaults, nested objects included. */
-function defaults(context: LaravelContext, fields: SpecField[], target: string, depth: number, top: boolean): string[] {
-  const statements: string[] = []
-  for (const field of fields) {
-    const access = `${target}[${phpString(field.wire)}]`
-    if (top && field.defaultValue !== undefined && !field.required)
-      statements.push(
-        `if (! array_key_exists(${phpString(field.wire)}, ${target})) {`,
-        `    ${access} = ${phpLiteral(field.defaultValue as JsonValue)};`,
-        '}',
-      )
-    if (depth > 2 || field.reference) continue
-    const inner = (type: SpecType): SpecObject | undefined =>
-      type.kind === 'object' ? context.spec.objects.find((item) => item.name === type.name) : undefined
-    const object = inner(field.type)
-    if (object) {
-      const nested = defaults(context, object.fields, access, depth + 1, true)
-      if (nested.length > 0) statements.push(`if (isset(${access}) && is_array(${access})) {`, ...nested.map((line) => `    ${line}`), '}')
-    }
-    const items = field.type.kind === 'array' ? inner(field.type.items) : undefined
-    if (items) {
-      const index = `$index${depth}`
-      const nested = defaults(context, items.fields, `${access}[${index}]`, depth + 1, true)
-      if (nested.length > 0)
-        statements.push(
-          `foreach (array_keys(${access} ?? []) as ${index}) {`,
-          `    if (is_array(${access}[${index}])) {`,
-          ...nested.map((line) => `        ${line}`),
-          '    }',
-          '}',
-        )
-    }
-  }
-  return statements
-}
-
 function requestFile(context: LaravelContext, resource: SpecResource, shape: Shape): GeneratedFile {
   const namespace = context.layout.resource(resource, 'request')
   const name = names(resource)
@@ -234,7 +174,7 @@ function requestFile(context: LaravelContext, resource: SpecResource, shape: Sha
   const fields = shapeFields(resource.fields, shape)
   for (const field of fields) addField(context, field, shape, { kind: 'top' }, field.wire, set, 0)
   const todos = fields.filter((field) => field.todo).map((field) => `        // TODO: ${field.wire}: ${field.todo}`)
-  const fill = defaults(context, fields, '$values', 0, shape === 'create')
+  const fill = fieldDefaults(context, fields, '$values', 0, shape === 'create')
   const description =
     shape === 'create'
       ? `Body of a request that creates or replaces ${article(resource.singular)}.`

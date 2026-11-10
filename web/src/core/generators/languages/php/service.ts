@@ -11,9 +11,6 @@ import { fileText, lines } from '../../common/text.ts'
 import { PhpImports, phpDoc, phpHeader, phpLiteral, phpName, phpString } from './php.ts'
 import { innerObject, keyField, keyType, referencedResources, resourceNames, type PhpProject } from './project.ts'
 
-/** The timestamp the server writes: UTC, ISO 8601 with milliseconds, as JavaScript's toISOString. */
-const NOW = "now()->utc()->format('Y-m-d\\TH:i:s.v\\Z')"
-
 /** PHP statements that check every reference of a set of values, nested objects included. */
 function referenceChecks(
   context: PhpProject,
@@ -116,7 +113,7 @@ export function serviceFile(context: PhpProject, resource: SpecResource): Genera
       ),
     )
   const check = hasChecks && '        $this->checkReferences($values);'
-  const now = (operation: 'create' | 'replace' | 'update') => usesNow(resource, operation) && `        $now = ${NOW};`
+  const now = (operation: 'create' | 'replace' | 'update') => usesNow(resource, operation) && `        $now = ${context.now};`
   const fill = (operation: 'create' | 'replace' | 'update') => serverValues(resource, operation).map((line) => `        ${line}`)
   for (const endpoint of resource.endpoints) {
     const fn = phpName(endpoint.name)
