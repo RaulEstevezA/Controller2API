@@ -57,6 +57,8 @@ class LaravelContext:
     eloquent: bool
     exceptions: str = "App\\Exceptions"
     support: str = "App\\Support"
+    # The timestamp the server writes: UTC, ISO 8601 with milliseconds, as JavaScript's toISOString
+    now = "now()->utc()->format('Y-m-d\\TH:i:s.v\\Z')"
     uuid = {"expression": "(string) Str::uuid()", "imports": ["Illuminate\\Support\\Str"]}
     tests = {
         "namespace": "Tests\\Feature",

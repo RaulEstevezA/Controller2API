@@ -4,7 +4,8 @@ not depend on the framework. Mirrors web/src/core/generators/languages/php/proje
 
 A profile has: spec, settings, pending (the storage is left to write), exceptions and support (namespaces of the
 error and list classes), namespace(resource, kind) for a resource's repository or service, class_path(namespace,
-name), uuid ({"expression", "imports"}) and tests ({"namespace", "folder", "base", "data", "dataPath"}).
+name), now (the expression of the current time the server writes: UTC, ISO 8601 with milliseconds),
+uuid ({"expression", "imports"}) and tests ({"namespace", "folder", "base", "data", "dataPath"}).
 """
 
 import re

@@ -9,9 +9,6 @@ from ...common.text import file_text, lines
 from .php import PhpImports, php_doc, php_header, php_literal, php_name, php_string
 from .project import inner_object, key_field, key_type, referenced_resources, resource_names
 
-# The timestamp the server writes: UTC, ISO 8601 with milliseconds, as JavaScript's toISOString
-NOW = "now()->utc()->format('Y-m-d\\TH:i:s.v\\Z')"
-
 
 def _reference_checks(context, resource: dict, fields: list[dict], source: str, label: str, depth: int) -> list[str]:
     """PHP statements that check every reference of a set of values, nested objects included."""
@@ -132,7 +129,7 @@ def service_file(context, resource: dict) -> dict:
     check = has_checks and "        $this->checkReferences($values);"
 
     def now(operation: str):
-        return _uses_now(resource, operation) and f"        $now = {NOW};"
+        return _uses_now(resource, operation) and f"        $now = {context.now};"
 
     def fill(operation: str) -> list[str]:
         return [f"        {line}" for line in _server_values(resource, operation)]

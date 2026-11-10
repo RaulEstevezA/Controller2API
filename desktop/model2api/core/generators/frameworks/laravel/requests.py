@@ -6,10 +6,11 @@ Presence follows openapi.yaml: a required field must be present (it may be "" or
 optional one may be left out, and null is accepted only where the field is nullable.
 """
 
-from ....js import js_string, number_text
+from ....js import number_text
 from ....openapi.build import shape_fields
 from ...common.text import file_text, lines
-from ...languages.php.php import PhpImports, php_class, php_doc, php_header, php_literal, php_regex, php_string
+from ...languages.php.model import field_defaults
+from ...languages.php.php import PhpImports, php_class, php_doc, php_header, php_regex, php_string
 from .context import LaravelContext, article, class_path, names, qualified
 
 # Patterns of the text formats Laravel has no rule for, as in the other generators
@@ -26,36 +27,6 @@ class _RuleSet:
         # Paths whose content is free
         self.open: list[str] = []
         self.imports = imports
-
-
-def enum_files(context: LaravelContext) -> list[dict]:
-    """The PHP enum of a spec enum, with a case per value."""
-    namespace = context.layout.enums()
-    files = []
-    for item in context.spec["enums"]:
-        used: set[str] = set()
-        cases = []
-        integer = item["valueType"] == "integer"
-        for value in item["values"]:
-            base = php_class(js_string(value))
-            case = base
-            n = 2
-            while case in used:
-                case = f"{base}{n}"
-                n += 1
-            used.add(case)
-            literal = number_text(value) if integer else php_string(js_string(value))
-            cases.append(f"    case {case} = {literal};")
-        content = lines(
-            *php_header(namespace, PhpImports(namespace)),
-            php_doc(f"Values of {item['name']}, with the value each one has in JSON."),
-            f"enum {php_class(item['name'])}: {'int' if integer else 'string'}",
-            "{",
-            cases,
-            "}",
-        )
-        files.append({"path": class_path(namespace, php_class(item["name"])), "content": file_text(content)})
-    return files
 
 
 def _regex_rule(pattern: str) -> str:
@@ -203,51 +174,6 @@ def _add_inner(context: LaravelContext, type_ref: dict, path: str, rule_set: _Ru
         _add_inner(context, item, f"{path}.*", rule_set, depth + 1)
 
 
-def _inner_object(context: LaravelContext, type_ref: dict) -> dict | None:
-    if type_ref["kind"] != "object":
-        return None
-    return next((item for item in context.spec["objects"] if item["name"] == type_ref["name"]), None)
-
-
-def _defaults(context: LaravelContext, fields: list[dict], target: str, depth: int, top: bool) -> list[str]:
-    """PHP statements that give the fields left out of an object their defaults, nested objects included."""
-    statements: list[str] = []
-    for field in fields:
-        access = f"{target}[{php_string(field['wire'])}]"
-        if top and "defaultValue" in field and not field["required"]:
-            statements.extend(
-                [
-                    f"if (! array_key_exists({php_string(field['wire'])}, {target})) {{",
-                    f"    {access} = {php_literal(field['defaultValue'])};",
-                    "}",
-                ]
-            )
-        if depth > 2 or field.get("reference"):
-            continue
-        spec_object = _inner_object(context, field["type"])
-        if spec_object:
-            nested = _defaults(context, spec_object["fields"], access, depth + 1, True)
-            if nested:
-                statements.extend(
-                    [f"if (isset({access}) && is_array({access})) {{", *(f"    {line}" for line in nested), "}"]
-                )
-        items = _inner_object(context, field["type"]["items"]) if field["type"]["kind"] == "array" else None
-        if items:
-            index = f"$index{depth}"
-            nested = _defaults(context, items["fields"], f"{access}[{index}]", depth + 1, True)
-            if nested:
-                statements.extend(
-                    [
-                        f"foreach (array_keys({access} ?? []) as {index}) {{",
-                        f"    if (is_array({access}[{index}])) {{",
-                        *(f"        {line}" for line in nested),
-                        "    }",
-                        "}",
-                    ]
-                )
-    return statements
-
-
 def _request_file(context: LaravelContext, resource: dict, shape: str) -> dict:
     namespace = context.layout.resource(resource, "request")
     name = names(resource)
@@ -257,7 +183,7 @@ def _request_file(context: LaravelContext, resource: dict, shape: str) -> dict:
     for field in fields:
         _add_field(context, field, shape, None, field["wire"], rule_set, 0)
     todos = [f"        // TODO: {field['wire']}: {field['todo']}" for field in fields if field.get("todo")]
-    fill = _defaults(context, fields, "$values", 0, shape == "create")
+    fill = field_defaults(context, fields, "$values", 0, shape == "create")
     if shape == "create":
         description = f"Body of a request that creates or replaces {article(resource['singular'])}."
     else:
