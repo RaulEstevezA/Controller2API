@@ -10,7 +10,7 @@ Client-side tool that turns data models (classes, DTOs, JSON, schemas) into the 
 
 ## What is this repository?
 
-Model2API helps go from the models of an application to its backend: paste or open the models, review the resources and endpoints it proposes, choose the framework (FastAPI, Django REST Framework, Express, NestJS, Spring Boot, Laravel or Symfony), the architecture, the persistence and the authentication, and copy each file or download the whole project.
+Model2API helps go from the models of an application to its backend: paste or open the models, review the resources and endpoints it proposes, choose the framework (FastAPI, Django REST Framework, Express, NestJS, Spring Boot, Laravel, Symfony or ASP.NET Core), the architecture, the persistence and the authentication, and copy each file or download the whole project.
 
 It proposes, but never decides an ambiguity: decisions to review wait for the user, and the generated code leaves a `TODO` where each one goes, and where the business logic of a custom endpoint belongs.
 

@@ -12,6 +12,7 @@ For each scenario (a built-in example, a stack and some edits of the proposed de
 | `runners/node.sh` | `node:24-alpine` | Installs the dependencies, checks the types (`tsc --noEmit`), builds, runs the project's tests (Vitest or Jest) |
 | `runners/java.sh` | `maven:3.9-eclipse-temurin-21` | Compiles and runs the project's tests with Maven |
 | `runners/php.sh` | `php:8.5-cli` with the PostgreSQL and MySQL drivers and Composer, built once | Installs the dependencies with Composer, checks the syntax of every file (`php -l`), runs the project's tests with PHPUnit |
+| `runners/dotnet.sh` | `mcr.microsoft.com/dotnet/sdk:10.0` | Restores the packages, builds the solution and runs the project's tests with xUnit (`dotnet test`) |
 
 The tests are generated with the project: every enabled endpoint is called the way a client would (create and read back, list and paginate, replace, update part, delete, missing items, invalid bodies, null where it is not allowed, missing credentials, missing roles, business operations still to write).
 
@@ -50,4 +51,6 @@ The runs are not a formality: they found problems no unit test would, each fixed
 - Doctrine DBAL needs the PostgreSQL server version before it connects; `doctrine.yaml` now sets it (Symfony with Doctrine).
 - Doctrine does not quote reserved words such as `lines` (MySQL): tables and columns are now quoted in the mapping (Symfony with Doctrine).
 - The input classes listed their `use` statements before the enums they check were added, so a body with an enum failed with a 500 (Symfony).
+- ASP.NET Core answered a body without `Content-Type` (415) with its own ProblemDetails: client errors now use the error format of the contract (ASP.NET Core).
+- The MySQL provider of Entity Framework Core reads dates as `DateTime`, so reading a `DateOnly` failed with a 500: dates are converted for MySQL and MariaDB (ASP.NET Core with EF Core).
 - Test files that recreate the schema at the same time on one database (NestJS with TypeORM): they now take turns.
