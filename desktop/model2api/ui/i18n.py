@@ -279,6 +279,7 @@ _PERSISTENCE_EN = {
     "mongoose": "Mongoose",
     "typeorm": "TypeORM",
     "jpa": "JPA / Hibernate",
+    "eloquent": "Eloquent",
 }
 
 _DATABASES = {
@@ -288,7 +289,7 @@ _DATABASES = {
     "sqlite": "SQLite",
     "mongodb": "MongoDB",
 }
-_LANGUAGES = {"python": "Python", "typescript": "TypeScript", "java": "Java"}
+_LANGUAGES = {"python": "Python", "typescript": "TypeScript", "java": "Java", "php": "PHP"}
 
 EN = SimpleNamespace(
     language_label="Language",

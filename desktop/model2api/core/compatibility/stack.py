@@ -64,6 +64,18 @@ FRAMEWORKS: tuple[dict, ...] = (
         ),
         "auth": ("none", "apiKey", "jwt"),
     },
+    {
+        "id": "laravel",
+        "label": "Laravel",
+        "language": "php",
+        "architectures": ("layered", "modular"),
+        "persistence": (
+            {"id": "memory", "databases": ()},
+            {"id": "none", "databases": ()},
+            {"id": "eloquent", "databases": ("postgresql", "mysql", "mariadb", "sqlite")},
+        ),
+        "auth": ("none", "apiKey", "jwt"),
+    },
 )
 
 DEFAULT_SETTINGS = {

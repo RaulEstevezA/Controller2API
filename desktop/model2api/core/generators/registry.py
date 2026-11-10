@@ -15,10 +15,18 @@ def _generators() -> dict:
     from .frameworks.django_rest import DJANGO_REST_GENERATOR
     from .frameworks.express import EXPRESS_GENERATOR
     from .frameworks.fastapi import FASTAPI_GENERATOR
+    from .frameworks.laravel import LARAVEL_GENERATOR
     from .frameworks.nestjs import NESTJS_GENERATOR
     from .frameworks.spring_boot import SPRING_BOOT_GENERATOR
 
-    every = (FASTAPI_GENERATOR, EXPRESS_GENERATOR, DJANGO_REST_GENERATOR, NESTJS_GENERATOR, SPRING_BOOT_GENERATOR)
+    every = (
+        FASTAPI_GENERATOR,
+        EXPRESS_GENERATOR,
+        DJANGO_REST_GENERATOR,
+        NESTJS_GENERATOR,
+        SPRING_BOOT_GENERATOR,
+        LARAVEL_GENERATOR,
+    )
     return {generator["framework"]: generator for generator in every}
 
 
