@@ -18,6 +18,7 @@ def _generators() -> dict:
     from .frameworks.laravel import LARAVEL_GENERATOR
     from .frameworks.nestjs import NESTJS_GENERATOR
     from .frameworks.spring_boot import SPRING_BOOT_GENERATOR
+    from .frameworks.symfony import SYMFONY_GENERATOR
 
     every = (
         FASTAPI_GENERATOR,
@@ -26,6 +27,7 @@ def _generators() -> dict:
         NESTJS_GENERATOR,
         SPRING_BOOT_GENERATOR,
         LARAVEL_GENERATOR,
+        SYMFONY_GENERATOR,
     )
     return {generator["framework"]: generator for generator in every}
 

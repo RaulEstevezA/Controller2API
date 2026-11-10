@@ -46,6 +46,14 @@ def _js_regex_accepts(pattern: str, value: str) -> bool:
     return re.search(pattern, value) is not None
 
 
+def pattern_accepts(pattern: str, value: str) -> bool:
+    """Whether a regular expression accepts a text, as JavaScript reads it; False when the pattern does not compile."""
+    try:
+        return _js_regex_accepts(pattern, value)
+    except re.error:
+        return False
+
+
 def sample_from_pattern(pattern: str) -> str | None:
     """Builds a string that a simple regular expression accepts: literals, classes, \\d \\w \\s, groups,
     alternatives (the first is used) and the quantifiers ? * + {n} {n,} {n,m}. None when the pattern uses

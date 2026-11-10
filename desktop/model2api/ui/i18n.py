@@ -280,6 +280,7 @@ _PERSISTENCE_EN = {
     "typeorm": "TypeORM",
     "jpa": "JPA / Hibernate",
     "eloquent": "Eloquent",
+    "doctrine": "Doctrine ORM",
 }
 
 _DATABASES = {

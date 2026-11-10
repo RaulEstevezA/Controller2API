@@ -76,6 +76,18 @@ FRAMEWORKS: tuple[dict, ...] = (
         ),
         "auth": ("none", "apiKey", "jwt"),
     },
+    {
+        "id": "symfony",
+        "label": "Symfony",
+        "language": "php",
+        "architectures": ("layered", "modular"),
+        "persistence": (
+            {"id": "memory", "databases": ()},
+            {"id": "none", "databases": ()},
+            {"id": "doctrine", "databases": ("postgresql", "mysql", "mariadb", "sqlite")},
+        ),
+        "auth": ("none", "apiKey", "jwt"),
+    },
 )
 
 DEFAULT_SETTINGS = {
