@@ -7,6 +7,9 @@ import type { ApiSpec, SpecField, SpecResource } from '../../../api/spec.ts'
 import type { ProjectSettings } from '../../../compatibility/stack.ts'
 import { phpClass, phpName } from './php.ts'
 
+// Shared with every generator; kept importable from here for the PHP writers
+export { innerObject, referencedResources } from '../../common/references.ts'
+
 /** The framework-specific choices of a PHP project, which the shared writers follow. */
 export interface PhpProject {
   spec: ApiSpec
@@ -49,32 +52,6 @@ export function keyField(resource: SpecResource): SpecField {
 /** The PHP type of the key: whole numbers are `int`, the rest text. */
 export function keyType(resource: SpecResource): string {
   return resource.key.type.scalar === 'integer' ? 'int' : 'string'
-}
-
-/** Resources a resource refers to, directly or inside its embedded objects, other than itself. */
-export function referencedResources(project: Pick<PhpProject, 'spec'>, resource: SpecResource): SpecResource[] {
-  const found = new Set<string>()
-  const visit = (fields: SpecField[], seen: Set<string>) => {
-    for (const field of fields) {
-      if (field.reference) found.add(field.reference)
-      const inner = innerObject(field.type)
-      if (inner && !seen.has(inner)) {
-        const object = project.spec.objects.find((item) => item.name === inner)
-        if (object) visit(object.fields, new Set([...seen, inner]))
-      }
-    }
-  }
-  visit(resource.fields, new Set())
-  found.delete(resource.name)
-  return project.spec.resources.filter((item) => found.has(item.name))
-}
-
-/** The embedded object a type holds, directly or as the items of a list or map. */
-export function innerObject(type: SpecField['type']): string | null {
-  if (type.kind === 'object') return type.name
-  if (type.kind === 'array') return innerObject(type.items)
-  if (type.kind === 'map') return innerObject(type.value)
-  return null
 }
 
 export function article(text: string): string {
