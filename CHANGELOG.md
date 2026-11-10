@@ -16,6 +16,7 @@ Notable changes to Model2API, the web and the desktop version together. The form
 - Web: browse, copy and download each generated file, the OpenAPI contract, or the whole project as a .zip.
 - Web: three built-in examples, project files to save and open, and "Remember in this browser".
 - Web: the page of the tool, in English and Spanish, following the layout of the other tools.
+- Web: writes Laravel 13 projects (PHP 8.3+), by layers or one folder per resource, with storage in memory, as interfaces to implement, or with Eloquent on PostgreSQL, MySQL, MariaDB or SQLite; Form Requests that reject unknown fields and check blank texts that Laravel's own rules let through; API key or JWT with roles; PHPUnit tests that call every endpoint. Verified in Docker with every storage and database.
 - Desktop: the same tool as a Python + PySide6 app for macOS, Windows and Linux: the same importers, proposals, checks, OpenAPI contract and generators, which write exactly the same files as the web version for the shared cases; the models, endpoints and project panes; project files, "Remember on this computer", and saving files, the contract or the whole project as a .zip.
 
 [Unreleased]: https://github.com/RaulEstevezA/Model2API/commits/main

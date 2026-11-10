@@ -11,6 +11,7 @@ For each scenario (a built-in example, a stack and some edits of the proposed de
 | `runners/python.sh` | `python:3.12-slim` | Installs `requirements-dev.txt`, compiles every module, runs the project's tests (pytest, or `manage.py test` for Django) |
 | `runners/node.sh` | `node:24-alpine` | Installs the dependencies, checks the types (`tsc --noEmit`), builds, runs the project's tests (Vitest or Jest) |
 | `runners/java.sh` | `maven:3.9-eclipse-temurin-21` | Compiles and runs the project's tests with Maven |
+| `runners/php.sh` | `php:8.5-cli` with the PostgreSQL and MySQL drivers and Composer, built once | Installs the dependencies with Composer, checks the syntax of every file (`php -l`), runs the project's tests with PHPUnit |
 
 The tests are generated with the project: every enabled endpoint is called the way a client would (create and read back, list and paginate, replace, update part, delete, missing items, invalid bodies, null where it is not allowed, missing credentials, missing roles, business operations still to write).
 
@@ -45,4 +46,5 @@ The runs are not a formality: they found problems no unit test would, each fixed
 - A UUID key the server assigns had no default on PostgreSQL (FastAPI with SQLAlchemy).
 - `lines` is a reserved word in MySQL and Hibernate did not quote it (Spring Boot with JPA).
 - Timestamps kept nanoseconds in the answer and microseconds in the database (Spring Boot with JPA).
+- Laravel's `RefreshDatabase` runs the migrations through Artisan, which needs Mockery in the tests (Laravel with Eloquent).
 - Test files that recreate the schema at the same time on one database (NestJS with TypeORM): they now take turns.
