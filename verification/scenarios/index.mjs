@@ -47,4 +47,12 @@ export const SCENARIOS = [
   { id: 'laravel-eloquent-postgresql-layered-jwt', example: 'library', settings: { framework: 'laravel', persistence: 'eloquent', database: 'postgresql', architecture: 'layered', auth: 'jwt' }, service: 'postgresql' },
   { id: 'laravel-eloquent-mysql-modular-none', example: 'store', settings: { framework: 'laravel', persistence: 'eloquent', database: 'mysql', architecture: 'modular', auth: 'none' }, edits: ['filters'], service: 'mysql' },
   { id: 'laravel-eloquent-mariadb-layered-apikey', example: 'catalog', settings: { framework: 'laravel', persistence: 'eloquent', database: 'mariadb', architecture: 'layered', auth: 'apiKey' }, service: 'mariadb' },
+  { id: 'symfony-memory-layered-none', example: 'store', settings: { framework: 'symfony', persistence: 'memory', architecture: 'layered', auth: 'none' }, edits: ['filters', 'custom'] },
+  { id: 'symfony-memory-modular-jwt', example: 'library', settings: { framework: 'symfony', persistence: 'memory', architecture: 'modular', auth: 'jwt' }, edits: ['roles'] },
+  { id: 'symfony-none-layered-apikey', example: 'catalog', settings: { framework: 'symfony', persistence: 'none', architecture: 'layered', auth: 'apiKey' } },
+  { id: 'symfony-doctrine-sqlite-layered-apikey', example: 'store', settings: { framework: 'symfony', persistence: 'doctrine', database: 'sqlite', architecture: 'layered', auth: 'apiKey' }, edits: ['filters'] },
+  { id: 'symfony-doctrine-sqlite-modular-none', example: 'catalog', settings: { framework: 'symfony', persistence: 'doctrine', database: 'sqlite', architecture: 'modular', auth: 'none' } },
+  { id: 'symfony-doctrine-postgresql-layered-jwt', example: 'library', settings: { framework: 'symfony', persistence: 'doctrine', database: 'postgresql', architecture: 'layered', auth: 'jwt' }, service: 'postgresql' },
+  { id: 'symfony-doctrine-mysql-modular-none', example: 'store', settings: { framework: 'symfony', persistence: 'doctrine', database: 'mysql', architecture: 'modular', auth: 'none' }, edits: ['filters'], service: 'mysql' },
+  { id: 'symfony-doctrine-mariadb-layered-apikey', example: 'catalog', settings: { framework: 'symfony', persistence: 'doctrine', database: 'mariadb', architecture: 'layered', auth: 'apiKey' }, service: 'mariadb' },
 ]

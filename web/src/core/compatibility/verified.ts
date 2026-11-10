@@ -60,6 +60,14 @@ export const VERIFIED: readonly VerifiedStack[] = [
   { framework: 'laravel', architecture: 'layered', persistence: 'eloquent', database: 'postgresql', auth: 'jwt', date: '2026-11-10' },
   { framework: 'laravel', architecture: 'modular', persistence: 'eloquent', database: 'mysql', auth: 'none', date: '2026-11-10' },
   { framework: 'laravel', architecture: 'layered', persistence: 'eloquent', database: 'mariadb', auth: 'apiKey', date: '2026-11-10' },
+  { framework: 'symfony', architecture: 'layered', persistence: 'memory', database: null, auth: 'none', date: '2026-11-10' },
+  { framework: 'symfony', architecture: 'modular', persistence: 'memory', database: null, auth: 'jwt', date: '2026-11-10' },
+  { framework: 'symfony', architecture: 'layered', persistence: 'none', database: null, auth: 'apiKey', date: '2026-11-10' },
+  { framework: 'symfony', architecture: 'layered', persistence: 'doctrine', database: 'sqlite', auth: 'apiKey', date: '2026-11-10' },
+  { framework: 'symfony', architecture: 'modular', persistence: 'doctrine', database: 'sqlite', auth: 'none', date: '2026-11-10' },
+  { framework: 'symfony', architecture: 'layered', persistence: 'doctrine', database: 'postgresql', auth: 'jwt', date: '2026-11-10' },
+  { framework: 'symfony', architecture: 'modular', persistence: 'doctrine', database: 'mysql', auth: 'none', date: '2026-11-10' },
+  { framework: 'symfony', architecture: 'layered', persistence: 'doctrine', database: 'mariadb', auth: 'apiKey', date: '2026-11-10' },
 ]
 
 /** - `verified`: this exact stack passed
