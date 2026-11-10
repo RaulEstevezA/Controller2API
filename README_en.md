@@ -3,7 +3,7 @@
 Model2API turns data models into the code of a REST API you review before it is written, and then writes it: a project with its resources and endpoints, validation, error handling, persistence, authentication, tests, OpenAPI contract and a README to run it. Everything happens on your side, in the browser: what you paste or open is never sent anywhere, and code is analyzed, never run.
 
 > [!IMPORTANT]
-> Model2API is not published on the website yet. Everything on this page works; the desktop version is in preparation.
+> Model2API is not published on the website yet. Everything on this page works, in the browser and in the desktop version.
 
 ```text
 Paste or open the models  →  Review the proposed endpoints  →  Choose the framework and options  →  Download the project
@@ -35,7 +35,7 @@ Generated projects are written in English. They are a starting point to review, 
 ## Versions
 
 - **Web**: React + TypeScript + Vite, in the browser.
-- **Desktop** (in preparation): Python + PySide6, the same tool as an installable app, checked against the same cases in `shared/test-cases/`.
+- **Desktop**: Python + PySide6, the same tool as an installable app, checked against the same cases in `shared/test-cases/` ([desktop/README_en.md](./desktop/README_en.md)).
 
 ## Development
 
