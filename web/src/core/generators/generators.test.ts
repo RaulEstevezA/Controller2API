@@ -9,6 +9,7 @@ import { openApiYaml } from '../openapi/build.ts'
 import { example } from '../test/fixtures.ts'
 import { compareText } from './common/text.ts'
 import { csClass, csProperty, csString } from './languages/csharp/csharp.ts'
+import { ktClass, ktName, ktString } from './languages/kotlin/kotlin.ts'
 import { findGenerator, generateProject } from './registry.ts'
 
 const EXAMPLES = ['store', 'library', 'catalog'] as const
@@ -65,6 +66,16 @@ describe('generated projects', () => {
             if (root && match[1].startsWith(`${root}.`)) expect(declared.has(match[1]), `${id}: ${file.path} uses ${match[1]}`).toBe(true)
           }
         }
+        // Kotlin: every import of the project's own packages names a package some file declares
+        const packages = new Set(files.flatMap((file) => [...file.content.matchAll(/^package ([\w.]+)$/gm)].map((match) => match[1])))
+        const base = resolved.javaPackage
+        for (const file of files.filter((item) => item.path.endsWith('.kt'))) {
+          for (const match of file.content.matchAll(/^import ([\w.]+)$/gm)) {
+            if (!match[1].startsWith(`${base}.`)) continue
+            const pkg = match[1].slice(0, match[1].lastIndexOf('.'))
+            expect(packages.has(pkg), `${id}: ${file.path} imports ${match[1]}`).toBe(true)
+          }
+        }
         for (const file of files.filter((item) => item.path.endsWith('.py'))) {
           for (const module of pythonImports(file.content)) {
             const path = module.replace(/\./g, '/')
@@ -100,5 +111,11 @@ describe('generated projects', () => {
     expect(csProperty('note', 'Note')).toBe('NoteValue')
     expect(csProperty('postal_code', 'Address')).toBe('PostalCode')
     expect(csString('say "hi"\\n')).toBe('"say \\"hi\\"\\\\n"')
+  })
+
+  it('writes Kotlin names and strings that compile', () => {
+    expect(ktClass('route')).toBe('RouteItem')
+    expect(ktName('object')).toBe('`object`')
+    expect(ktString('costs $5 "now"')).toBe('"costs \\$5 \\"now\\""')
   })
 })

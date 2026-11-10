@@ -188,7 +188,7 @@ export function ProjectPane({ spec, settings, files, onSettingsChange }: Project
               </select>
             </label>
           )}
-          {framework.language === 'java' && (
+          {(framework.language === 'java' || framework.language === 'kotlin') && (
             <label className="field">
               <span>{t.javaPackageLabel}</span>
               <CommitInput

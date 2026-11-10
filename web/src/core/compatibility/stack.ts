@@ -7,9 +7,9 @@
  * register the generator (generators/registry.ts).
  */
 
-export type FrameworkId = 'fastapi' | 'djangoRest' | 'express' | 'nestjs' | 'springBoot' | 'laravel' | 'symfony' | 'aspnetCore'
+export type FrameworkId = 'fastapi' | 'djangoRest' | 'express' | 'nestjs' | 'springBoot' | 'laravel' | 'symfony' | 'aspnetCore' | 'ktor'
 
-export type LanguageId = 'python' | 'typescript' | 'java' | 'php' | 'csharp'
+export type LanguageId = 'python' | 'typescript' | 'java' | 'php' | 'csharp' | 'kotlin'
 
 /** - `layered`: routes or controllers, services and repositories in one folder each
  * - `modular`: one folder per resource with its own routes, service and repository */
@@ -19,7 +19,18 @@ export type ArchitectureId = 'layered' | 'modular'
  * - `none`: repository interfaces to implement, with every method marked as pending
  * - the others: the ORM or ODM named */
 export type PersistenceId =
-  'memory' | 'none' | 'sqlalchemy' | 'djangoOrm' | 'prisma' | 'mongoose' | 'typeorm' | 'jpa' | 'eloquent' | 'doctrine' | 'efCore'
+  | 'memory'
+  | 'none'
+  | 'sqlalchemy'
+  | 'djangoOrm'
+  | 'prisma'
+  | 'mongoose'
+  | 'typeorm'
+  | 'jpa'
+  | 'eloquent'
+  | 'doctrine'
+  | 'efCore'
+  | 'exposed'
 
 export type DatabaseId = 'postgresql' | 'mysql' | 'mariadb' | 'sqlite' | 'mongodb'
 
@@ -131,6 +142,18 @@ export const FRAMEWORKS: readonly FrameworkInfo[] = [
     ],
     auth: ['none', 'apiKey', 'jwt'],
   },
+  {
+    id: 'ktor',
+    label: 'Ktor',
+    language: 'kotlin',
+    architectures: ['layered', 'modular'],
+    persistence: [
+      { id: 'memory', databases: [] },
+      { id: 'none', databases: [] },
+      { id: 'exposed', databases: ['postgresql', 'mysql', 'mariadb', 'sqlite'] },
+    ],
+    auth: ['none', 'apiKey', 'jwt'],
+  },
 ]
 
 export interface ProjectSettings {
@@ -144,7 +167,7 @@ export interface ProjectSettings {
   auth: AuthId
   /** Who may call an endpoint whose access is `default` when authentication is on */
   defaultAccess: 'public' | 'authenticated'
-  /** Java only: base package of the code (`com.example.shop`) */
+  /** JVM languages (Java, Kotlin): base package of the code (`com.example.shop`) */
   javaPackage: string
 }
 

@@ -10,6 +10,7 @@ import { aspNetCoreGenerator } from './frameworks/aspnetCore/index.ts'
 import { djangoRestGenerator } from './frameworks/djangoRest/index.ts'
 import { expressGenerator } from './frameworks/express/index.ts'
 import { fastApiGenerator } from './frameworks/fastapi/index.ts'
+import { ktorGenerator } from './frameworks/ktor/index.ts'
 import { laravelGenerator } from './frameworks/laravel/index.ts'
 import { nestJsGenerator } from './frameworks/nestjs/index.ts'
 import { springBootGenerator } from './frameworks/springBoot/index.ts'
@@ -25,6 +26,7 @@ const GENERATORS: Partial<Record<FrameworkId, Generator>> = {
   laravel: laravelGenerator,
   symfony: symfonyGenerator,
   aspnetCore: aspNetCoreGenerator,
+  ktor: ktorGenerator,
 }
 
 /** The generator of a framework, or undefined while it is not written. */
