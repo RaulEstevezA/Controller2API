@@ -41,7 +41,7 @@ export function FieldTable({ schema, resource, keyField, change }: FieldTablePro
           {resource.fields.map((field) => {
             const definition = definitions.get(field.field)
             const isKey = field.field === keyField
-            const constraints = definition ? readConstraints(definition) : null
+            const constraints = definition ? readConstraints(definition, schema.origin?.language) : null
             const subject = `${resource.model}.${field.field}`
             return (
               <tr key={field.field} className={field.include ? undefined : 'field-table__excluded'}>

@@ -1,7 +1,8 @@
 /**
  * Validations declared on a field, read from what the input already says: annotations and decorators
- * (Jakarta Bean Validation, class-validator, DataAnnotations, Pydantic, Django, JPA, SQLAlchemy, Prisma,
- * Zod checks, Go `validate` tags) and JSON Schema keywords. Nothing is inferred from names or examples.
+ * (Jakarta Bean Validation, class-validator, DataAnnotations, Symfony Validator, Laravel Data, Pydantic,
+ * Django, JPA, SQLAlchemy, Prisma, Zod checks, Go `validate` tags, Laravel rules) and JSON Schema keywords.
+ * Nothing is inferred from names or examples.
  *
  * Each notation is a reader (Strategy pattern) in `READERS`. To support a new one, write a reader that
  * turns one annotation into raw bounds and add it to the list; the normalization does the rest.
@@ -48,7 +49,9 @@ interface RawBounds {
   format?: StringFormat
 }
 
-type Reader = (annotation: Annotation, name: string) => RawBounds | null
+/** A notation's reader: one annotation, its simple lower-case name, and the language of the input when known
+ * (a name can mean different things in different languages). */
+type Reader = (annotation: Annotation, name: string, language: string | undefined) => RawBounds | null
 
 /** `Size`, `javax.validation.constraints.Size`, `field:Size`, `MaxLengthAttribute` → `size`, `maxlength`. */
 function simpleName(name: string): string {
@@ -133,6 +136,13 @@ function toPattern(text: string | undefined): string | undefined {
   return literal ? literal[1] : toText(text)
 }
 
+/** A PCRE pattern as PHP writes it, with its delimiters and flags (`'/^\d+$/'`, `'#^[a-z]+$#i'`) → `^\d+$`. */
+function withoutDelimiters(pattern: string | undefined): string | undefined {
+  if (pattern === undefined) return undefined
+  const delimited = /^([^\w\s\\])([\s\S]*)\1[a-zA-Z]*$/.exec(pattern)
+  return delimited ? delimited[2] : pattern
+}
+
 const FORMAT_NAMES: Record<string, StringFormat> = {
   email: 'email',
   isemail: 'email',
@@ -142,22 +152,36 @@ const FORMAT_NAMES: Record<string, StringFormat> = {
   isurl: 'uri',
   urlfield: 'uri',
   isuuid: 'uuid',
+  uuid: 'uuid',
   uuidfield: 'uuid',
   isdatestring: 'date-time',
   isiso8601: 'date-time',
 }
 
-/** Jakarta Bean Validation and Hibernate Validator (Java, Kotlin), class-validator (TypeScript) and
- * DataAnnotations (C#). Their names barely overlap, and where they do they mean the same. */
-const annotationReader: Reader = (annotation, name) => {
+/** Jakarta Bean Validation and Hibernate Validator (Java, Kotlin), class-validator (TypeScript),
+ * DataAnnotations (C#), Symfony Validator and Laravel Data (PHP). Their names barely overlap, and where
+ * they do they mean the same, except `Min`, `Max` and `Size(n)`: in Laravel Data (PHP) they bound whatever
+ * the type has (length, value or items), elsewhere `Min` / `Max` bound only a number. */
+const annotationReader: Reader = (annotation, name, language) => {
+  const laravel = language === 'php'
   const { named, positional } = readArgs(annotation)
   const first = positional[0] ?? named.get('value')
   if (FORMAT_NAMES[name] && !name.endsWith('field')) return { format: FORMAT_NAMES[name] }
   switch (name) {
     case 'size':
     case 'length':
-    case 'arraysize':
+    case 'count':
+    case 'arraysize': {
+      // Symfony: Length(exactly: 5), Count(min: 1, max: 3)
+      const exactly = toNumber(named.get('exactly'))
+      if (exactly !== undefined) return { sizeMin: exactly, sizeMax: exactly }
+      // Laravel Data: Size(5) is the exact length, value or number of items
+      if (laravel && name === 'size' && positional.length === 1 && named.size === 0) {
+        const size = toNumber(positional[0])
+        return { boundMin: size, boundMax: size }
+      }
       return { sizeMin: toNumber(named.get('min') ?? positional[0]), sizeMax: toNumber(named.get('max') ?? positional[1]) }
+    }
     case 'minlength':
     case 'arrayminsize':
       return { sizeMin: toNumber(first) }
@@ -172,9 +196,12 @@ const annotationReader: Reader = (annotation, name) => {
     case 'isnotempty':
       return { sizeMin: 1 }
     case 'min':
-      return { minimum: toNumber(first) }
+      return laravel ? { boundMin: toNumber(first) } : { minimum: toNumber(first) }
     case 'max':
-      return { maximum: toNumber(first) }
+      return laravel ? { boundMax: toNumber(first) } : { maximum: toNumber(first) }
+    case 'between':
+      // Laravel Data: Between(1, 10)
+      return { boundMin: toNumber(positional[0]), boundMax: toNumber(positional[1]) }
     case 'decimalmin': {
       const value = toNumber(first)
       return named.get('inclusive') === 'false' ? { exclusiveMinimum: value } : { minimum: value }
@@ -184,6 +211,8 @@ const annotationReader: Reader = (annotation, name) => {
       return named.get('inclusive') === 'false' ? { exclusiveMaximum: value } : { maximum: value }
     }
     case 'range': {
+      // Symfony: Range(min: 1, max: 10)
+      if (named.has('min') || named.has('max')) return { minimum: toNumber(named.get('min')), maximum: toNumber(named.get('max')) }
       // C#: [Range(1, 10)] or [Range(typeof(decimal), "0.01", "100")]
       const values = positional[0]?.startsWith('typeof') ? positional.slice(1) : positional
       return { minimum: toNumber(values[0]), maximum: toNumber(values[1]) }
@@ -198,6 +227,19 @@ const annotationReader: Reader = (annotation, name) => {
       return { exclusiveMaximum: 0 }
     case 'negativeorzero':
       return { maximum: 0 }
+    // Symfony: GreaterThan(0) or GreaterThan(value: 0); a property path or a date is not a number and is ignored
+    case 'greaterthan':
+      return { exclusiveMinimum: toNumber(first) }
+    case 'greaterthanorequal':
+      return { minimum: toNumber(first) }
+    case 'lessthan':
+      return { exclusiveMaximum: toNumber(first) }
+    case 'lessthanorequal':
+      return { maximum: toNumber(first) }
+    case 'regex':
+      // Symfony: Regex(pattern: '/^\d+$/'), and match: false accepts what does not match, which a pattern cannot say
+      if (named.get('match') === 'false') return null
+      return { pattern: withoutDelimiters(toText(named.get('pattern') ?? first)) }
     case 'pattern':
       return { pattern: toText(named.get('regexp') ?? first) }
     case 'matches':
@@ -310,8 +352,44 @@ const goTagReader: Reader = (annotation) => {
   return bounds
 }
 
+/** Laravel validation rules, as Laravel Data's `#[Rule('required|max:120')]` or `#[Rule(['required', 'email'])]`
+ * declares them. `min`, `max`, `between` and `size` bound whatever the type has; `gt`, `gte`, `lt` and `lte`
+ * only count when they compare with a number, not with another field. */
+const laravelRuleReader: Reader = (annotation, name) => {
+  if (name !== 'rule') return null
+  const rules: string[] = []
+  for (const arg of splitArgs(annotation.args)) {
+    const list = /^\[([\s\S]*)\]$/.exec(arg.trim())
+    // In an array each item is one rule (a pattern may hold a "|"); a text separates them with "|"
+    if (list) rules.push(...splitArgs(list[1]).map((item) => toText(item) ?? ''))
+    else rules.push(...(toText(arg) ?? '').split('|'))
+  }
+  const bounds: RawBounds = {}
+  for (const rule of rules) {
+    const colon = rule.indexOf(':')
+    const key = (colon < 0 ? rule : rule.slice(0, colon)).trim().toLowerCase()
+    const value = colon < 0 ? '' : rule.slice(colon + 1)
+    const [first, second] = value.split(',')
+    if (key === 'min') bounds.boundMin = toNumber(first)
+    else if (key === 'max') bounds.boundMax = toNumber(first)
+    else if (key === 'between') {
+      bounds.boundMin = toNumber(first)
+      bounds.boundMax = toNumber(second)
+    } else if (key === 'size') bounds.boundMin = bounds.boundMax = toNumber(first)
+    else if (key === 'gt') bounds.exclusiveMinimum = toNumber(first)
+    else if (key === 'gte') bounds.minimum = toNumber(first)
+    else if (key === 'lt') bounds.exclusiveMaximum = toNumber(first)
+    else if (key === 'lte') bounds.maximum = toNumber(first)
+    else if (key === 'email') bounds.format = 'email'
+    else if (key === 'url') bounds.format = 'uri'
+    else if (key === 'uuid') bounds.format = 'uuid'
+    else if (key === 'regex') bounds.pattern = withoutDelimiters(value)
+  }
+  return bounds
+}
+
 /** Every notation, tried in order on each annotation; the first that recognizes it reads it. */
-const READERS: readonly Reader[] = [zodReader, goTagReader, prismaReader, pythonAndOrmReader, annotationReader]
+const READERS: readonly Reader[] = [zodReader, goTagReader, prismaReader, laravelRuleReader, pythonAndOrmReader, annotationReader]
 
 const METADATA_FORMATS: Record<string, StringFormat> = {
   email: 'email',
@@ -407,16 +485,17 @@ function describeAnnotation(annotation: Annotation): string {
  * is ignored, because the generated code could not enforce it.
  *
  * @param field The field as the importer read it.
+ * @param language The language of the input (`schema.origin.language`), when known.
  * @returns The validations and the declarations they come from; empty when it declares none.
  */
-export function readConstraints(field: FieldDef): DeclaredConstraints {
+export function readConstraints(field: FieldDef, language?: string): DeclaredConstraints {
   const shape = shapeOf(field.type)
   const constraints: Constraints = {}
   const sources: string[] = []
   for (const annotation of field.annotations ?? []) {
     const name = simpleName(annotation.name)
     for (const reader of READERS) {
-      const bounds = reader(annotation, name)
+      const bounds = reader(annotation, name, language)
       if (!bounds) continue
       const before = JSON.stringify(compact(constraints))
       apply(constraints, bounds, shape)

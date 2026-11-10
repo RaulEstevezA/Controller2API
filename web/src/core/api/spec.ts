@@ -265,7 +265,7 @@ function resolveFields(resource: ResourceDesign, context: Context, key: SpecKey 
       required: !field.optional && !field.nullable && field.defaultValue === undefined,
       nullable: field.nullable,
       access,
-      constraints: readConstraints(field).constraints,
+      constraints: readConstraints(field, context.schema.origin?.language).constraints,
     }
     if (field.defaultValue !== undefined) spec.defaultValue = field.defaultValue
     if (isReference) spec.reference = target!.model
