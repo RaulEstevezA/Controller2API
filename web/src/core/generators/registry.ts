@@ -12,6 +12,7 @@ import { fastApiGenerator } from './frameworks/fastapi/index.ts'
 import { laravelGenerator } from './frameworks/laravel/index.ts'
 import { nestJsGenerator } from './frameworks/nestjs/index.ts'
 import { springBootGenerator } from './frameworks/springBoot/index.ts'
+import { symfonyGenerator } from './frameworks/symfony/index.ts'
 import { compareText } from './common/text.ts'
 
 const GENERATORS: Partial<Record<FrameworkId, Generator>> = {
@@ -21,6 +22,7 @@ const GENERATORS: Partial<Record<FrameworkId, Generator>> = {
   djangoRest: djangoRestGenerator,
   nestjs: nestJsGenerator,
   laravel: laravelGenerator,
+  symfony: symfonyGenerator,
 }
 
 /** The generator of a framework, or undefined while it is not written. */

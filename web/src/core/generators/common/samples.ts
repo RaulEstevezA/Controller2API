@@ -132,6 +132,15 @@ export function sampleFromPattern(pattern: string): string | null {
   }
 }
 
+/** Whether a regular expression accepts a text, as JavaScript reads it; false when the pattern does not compile. */
+export function patternAccepts(pattern: string, value: string): boolean {
+  try {
+    return new RegExp(pattern).test(value)
+  } catch {
+    return false
+  }
+}
+
 /** A text that respects the field's validations: its format, its pattern or its length. */
 function sampleText(constraints: Constraints, name: string, variant: number): string {
   switch (constraints.format) {

@@ -366,6 +366,7 @@ const en = {
     typeorm: 'TypeORM',
     jpa: 'JPA / Hibernate',
     eloquent: 'Eloquent',
+    doctrine: 'Doctrine ORM',
   } satisfies Record<PersistenceId, string>,
   databaseLabel: 'Database',
   databases: { postgresql: 'PostgreSQL', mysql: 'MySQL', mariadb: 'MariaDB', sqlite: 'SQLite', mongodb: 'MongoDB' } satisfies Record<
@@ -701,6 +702,7 @@ const es: Messages = {
     typeorm: 'TypeORM',
     jpa: 'JPA / Hibernate',
     eloquent: 'Eloquent',
+    doctrine: 'Doctrine ORM',
   },
   databaseLabel: 'Base de datos',
   databases: { postgresql: 'PostgreSQL', mysql: 'MySQL', mariadb: 'MariaDB', sqlite: 'SQLite', mongodb: 'MongoDB' },
