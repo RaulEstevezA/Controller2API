@@ -193,7 +193,7 @@ def _resolve_fields(resource: dict, context: _Context, key: dict | None) -> list
             "required": not field.get("optional") and not field.get("nullable") and not has_default,
             "nullable": field["nullable"],
             "access": access,
-            "constraints": read_constraints(field)["constraints"],
+            "constraints": read_constraints(field, (context.schema.get("origin") or {}).get("language"))["constraints"],
         }
         if has_default:
             spec["defaultValue"] = field["defaultValue"]

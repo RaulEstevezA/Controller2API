@@ -442,7 +442,8 @@ class EndpointsPane(Pane):
                 travels.addWidget(muted(t.travels_as_value))
             grid.addLayout(travels, row, 3, Qt.AlignmentFlag.AlignTop)
 
-            constraints = read_constraints(definition) if definition else None
+            language = (schema.get("origin") or {}).get("language")
+            constraints = read_constraints(definition, language) if definition else None
             if constraints and constraints["sources"]:
                 validations = muted(t.describe_constraints(constraints["constraints"]))
                 validations.setToolTip("\n".join(constraints["sources"]))

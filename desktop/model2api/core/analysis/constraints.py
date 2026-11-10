@@ -1,7 +1,7 @@
 """Validations declared on a field, read from what the input already says: annotations and decorators (Jakarta
-Bean Validation, class-validator, DataAnnotations, Pydantic, Django, JPA, SQLAlchemy, Prisma, Zod checks, Go
-`validate` tags) and JSON Schema keywords. Nothing is inferred from names or examples. Mirrors
-web/src/core/analysis/constraints.ts.
+Bean Validation, class-validator, DataAnnotations, Symfony Validator, Laravel Data, Pydantic, Django, JPA,
+SQLAlchemy, Prisma, Zod checks, Go `validate` tags, Laravel rules) and JSON Schema keywords. Nothing is inferred
+from names or examples. Mirrors web/src/core/analysis/constraints.ts.
 
 Each notation is a reader (Strategy pattern) in READERS. To support a new one, write a reader that turns one
 annotation into raw bounds and add it to the list; the normalization does the rest.
@@ -20,7 +20,9 @@ from ..model.schema import FieldDef, TypeRef
 
 Constraints = dict
 RawBounds = dict
-Reader = Callable[[dict, str], RawBounds | None]
+# A notation's reader: one annotation, its simple lower-case name, and the language of the input when known (a
+# name can mean different things in different languages)
+Reader = Callable[[dict, str, str | None], RawBounds | None]
 
 _PREFIX = re.compile(r"^[a-z]+:")
 _SEPARATORS = re.compile(r"\.|::|\\")
@@ -129,6 +131,17 @@ def _to_pattern(text: str | None) -> str | None:
     return literal.group(1) if literal else _to_text(text)
 
 
+_DELIMITED = re.compile(r"^([^\w\s\\])([\s\S]*)\1[a-zA-Z]*$", re.ASCII)
+
+
+def _without_delimiters(pattern: str | None) -> str | None:
+    """A PCRE pattern as PHP writes it, with its delimiters and flags ('/^\\d+$/', '#^[a-z]+$#i') → ^\\d+$."""
+    if pattern is None:
+        return None
+    delimited = _DELIMITED.match(pattern)
+    return delimited.group(2) if delimited else pattern
+
+
 FORMAT_NAMES = {
     "email": "email",
     "isemail": "email",
@@ -138,21 +151,41 @@ FORMAT_NAMES = {
     "isurl": "uri",
     "urlfield": "uri",
     "isuuid": "uuid",
+    "uuid": "uuid",
     "uuidfield": "uuid",
     "isdatestring": "date-time",
     "isiso8601": "date-time",
 }
 
 
-def _annotation_reader(annotation: dict, name: str) -> RawBounds | None:
-    """Jakarta Bean Validation and Hibernate Validator (Java, Kotlin), class-validator (TypeScript) and
-    DataAnnotations (C#). Their names barely overlap, and where they do they mean the same."""
+_COMPARISONS = {
+    "greaterthan": "exclusiveMinimum",
+    "greaterthanorequal": "minimum",
+    "lessthan": "exclusiveMaximum",
+    "lessthanorequal": "maximum",
+}
+
+
+def _annotation_reader(annotation: dict, name: str, language: str | None) -> RawBounds | None:
+    """Jakarta Bean Validation and Hibernate Validator (Java, Kotlin), class-validator (TypeScript), DataAnnotations
+    (C#), Symfony Validator and Laravel Data (PHP). Their names barely overlap, and where they do they mean the same,
+    except Min, Max and Size(n): in Laravel Data (PHP) they bound whatever the type has (length, value or items),
+    elsewhere Min / Max bound only a number."""
+    laravel = language == "php"
     named, positional = _read_args(annotation)
     first = positional[0] if positional else named.get("value")
     if name in FORMAT_NAMES and not name.endswith("field"):
         return {"format": FORMAT_NAMES[name]}
     second = positional[1] if len(positional) > 1 else None
-    if name in ("size", "length", "arraysize"):
+    if name in ("size", "length", "count", "arraysize"):
+        # Symfony: Length(exactly: 5), Count(min: 1, max: 3)
+        exactly = _to_number(named.get("exactly"))
+        if exactly is not None:
+            return {"sizeMin": exactly, "sizeMax": exactly}
+        # Laravel Data: Size(5) is the exact length, value or number of items
+        if laravel and name == "size" and len(positional) == 1 and not named:
+            size = _to_number(positional[0])
+            return {"boundMin": size, "boundMax": size}
         min_text = named["min"] if "min" in named else (positional[0] if positional else None)
         max_text = named["max"] if "max" in named else second
         return {"sizeMin": _to_number(min_text), "sizeMax": _to_number(max_text)}
@@ -166,9 +199,12 @@ def _annotation_reader(annotation: dict, name: str) -> RawBounds | None:
     if name in ("notblank", "notempty", "isnotempty"):
         return {"sizeMin": 1}
     if name == "min":
-        return {"minimum": _to_number(first)}
+        return {"boundMin": _to_number(first)} if laravel else {"minimum": _to_number(first)}
     if name == "max":
-        return {"maximum": _to_number(first)}
+        return {"boundMax": _to_number(first)} if laravel else {"maximum": _to_number(first)}
+    if name == "between":
+        # Laravel Data: Between(1, 10)
+        return {"boundMin": _to_number(positional[0] if positional else None), "boundMax": _to_number(second)}
     if name == "decimalmin":
         value = _to_number(first)
         return {"exclusiveMinimum": value} if named.get("inclusive") == "false" else {"minimum": value}
@@ -176,6 +212,9 @@ def _annotation_reader(annotation: dict, name: str) -> RawBounds | None:
         value = _to_number(first)
         return {"exclusiveMaximum": value} if named.get("inclusive") == "false" else {"maximum": value}
     if name == "range":
+        # Symfony: Range(min: 1, max: 10)
+        if "min" in named or "max" in named:
+            return {"minimum": _to_number(named.get("min")), "maximum": _to_number(named.get("max"))}
         # C#: [Range(1, 10)] or [Range(typeof(decimal), "0.01", "100")]
         values = positional[1:] if positional and positional[0].startswith("typeof") else positional
         return {
@@ -190,6 +229,14 @@ def _annotation_reader(annotation: dict, name: str) -> RawBounds | None:
         return {"exclusiveMaximum": 0}
     if name == "negativeorzero":
         return {"maximum": 0}
+    # Symfony: GreaterThan(0) or GreaterThan(value: 0); a property path or a date is not a number and is ignored
+    if name in _COMPARISONS:
+        return {_COMPARISONS[name]: _to_number(first)}
+    if name == "regex":
+        # Symfony: Regex(pattern: '/^\d+$/'), and match: false accepts what does not match, which a pattern cannot say
+        if named.get("match") == "false":
+            return None
+        return {"pattern": _without_delimiters(_to_text(named["pattern"] if "pattern" in named else first))}
     if name == "pattern":
         return {"pattern": _to_text(named["regexp"] if "regexp" in named else first)}
     if name in ("matches", "regularexpression"):
@@ -205,7 +252,7 @@ def _first_of(named: dict[str, str], *keys: str) -> str | None:
     return next((named[key] for key in keys if key in named), None)
 
 
-def _python_and_orm_reader(annotation: dict, name: str) -> RawBounds | None:
+def _python_and_orm_reader(annotation: dict, name: str, _language: str | None) -> RawBounds | None:
     """Pydantic Field(...), Django fields (CharField(max_length=80), EmailField()), SQLAlchemy
     mapped_column(String(80)) and JPA @Column(length = 80)."""
     named, positional = _read_args(annotation)
@@ -232,7 +279,7 @@ def _python_and_orm_reader(annotation: dict, name: str) -> RawBounds | None:
 _PRISMA_SIZED = re.compile(r"^db\.(?:VarChar|Char|NVarChar|NChar)$", re.IGNORECASE)
 
 
-def _prisma_reader(annotation: dict, _name: str) -> RawBounds | None:
+def _prisma_reader(annotation: dict, _name: str, _language: str | None) -> RawBounds | None:
     """Prisma native types with a size: @db.VarChar(80), @db.Char(3)."""
     return {"sizeMax": _to_number(annotation.get("args"))} if _PRISMA_SIZED.match(annotation["name"]) else None
 
@@ -254,7 +301,7 @@ _ZOD_FIXED = {
 }
 
 
-def _zod_reader(annotation: dict, _name: str) -> RawBounds | None:
+def _zod_reader(annotation: dict, _name: str, _language: str | None) -> RawBounds | None:
     """Zod checks, kept by the importer as z.<method> annotations."""
     if not annotation["name"].startswith("z."):
         return None
@@ -286,7 +333,7 @@ _GO_LIMITS = {"gte": "minimum", "lte": "maximum", "gt": "exclusiveMinimum", "lt"
 _GO_FORMATS = {"email": "email", "url": "uri", "uri": "uri", "uuid": "uuid", "uuid4": "uuid"}
 
 
-def _go_tag_reader(annotation: dict, _name: str) -> RawBounds | None:
+def _go_tag_reader(annotation: dict, _name: str, _language: str | None) -> RawBounds | None:
     """Go struct tags: validate:"required,min=2,max=50,email"."""
     if annotation["name"] != "tag":
         return None
@@ -309,8 +356,57 @@ def _go_tag_reader(annotation: dict, _name: str) -> RawBounds | None:
     return bounds
 
 
+_LIST = re.compile(r"^\[([\s\S]*)\]$")
+_RULE_BOUNDS = {"min": ("boundMin",), "max": ("boundMax",), "size": ("boundMin", "boundMax")}
+_RULE_LIMITS = {"gt": "exclusiveMinimum", "gte": "minimum", "lt": "exclusiveMaximum", "lte": "maximum"}
+_RULE_FORMATS = {"email": "email", "url": "uri", "uuid": "uuid"}
+
+
+def _laravel_rule_reader(annotation: dict, name: str, _language: str | None) -> RawBounds | None:
+    """Laravel validation rules, as Laravel Data's #[Rule('required|max:120')] or #[Rule(['required', 'email'])]
+    declares them. min, max, between and size bound whatever the type has; gt, gte, lt and lte only count when
+    they compare with a number, not with another field."""
+    if name != "rule":
+        return None
+    rules: list[str] = []
+    for arg in _split_args(annotation.get("args")):
+        items = _LIST.match(trim(arg))
+        # In an array each item is one rule (a pattern may hold a "|"); a text separates them with "|"
+        if items:
+            rules.extend(_to_text(item) or "" for item in _split_args(items.group(1)))
+        else:
+            rules.extend((_to_text(arg) or "").split("|"))
+    bounds: RawBounds = {}
+    for rule in rules:
+        colon = rule.find(":")
+        key = trim(rule if colon < 0 else rule[:colon]).lower()
+        value = "" if colon < 0 else rule[colon + 1 :]
+        parts = value.split(",")
+        first = parts[0]
+        if key in _RULE_BOUNDS:
+            for target in _RULE_BOUNDS[key]:
+                bounds[target] = _to_number(first)
+        elif key == "between":
+            bounds["boundMin"] = _to_number(first)
+            bounds["boundMax"] = _to_number(parts[1] if len(parts) > 1 else None)
+        elif key in _RULE_LIMITS:
+            bounds[_RULE_LIMITS[key]] = _to_number(first)
+        elif key in _RULE_FORMATS:
+            bounds["format"] = _RULE_FORMATS[key]
+        elif key == "regex":
+            bounds["pattern"] = _without_delimiters(value)
+    return bounds
+
+
 # Every notation, tried in order on each annotation; the first that recognizes it reads it
-READERS: tuple[Reader, ...] = (_zod_reader, _go_tag_reader, _prisma_reader, _python_and_orm_reader, _annotation_reader)
+READERS: tuple[Reader, ...] = (
+    _zod_reader,
+    _go_tag_reader,
+    _prisma_reader,
+    _laravel_rule_reader,
+    _python_and_orm_reader,
+    _annotation_reader,
+)
 
 _METADATA_FORMATS = {
     "email": "email",
@@ -448,8 +544,9 @@ def _snapshot(constraints: Constraints) -> str:
     return json.dumps(_compact(constraints))
 
 
-def read_constraints(field: FieldDef) -> dict:
-    """The validations a field declares and the declarations they come from: {"constraints", "sources"}.
+def read_constraints(field: FieldDef, language: str | None = None) -> dict:
+    """The validations a field declares and the declarations they come from: {"constraints", "sources"}. language
+    is the language of the input (schema["origin"]["language"]), when known.
 
     Only declarations that apply to the field's type are kept: a length on a number or a range on a text is
     ignored, because the generated code could not enforce it."""
@@ -459,7 +556,7 @@ def read_constraints(field: FieldDef) -> dict:
     for annotation in field.get("annotations") or []:
         name = _simple_name(annotation["name"])
         for reader in READERS:
-            bounds = reader(annotation, name)
+            bounds = reader(annotation, name, language)
             if bounds is None:
                 continue
             before = _snapshot(constraints)
