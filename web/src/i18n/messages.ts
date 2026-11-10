@@ -351,7 +351,7 @@ const en = {
   // Project pane
   projectName: 'Project name',
   frameworkLabel: 'Framework',
-  languages: { python: 'Python', typescript: 'TypeScript', java: 'Java' } satisfies Record<LanguageId, string>,
+  languages: { python: 'Python', typescript: 'TypeScript', java: 'Java', php: 'PHP' } satisfies Record<LanguageId, string>,
   notWrittenYet: (framework: string) => `${framework} · not available yet`,
   architectureLabel: 'Architecture',
   architectures: { layered: 'By layers', modular: 'One folder per resource' } satisfies Record<ArchitectureId, string>,
@@ -365,6 +365,7 @@ const en = {
     mongoose: 'Mongoose',
     typeorm: 'TypeORM',
     jpa: 'JPA / Hibernate',
+    eloquent: 'Eloquent',
   } satisfies Record<PersistenceId, string>,
   databaseLabel: 'Database',
   databases: { postgresql: 'PostgreSQL', mysql: 'MySQL', mariadb: 'MariaDB', sqlite: 'SQLite', mongodb: 'MongoDB' } satisfies Record<
@@ -685,7 +686,7 @@ const es: Messages = {
   },
   projectName: 'Nombre del proyecto',
   frameworkLabel: 'Framework',
-  languages: { python: 'Python', typescript: 'TypeScript', java: 'Java' },
+  languages: { python: 'Python', typescript: 'TypeScript', java: 'Java', php: 'PHP' },
   notWrittenYet: (framework) => `${framework} · todavía no disponible`,
   architectureLabel: 'Arquitectura',
   architectures: { layered: 'Por capas', modular: 'Una carpeta por recurso' },
@@ -699,6 +700,7 @@ const es: Messages = {
     mongoose: 'Mongoose',
     typeorm: 'TypeORM',
     jpa: 'JPA / Hibernate',
+    eloquent: 'Eloquent',
   },
   databaseLabel: 'Base de datos',
   databases: { postgresql: 'PostgreSQL', mysql: 'MySQL', mariadb: 'MariaDB', sqlite: 'SQLite', mongodb: 'MongoDB' },

@@ -7,9 +7,9 @@
  * register the generator (generators/registry.ts).
  */
 
-export type FrameworkId = 'fastapi' | 'djangoRest' | 'express' | 'nestjs' | 'springBoot'
+export type FrameworkId = 'fastapi' | 'djangoRest' | 'express' | 'nestjs' | 'springBoot' | 'laravel'
 
-export type LanguageId = 'python' | 'typescript' | 'java'
+export type LanguageId = 'python' | 'typescript' | 'java' | 'php'
 
 /** - `layered`: routes or controllers, services and repositories in one folder each
  * - `modular`: one folder per resource with its own routes, service and repository */
@@ -18,7 +18,7 @@ export type ArchitectureId = 'layered' | 'modular'
 /** - `memory`: repositories that keep the data in memory, to run the API without a database
  * - `none`: repository interfaces to implement, with every method marked as pending
  * - the others: the ORM or ODM named */
-export type PersistenceId = 'memory' | 'none' | 'sqlalchemy' | 'djangoOrm' | 'prisma' | 'mongoose' | 'typeorm' | 'jpa'
+export type PersistenceId = 'memory' | 'none' | 'sqlalchemy' | 'djangoOrm' | 'prisma' | 'mongoose' | 'typeorm' | 'jpa' | 'eloquent'
 
 export type DatabaseId = 'postgresql' | 'mysql' | 'mariadb' | 'sqlite' | 'mongodb'
 
@@ -91,6 +91,18 @@ export const FRAMEWORKS: readonly FrameworkInfo[] = [
       { id: 'memory', databases: [] },
       { id: 'none', databases: [] },
       { id: 'jpa', databases: ['postgresql', 'mysql', 'mariadb'] },
+    ],
+    auth: ['none', 'apiKey', 'jwt'],
+  },
+  {
+    id: 'laravel',
+    label: 'Laravel',
+    language: 'php',
+    architectures: ['layered', 'modular'],
+    persistence: [
+      { id: 'memory', databases: [] },
+      { id: 'none', databases: [] },
+      { id: 'eloquent', databases: ['postgresql', 'mysql', 'mariadb', 'sqlite'] },
     ],
     auth: ['none', 'apiKey', 'jwt'],
   },
