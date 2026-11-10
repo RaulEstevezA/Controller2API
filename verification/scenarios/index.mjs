@@ -39,4 +39,12 @@ export const SCENARIOS = [
   { id: 'fastapi-sqlalchemy-postgresql-layered-jwt', example: 'library', settings: { framework: 'fastapi', persistence: 'sqlalchemy', database: 'postgresql', architecture: 'layered', auth: 'jwt' }, service: 'postgresql' },
   { id: 'fastapi-sqlalchemy-mysql-modular-none', example: 'store', settings: { framework: 'fastapi', persistence: 'sqlalchemy', database: 'mysql', architecture: 'modular', auth: 'none' }, service: 'mysql' },
   { id: 'fastapi-sqlalchemy-mariadb-layered-apikey', example: 'catalog', settings: { framework: 'fastapi', persistence: 'sqlalchemy', database: 'mariadb', architecture: 'layered', auth: 'apiKey' }, service: 'mariadb' },
+  { id: 'laravel-memory-layered-none', example: 'store', settings: { framework: 'laravel', persistence: 'memory', architecture: 'layered', auth: 'none' }, edits: ['filters', 'custom'] },
+  { id: 'laravel-memory-modular-jwt', example: 'library', settings: { framework: 'laravel', persistence: 'memory', architecture: 'modular', auth: 'jwt' }, edits: ['roles'] },
+  { id: 'laravel-none-layered-apikey', example: 'catalog', settings: { framework: 'laravel', persistence: 'none', architecture: 'layered', auth: 'apiKey' } },
+  { id: 'laravel-eloquent-sqlite-layered-apikey', example: 'store', settings: { framework: 'laravel', persistence: 'eloquent', database: 'sqlite', architecture: 'layered', auth: 'apiKey' }, edits: ['filters'] },
+  { id: 'laravel-eloquent-sqlite-modular-none', example: 'catalog', settings: { framework: 'laravel', persistence: 'eloquent', database: 'sqlite', architecture: 'modular', auth: 'none' } },
+  { id: 'laravel-eloquent-postgresql-layered-jwt', example: 'library', settings: { framework: 'laravel', persistence: 'eloquent', database: 'postgresql', architecture: 'layered', auth: 'jwt' }, service: 'postgresql' },
+  { id: 'laravel-eloquent-mysql-modular-none', example: 'store', settings: { framework: 'laravel', persistence: 'eloquent', database: 'mysql', architecture: 'modular', auth: 'none' }, edits: ['filters'], service: 'mysql' },
+  { id: 'laravel-eloquent-mariadb-layered-apikey', example: 'catalog', settings: { framework: 'laravel', persistence: 'eloquent', database: 'mariadb', architecture: 'layered', auth: 'apiKey' }, service: 'mariadb' },
 ]

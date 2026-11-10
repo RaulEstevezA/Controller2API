@@ -15,6 +15,7 @@ runner_of() {
     fastapi-* | djangorest-*) echo ./runners/python.sh ;;
     express-* | nestjs-*) echo ./runners/node.sh ;;
     springboot-*) echo ./runners/java.sh ;;
+    laravel-*) echo ./runners/php.sh ;;
   esac
 }
 
