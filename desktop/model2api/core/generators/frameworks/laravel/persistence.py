@@ -11,6 +11,7 @@ Items travel as arrays keyed by their JSON names, the same shape the service and
 from ....js import number_text
 from ...common.text import file_text, lines
 from ...languages.php.php import PhpImports, php_doc, php_header, php_string
+from ...languages.php.storage import memory_repository_file, pending_repository_file, repository_contract_file
 from .context import LaravelContext, class_path, column, key_field, key_type, names, qualified
 
 _LISTING = ("App\\Support\\ListQuery", "App\\Support\\ListResult")
@@ -18,42 +19,6 @@ _LISTING = ("App\\Support\\ListQuery", "App\\Support\\ListResult")
 
 def php_file(namespace: str, name: str, imports: PhpImports, body: list) -> dict:
     return {"path": class_path(namespace, name), "content": file_text(lines(*php_header(namespace, imports), *body))}
-
-
-def values_file(context: LaravelContext) -> dict | None:
-    """Helpers the in-memory repositories share: comparing values as JSON would."""
-    if context.settings["persistence"] != "memory":
-        return None
-    namespace = "App\\Support"
-    return php_file(
-        namespace,
-        "Values",
-        PhpImports(namespace),
-        [
-            php_doc("Compares values as JSON does: a whole number equals the same number with decimals."),
-            "final class Values",
-            "{",
-            "    public static function same(mixed $left, mixed $right): bool",
-            "    {",
-            "        if (is_numeric($left) && is_numeric($right) && ! is_string($left) && ! is_string($right)) {",
-            "            return $left == $right;",
-            "        }",
-            "",
-            "        return $left === $right;",
-            "    }",
-            "",
-            "    /** Texts in character order, numbers by value. */",
-            "    public static function compare(mixed $left, mixed $right): int",
-            "    {",
-            "        if (is_string($left) && is_string($right)) {",
-            "            return strcmp($left, $right);",
-            "        }",
-            "",
-            "        return $left <=> $right;",
-            "    }",
-            "}",
-        ],
-    )
 
 
 def _is_scalar(field: dict, scalar: str) -> bool:
@@ -66,168 +31,16 @@ def _stored_as_json(field: dict) -> bool:
 
 
 def repository_files(context: LaravelContext, resource: dict) -> list[dict]:
+    files = [repository_contract_file(context, resource)]
+    if context.pending:
+        return [*files, pending_repository_file(context, resource)]
+    if not context.eloquent:
+        return [*files, memory_repository_file(context, resource)]
     namespace = context.layout.resource(resource, "repository")
     name = names(resource)
     key = key_type(resource)
-    key_wire = key_field(resource)["wire"]
     generated = resource["key"].get("generated")
     plural = resource["plural"]
-    files = [
-        php_file(
-            namespace,
-            name["repository"],
-            PhpImports(namespace).add(*_LISTING),
-            [
-                php_doc(
-                    f"Where {plural} are kept. The service depends only on this interface; items are arrays keyed by JSON name."
-                ),
-                f"interface {name['repository']}",
-                "{",
-                "    /** Items equal to every filter, in order, within the window; and how many match. */",
-                "    public function list(ListQuery $query): ListResult;",
-                "",
-                "    /** @return array<string, mixed>|null The item with this key, or null. */",
-                f"    public function get({key} $key): ?array;",
-                "",
-                "    /**",
-                f"     * Stores a new item{' and assigns its key' if generated else ''}.",
-                "     *",
-                "     * @param  array<string, mixed>  $item",
-                "     * @return array<string, mixed> The item as stored.",
-                "     */",
-                "    public function add(array $item): array;",
-                "",
-                "    /**",
-                "     * Stores the new state of an existing item: every field, as given.",
-                "     *",
-                "     * @param  array<string, mixed>  $item",
-                "     * @return array<string, mixed> The item as stored.",
-                "     */",
-                f"    public function save({key} $key, array $item): array;",
-                "",
-                "    /** Removes an existing item. */",
-                f"    public function delete({key} $key): void;",
-                "}",
-            ],
-        )
-    ]
-
-    if context.pending:
-        imports = PhpImports(namespace).add(*_LISTING, "App\\Exceptions\\NotImplementedException")
-        message = php_string(f"The storage of {plural} is not written yet")
-
-        def method(signature: str, returns: str) -> list[str]:
-            return [
-                f"    public function {signature}: {returns}",
-                "    {",
-                f"        // TODO: store {plural} in your database",
-                f"        throw new NotImplementedException({message});",
-                "    }",
-            ]
-
-        files.append(
-            php_file(
-                namespace,
-                name["pendingRepository"],
-                imports,
-                [
-                    php_doc(f"Storage of {plural} to write: every method answers 501 until it is implemented."),
-                    f"final class {name['pendingRepository']} implements {name['repository']}",
-                    "{",
-                    method("list(ListQuery $query)", "ListResult"),
-                    "",
-                    method(f"get({key} $key)", "?array"),
-                    "",
-                    method("add(array $item)", "array"),
-                    "",
-                    method(f"save({key} $key, array $item)", "array"),
-                    "",
-                    method(f"delete({key} $key)", "void"),
-                    "}",
-                ],
-            )
-        )
-        return files
-
-    if not context.eloquent:
-        imports = PhpImports(namespace).add(*_LISTING, "App\\Support\\Values")
-        if generated == "uuid":
-            imports.add("Illuminate\\Support\\Str")
-        if generated == "increment":
-            assign = f"        $item[{php_string(key_wire)}] = $this->nextKey++;"
-        elif generated == "uuid":
-            assign = f"        $item[{php_string(key_wire)}] = (string) Str::uuid();"
-        else:
-            assign = None
-        files.append(
-            php_file(
-                namespace,
-                name["memory"],
-                imports,
-                [
-                    php_doc(
-                        f"Keeps {plural} in memory: they are lost when the application stops. Use it to try the API."
-                    ),
-                    f"final class {name['memory']} implements {name['repository']}",
-                    "{",
-                    "    /** @var array<int|string, array<string, mixed>> */",
-                    "    private array $items = [];",
-                    generated == "increment" and ["", "    private int $nextKey = 1;"],
-                    "",
-                    "    public function list(ListQuery $query): ListResult",
-                    "    {",
-                    "        $items = array_values(array_filter($this->items, function (array $item) use ($query): bool {",
-                    "            foreach ($query->filters as $field => $value) {",
-                    "                if (! Values::same($item[$field] ?? null, $value)) {",
-                    "                    return false;",
-                    "                }",
-                    "            }",
-                    "",
-                    "            return true;",
-                    "        }));",
-                    "        if ($query->sortField !== null) {",
-                    "            $field = $query->sortField;",
-                    "            // Items without a value go last, whatever the order",
-                    "            $present = array_values(array_filter($items, fn (array $item) => ($item[$field] ?? null) !== null));",
-                    "            $missing = array_values(array_filter($items, fn (array $item) => ($item[$field] ?? null) === null));",
-                    "            usort($present, fn (array $a, array $b) => $query->descending",
-                    "                ? Values::compare($b[$field], $a[$field])",
-                    "                : Values::compare($a[$field], $b[$field]));",
-                    "            $items = [...$present, ...$missing];",
-                    "        }",
-                    "",
-                    "        return new ListResult(array_slice($items, $query->offset, $query->limit), count($items));",
-                    "    }",
-                    "",
-                    f"    public function get({key} $key): ?array",
-                    "    {",
-                    "        return $this->items[$key] ?? null;",
-                    "    }",
-                    "",
-                    "    public function add(array $item): array",
-                    "    {",
-                    assign,
-                    f"        $this->items[$item[{php_string(key_wire)}]] = $item;",
-                    "",
-                    "        return $item;",
-                    "    }",
-                    "",
-                    f"    public function save({key} $key, array $item): array",
-                    "    {",
-                    "        $this->items[$key] = $item;",
-                    "",
-                    "        return $item;",
-                    "    }",
-                    "",
-                    f"    public function delete({key} $key): void",
-                    "    {",
-                    "        unset($this->items[$key]);",
-                    "    }",
-                    "}",
-                ],
-            )
-        )
-        return files
 
     # Eloquent: the model is the row; the repository maps rows to the arrays the service works with
     model = name["model"]

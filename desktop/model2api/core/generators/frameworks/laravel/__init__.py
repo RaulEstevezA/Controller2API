@@ -3,22 +3,24 @@ is chosen. It composes the modules of this folder; each writes one kind of file.
 web/src/core/generators/frameworks/laravel/index.ts.
 """
 
+from ...languages.php.service import service_file
+from ...languages.php.storage import values_file
+from ...languages.php.support import exception_files, listing_files
 from .app import (
     api_request_file,
     blank_string_rule_file,
     bootstrap_files,
     config_file,
-    error_files,
-    listing_files,
+    error_renderer_file,
     provider_file,
     security_files,
 )
 from .context import create_context
-from .persistence import migration_file, model_file, repository_files, values_file
+from .persistence import migration_file, model_file, repository_files
 from .project import composer_file, env_example_file, gitignore_file, phpunit_file, readme_file
 from .requests import enum_files, request_files
 from .tests import test_files
-from .web import base_controller_file, controller_file, resource_file, routes_file, service_file
+from .web import base_controller_file, controller_file, resource_file, routes_file
 
 
 def _generate(spec: dict, settings: dict, open_api: str) -> list[dict]:
@@ -26,8 +28,9 @@ def _generate(spec: dict, settings: dict, open_api: str) -> list[dict]:
     code = [
         *bootstrap_files(context),
         config_file(context),
-        *error_files(),
-        *listing_files(),
+        *exception_files(context),
+        error_renderer_file(),
+        *listing_files(context),
         values_file(context),
         api_request_file(),
         blank_string_rule_file(),
