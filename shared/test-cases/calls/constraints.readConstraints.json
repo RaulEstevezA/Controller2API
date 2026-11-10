@@ -2110,5 +2110,552 @@
    "constraints": {},
    "sources": []
   }
+ },
+ {
+  "args": [
+   {
+    "name": "name",
+    "type": {
+     "kind": "primitive",
+     "name": "string"
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "string",
+    "annotations": [
+     {
+      "name": "NotBlank"
+     },
+     {
+      "name": "Length",
+      "args": "min: 3, max: 120"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "minLength": 3,
+    "maxLength": 120
+   },
+   "sources": [
+    "NotBlank()",
+    "Length(min: 3, max: 120)"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "postalCode",
+    "type": {
+     "kind": "primitive",
+     "name": "string"
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "string",
+    "annotations": [
+     {
+      "name": "Length",
+      "args": "exactly: 5"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "minLength": 5,
+    "maxLength": 5
+   },
+   "sources": [
+    "Length(exactly: 5)"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "capacity",
+    "type": {
+     "kind": "primitive",
+     "name": "integer",
+     "bits": 64
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "int",
+    "annotations": [
+     {
+      "name": "Range",
+      "args": "min: 1, max: 5000"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "minimum": 1,
+    "maximum": 5000
+   },
+   "sources": [
+    "Range(min: 1, max: 5000)"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "price",
+    "type": {
+     "kind": "primitive",
+     "name": "float",
+     "bits": 64
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "float",
+    "annotations": [
+     {
+      "name": "GreaterThan",
+      "args": "0"
+     },
+     {
+      "name": "LessThanOrEqual",
+      "args": "value: 999.99"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "maximum": 999.99,
+    "exclusiveMinimum": 0
+   },
+   "sources": [
+    "GreaterThan(0)",
+    "LessThanOrEqual(value: 999.99)"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "code",
+    "type": {
+     "kind": "primitive",
+     "name": "string"
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "string",
+    "annotations": [
+     {
+      "name": "Regex",
+      "args": "pattern: '/^[A-Z]{2}\\d+$/'"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "pattern": "^[A-Z]{2}\\d+$"
+   },
+   "sources": [
+    "Regex(pattern: '/^[A-Z]{2}\\d+$/')"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "nickname",
+    "type": {
+     "kind": "primitive",
+     "name": "string"
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "string",
+    "annotations": [
+     {
+      "name": "Regex",
+      "args": "pattern: '/\\d/', match: false"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {},
+   "sources": []
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "tags",
+    "type": {
+     "kind": "array",
+     "items": {
+      "kind": "primitive",
+      "name": "string"
+     }
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "array",
+    "annotations": [
+     {
+      "name": "Count",
+      "args": "min: 1, max: 3"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "minItems": 1,
+    "maxItems": 3
+   },
+   "sources": [
+    "Count(min: 1, max: 3)"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "reference",
+    "type": {
+     "kind": "primitive",
+     "name": "string"
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "string",
+    "annotations": [
+     {
+      "name": "Uuid"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "format": "uuid"
+   },
+   "sources": [
+    "Uuid()"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "title",
+    "type": {
+     "kind": "primitive",
+     "name": "string"
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "string",
+    "annotations": [
+     {
+      "name": "Max",
+      "args": "255"
+     },
+     {
+      "name": "Min",
+      "args": "3"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "minLength": 3,
+    "maxLength": 255
+   },
+   "sources": [
+    "Max(255)",
+    "Min(3)"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "stars",
+    "type": {
+     "kind": "primitive",
+     "name": "integer",
+     "bits": 64
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "int",
+    "annotations": [
+     {
+      "name": "Between",
+      "args": "1, 5"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "minimum": 1,
+    "maximum": 5
+   },
+   "sources": [
+    "Between(1, 5)"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "country",
+    "type": {
+     "kind": "primitive",
+     "name": "string"
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "string",
+    "annotations": [
+     {
+      "name": "Size",
+      "args": "2"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "minLength": 2,
+    "maxLength": 2
+   },
+   "sources": [
+    "Size(2)"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "tags",
+    "type": {
+     "kind": "array",
+     "items": {
+      "kind": "primitive",
+      "name": "any"
+     }
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "array",
+    "annotations": [
+     {
+      "name": "Max",
+      "args": "3"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "maxItems": 3
+   },
+   "sources": [
+    "Max(3)"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "author",
+    "type": {
+     "kind": "primitive",
+     "name": "string"
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "string",
+    "annotations": [
+     {
+      "name": "Rule",
+      "args": "'required|string|max:120'"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "maxLength": 120
+   },
+   "sources": [
+    "Rule('required|string|max:120')"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "email",
+    "type": {
+     "kind": "primitive",
+     "name": "string"
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "string",
+    "annotations": [
+     {
+      "name": "Rule",
+      "args": "['required', 'email', 'regex:/^[^|]+$/']"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "pattern": "^[^|]+$",
+    "format": "email"
+   },
+   "sources": [
+    "Rule(['required', 'email', 'regex:/^[^|]+$/'])"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "score",
+    "type": {
+     "kind": "primitive",
+     "name": "float",
+     "bits": 64
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "float",
+    "annotations": [
+     {
+      "name": "Rule",
+      "args": "'numeric|gte:0|lt:other'"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "minimum": 0
+   },
+   "sources": [
+    "Rule('numeric|gte:0|lt:other')"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "slug",
+    "type": {
+     "kind": "primitive",
+     "name": "string"
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "string",
+    "annotations": [
+     {
+      "name": "Regex",
+      "args": "'#^[a-z-]+$#'"
+     }
+    ]
+   },
+   "php"
+  ],
+  "result": {
+   "constraints": {
+    "pattern": "^[a-z-]+$"
+   },
+   "sources": [
+    "Regex('#^[a-z-]+$#')"
+   ]
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "code",
+    "type": {
+     "kind": "primitive",
+     "name": "string"
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "String",
+    "annotations": [
+     {
+      "name": "Min",
+      "args": "3"
+     }
+    ]
+   },
+   "java"
+  ],
+  "result": {
+   "constraints": {},
+   "sources": []
+  }
+ },
+ {
+  "args": [
+   {
+    "name": "level",
+    "type": {
+     "kind": "primitive",
+     "name": "integer",
+     "bits": 32
+    },
+    "nullable": false,
+    "optional": false,
+    "originalType": "int",
+    "annotations": [
+     {
+      "name": "Max",
+      "args": "10"
+     }
+    ]
+   },
+   "java"
+  ],
+  "result": {
+   "constraints": {
+    "maximum": 10
+   },
+   "sources": [
+    "Max(10)"
+   ]
+  }
  }
 ]

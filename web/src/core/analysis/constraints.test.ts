@@ -180,6 +180,71 @@ class User(Base):
     expect(fields.name).toEqual({ minLength: 2, maxLength: 30 })
   })
 
+  it('reads Symfony Validator in PHP', () => {
+    const fields = constraintsOf(
+      'php',
+      `<?php
+      use Symfony\\Component\\Validator\\Constraints as Assert;
+      class Venue {
+        #[Assert\\NotBlank] #[Assert\\Length(min: 3, max: 120)] private string $name;
+        #[Assert\\Length(exactly: 5)] private string $postalCode;
+        #[Assert\\Range(min: 1, max: 5000)] private int $capacity;
+        #[Assert\\GreaterThan(0)] #[Assert\\LessThanOrEqual(value: 999.99)] private float $price;
+        #[Assert\\Regex(pattern: '/^[A-Z]{2}\\d+$/')] private string $code;
+        #[Assert\\Regex(pattern: '/\\d/', match: false)] private string $nickname;
+        /** @var string[] */
+        #[Assert\\Count(min: 1, max: 3)] private array $tags;
+        #[Assert\\Email] private string $contact;
+        #[Assert\\Uuid] private string $reference;
+      }`,
+      'Venue',
+    )
+    expect(fields.name).toEqual({ minLength: 3, maxLength: 120 })
+    expect(fields.postalCode).toEqual({ minLength: 5, maxLength: 5 })
+    expect(fields.capacity).toEqual({ minimum: 1, maximum: 5000 })
+    expect(fields.price).toEqual({ exclusiveMinimum: 0, maximum: 999.99 })
+    expect(fields.code).toEqual({ pattern: '^[A-Z]{2}\\d+$' })
+    expect(fields.nickname).toEqual({})
+    expect(fields.tags).toEqual({ minItems: 1, maxItems: 3 })
+    expect(fields.contact).toEqual({ format: 'email' })
+    expect(fields.reference).toEqual({ format: 'uuid' })
+  })
+
+  it('reads Laravel Data attributes and rules, which bound whatever the type has', () => {
+    const outcome = parseInput(
+      `<?php
+      class Review extends Data {
+        public function __construct(
+          #[Max(255), Min(3)] public string $title,
+          #[Between(1, 5)] public int $stars,
+          #[Size(2)] public string $country,
+          /** @var string[] */
+          #[Max(3)] public array $tags,
+          #[Rule('required|string|max:120')] public string $author,
+          #[Rule(['required', 'email'])] public string $email,
+          #[Rule('numeric|gte:0|lt:other')] public float $score,
+          #[Regex('#^[a-z-]+$#')] public string $slug,
+        ) {}
+      }`,
+      'php',
+    )
+    if (!outcome.ok) throw new Error(JSON.stringify(outcome.error))
+    const read = (name: string) =>
+      readConstraints(
+        outcome.schema.models[0].fields.find((field) => field.name === name)!,
+        outcome.schema.origin?.language,
+      ).constraints
+    expect(read('title')).toEqual({ minLength: 3, maxLength: 255 })
+    expect(read('stars')).toEqual({ minimum: 1, maximum: 5 })
+    expect(read('country')).toEqual({ minLength: 2, maxLength: 2 })
+    expect(read('tags')).toEqual({ maxItems: 3 })
+    expect(read('author')).toEqual({ maxLength: 120 })
+    expect(read('email')).toEqual({ format: 'email' })
+    // gt, gte, lt and lte against another field are not numbers and are left out
+    expect(read('score')).toEqual({ minimum: 0 })
+    expect(read('slug')).toEqual({ pattern: '^[a-z-]+$' })
+  })
+
   it('ignores declarations that do not apply to the type', () => {
     const fields = constraintsOf('java', 'public class A { @Size(max = 4) private int count; @Min(1) private String code; }', 'A')
     expect(fields.count).toEqual({})
