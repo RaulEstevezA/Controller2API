@@ -351,7 +351,7 @@ const en = {
   // Project pane
   projectName: 'Project name',
   frameworkLabel: 'Framework',
-  languages: { python: 'Python', typescript: 'TypeScript', java: 'Java', php: 'PHP' } satisfies Record<LanguageId, string>,
+  languages: { python: 'Python', typescript: 'TypeScript', java: 'Java', php: 'PHP', csharp: 'C#' } satisfies Record<LanguageId, string>,
   notWrittenYet: (framework: string) => `${framework} · not available yet`,
   architectureLabel: 'Architecture',
   architectures: { layered: 'By layers', modular: 'One folder per resource' } satisfies Record<ArchitectureId, string>,
@@ -367,6 +367,7 @@ const en = {
     jpa: 'JPA / Hibernate',
     eloquent: 'Eloquent',
     doctrine: 'Doctrine ORM',
+    efCore: 'Entity Framework Core',
   } satisfies Record<PersistenceId, string>,
   databaseLabel: 'Database',
   databases: { postgresql: 'PostgreSQL', mysql: 'MySQL', mariadb: 'MariaDB', sqlite: 'SQLite', mongodb: 'MongoDB' } satisfies Record<
@@ -687,7 +688,7 @@ const es: Messages = {
   },
   projectName: 'Nombre del proyecto',
   frameworkLabel: 'Framework',
-  languages: { python: 'Python', typescript: 'TypeScript', java: 'Java', php: 'PHP' },
+  languages: { python: 'Python', typescript: 'TypeScript', java: 'Java', php: 'PHP', csharp: 'C#' },
   notWrittenYet: (framework) => `${framework} · todavía no disponible`,
   architectureLabel: 'Arquitectura',
   architectures: { layered: 'Por capas', modular: 'Una carpeta por recurso' },
@@ -703,6 +704,7 @@ const es: Messages = {
     jpa: 'JPA / Hibernate',
     eloquent: 'Eloquent',
     doctrine: 'Doctrine ORM',
+    efCore: 'Entity Framework Core',
   },
   databaseLabel: 'Base de datos',
   databases: { postgresql: 'PostgreSQL', mysql: 'MySQL', mariadb: 'MariaDB', sqlite: 'SQLite', mongodb: 'MongoDB' },

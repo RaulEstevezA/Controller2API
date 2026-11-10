@@ -7,9 +7,9 @@
  * register the generator (generators/registry.ts).
  */
 
-export type FrameworkId = 'fastapi' | 'djangoRest' | 'express' | 'nestjs' | 'springBoot' | 'laravel' | 'symfony'
+export type FrameworkId = 'fastapi' | 'djangoRest' | 'express' | 'nestjs' | 'springBoot' | 'laravel' | 'symfony' | 'aspnetCore'
 
-export type LanguageId = 'python' | 'typescript' | 'java' | 'php'
+export type LanguageId = 'python' | 'typescript' | 'java' | 'php' | 'csharp'
 
 /** - `layered`: routes or controllers, services and repositories in one folder each
  * - `modular`: one folder per resource with its own routes, service and repository */
@@ -19,7 +19,7 @@ export type ArchitectureId = 'layered' | 'modular'
  * - `none`: repository interfaces to implement, with every method marked as pending
  * - the others: the ORM or ODM named */
 export type PersistenceId =
-  'memory' | 'none' | 'sqlalchemy' | 'djangoOrm' | 'prisma' | 'mongoose' | 'typeorm' | 'jpa' | 'eloquent' | 'doctrine'
+  'memory' | 'none' | 'sqlalchemy' | 'djangoOrm' | 'prisma' | 'mongoose' | 'typeorm' | 'jpa' | 'eloquent' | 'doctrine' | 'efCore'
 
 export type DatabaseId = 'postgresql' | 'mysql' | 'mariadb' | 'sqlite' | 'mongodb'
 
@@ -116,6 +116,18 @@ export const FRAMEWORKS: readonly FrameworkInfo[] = [
       { id: 'memory', databases: [] },
       { id: 'none', databases: [] },
       { id: 'doctrine', databases: ['postgresql', 'mysql', 'mariadb', 'sqlite'] },
+    ],
+    auth: ['none', 'apiKey', 'jwt'],
+  },
+  {
+    id: 'aspnetCore',
+    label: 'ASP.NET Core',
+    language: 'csharp',
+    architectures: ['layered', 'modular'],
+    persistence: [
+      { id: 'memory', databases: [] },
+      { id: 'none', databases: [] },
+      { id: 'efCore', databases: ['postgresql', 'mysql', 'mariadb', 'sqlite'] },
     ],
     auth: ['none', 'apiKey', 'jwt'],
   },

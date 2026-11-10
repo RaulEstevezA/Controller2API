@@ -8,6 +8,7 @@ import { FRAMEWORKS, databasesFor, type ProjectSettings } from '../compatibility
 import { openApiYaml } from '../openapi/build.ts'
 import { example } from '../test/fixtures.ts'
 import { compareText } from './common/text.ts'
+import { csClass, csProperty, csString } from './languages/csharp/csharp.ts'
 import { findGenerator, generateProject } from './registry.ts'
 
 const EXAMPLES = ['store', 'library', 'catalog'] as const
@@ -56,6 +57,14 @@ describe('generated projects', () => {
             expect(paths.has(`${target.join('/')}.ts`), `${id}: ${file.path} imports ${match[1]}`).toBe(true)
           }
         }
+        // C#: every `using` of the project's own namespaces names a namespace some file declares
+        const declared = new Set(files.flatMap((file) => [...file.content.matchAll(/^namespace ([\w.]+);/gm)].map((match) => match[1])))
+        const root = [...declared][0]?.split('.')[0]
+        for (const file of files.filter((item) => item.path.endsWith('.cs'))) {
+          for (const match of file.content.matchAll(/^using ([\w.]+);/gm)) {
+            if (root && match[1].startsWith(`${root}.`)) expect(declared.has(match[1]), `${id}: ${file.path} uses ${match[1]}`).toBe(true)
+          }
+        }
         for (const file of files.filter((item) => item.path.endsWith('.py'))) {
           for (const module of pythonImports(file.content)) {
             const path = module.replace(/\./g, '/')
@@ -83,5 +92,13 @@ describe('generated projects', () => {
     const env = generateProject(spec, settings).find((file) => file.path === '.env.example')!.content
     expect(env).toMatch(/^JWT_SECRET=$/m)
     expect(env).toContain('change-me')
+  })
+
+  it('writes C# names that do not clash with .NET or with their own class', () => {
+    expect(csClass('task')).toBe('TaskItem')
+    expect(csClass('order line')).toBe('OrderLine')
+    expect(csProperty('note', 'Note')).toBe('NoteValue')
+    expect(csProperty('postal_code', 'Address')).toBe('PostalCode')
+    expect(csString('say "hi"\\n')).toBe('"say \\"hi\\"\\\\n"')
   })
 })
