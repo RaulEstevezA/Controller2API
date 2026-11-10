@@ -63,4 +63,12 @@ export const SCENARIOS = [
   { id: 'aspnetcore-efcore-postgresql-layered-jwt', example: 'library', settings: { framework: 'aspnetCore', persistence: 'efCore', database: 'postgresql', architecture: 'layered', auth: 'jwt' }, service: 'postgresql' },
   { id: 'aspnetcore-efcore-mysql-modular-none', example: 'store', settings: { framework: 'aspnetCore', persistence: 'efCore', database: 'mysql', architecture: 'modular', auth: 'none' }, edits: ['filters'], service: 'mysql' },
   { id: 'aspnetcore-efcore-mariadb-layered-apikey', example: 'catalog', settings: { framework: 'aspnetCore', persistence: 'efCore', database: 'mariadb', architecture: 'layered', auth: 'apiKey' }, service: 'mariadb' },
+  { id: 'ktor-memory-layered-none', example: 'store', settings: { framework: 'ktor', persistence: 'memory', architecture: 'layered', auth: 'none' }, edits: ['filters', 'custom'] },
+  { id: 'ktor-memory-modular-jwt', example: 'library', settings: { framework: 'ktor', persistence: 'memory', architecture: 'modular', auth: 'jwt' }, edits: ['roles'] },
+  { id: 'ktor-none-layered-apikey', example: 'catalog', settings: { framework: 'ktor', persistence: 'none', architecture: 'layered', auth: 'apiKey' } },
+  { id: 'ktor-exposed-sqlite-layered-apikey', example: 'store', settings: { framework: 'ktor', persistence: 'exposed', database: 'sqlite', architecture: 'layered', auth: 'apiKey' }, edits: ['filters'] },
+  { id: 'ktor-exposed-sqlite-modular-none', example: 'catalog', settings: { framework: 'ktor', persistence: 'exposed', database: 'sqlite', architecture: 'modular', auth: 'none' } },
+  { id: 'ktor-exposed-postgresql-layered-jwt', example: 'library', settings: { framework: 'ktor', persistence: 'exposed', database: 'postgresql', architecture: 'layered', auth: 'jwt' }, service: 'postgresql' },
+  { id: 'ktor-exposed-mysql-modular-none', example: 'store', settings: { framework: 'ktor', persistence: 'exposed', database: 'mysql', architecture: 'modular', auth: 'none' }, edits: ['filters'], service: 'mysql' },
+  { id: 'ktor-exposed-mariadb-layered-apikey', example: 'catalog', settings: { framework: 'ktor', persistence: 'exposed', database: 'mariadb', architecture: 'layered', auth: 'apiKey' }, service: 'mariadb' },
 ]

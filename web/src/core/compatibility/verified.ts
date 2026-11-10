@@ -76,6 +76,14 @@ export const VERIFIED: readonly VerifiedStack[] = [
   { framework: 'aspnetCore', architecture: 'layered', persistence: 'efCore', database: 'postgresql', auth: 'jwt', date: '2026-11-10' },
   { framework: 'aspnetCore', architecture: 'modular', persistence: 'efCore', database: 'mysql', auth: 'none', date: '2026-11-10' },
   { framework: 'aspnetCore', architecture: 'layered', persistence: 'efCore', database: 'mariadb', auth: 'apiKey', date: '2026-11-10' },
+  { framework: 'ktor', architecture: 'layered', persistence: 'memory', database: null, auth: 'none', date: '2026-11-10' },
+  { framework: 'ktor', architecture: 'modular', persistence: 'memory', database: null, auth: 'jwt', date: '2026-11-10' },
+  { framework: 'ktor', architecture: 'layered', persistence: 'none', database: null, auth: 'apiKey', date: '2026-11-10' },
+  { framework: 'ktor', architecture: 'layered', persistence: 'exposed', database: 'sqlite', auth: 'apiKey', date: '2026-11-10' },
+  { framework: 'ktor', architecture: 'modular', persistence: 'exposed', database: 'sqlite', auth: 'none', date: '2026-11-10' },
+  { framework: 'ktor', architecture: 'layered', persistence: 'exposed', database: 'postgresql', auth: 'jwt', date: '2026-11-10' },
+  { framework: 'ktor', architecture: 'modular', persistence: 'exposed', database: 'mysql', auth: 'none', date: '2026-11-10' },
+  { framework: 'ktor', architecture: 'layered', persistence: 'exposed', database: 'mariadb', auth: 'apiKey', date: '2026-11-10' },
 ]
 
 /** - `verified`: this exact stack passed

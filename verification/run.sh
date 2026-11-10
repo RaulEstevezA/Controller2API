@@ -17,6 +17,7 @@ runner_of() {
     springboot-*) echo ./runners/java.sh ;;
     laravel-* | symfony-*) echo ./runners/php.sh ;;
     aspnetcore-*) echo ./runners/dotnet.sh ;;
+    ktor-*) echo ./runners/kotlin.sh ;;
   esac
 }
 
