@@ -1,0 +1,258 @@
+"""Stacks whose generated projects have been built, run and called with their real tools (verification/run.sh, in
+Docker). The interface shows a stack as verified only when it is listed here. Mirrors
+web/src/core/compatibility/verified.ts.
+
+Update this list after running the verification: one entry per scenario that passed, with its date.
+"""
+
+VERIFIED: tuple[dict, ...] = (
+    {
+        "framework": "fastapi",
+        "architecture": "layered",
+        "persistence": "memory",
+        "database": None,
+        "auth": "none",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "fastapi",
+        "architecture": "modular",
+        "persistence": "memory",
+        "database": None,
+        "auth": "jwt",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "fastapi",
+        "architecture": "layered",
+        "persistence": "none",
+        "database": None,
+        "auth": "apiKey",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "fastapi",
+        "architecture": "layered",
+        "persistence": "sqlalchemy",
+        "database": "sqlite",
+        "auth": "apiKey",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "fastapi",
+        "architecture": "modular",
+        "persistence": "sqlalchemy",
+        "database": "sqlite",
+        "auth": "none",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "fastapi",
+        "architecture": "layered",
+        "persistence": "sqlalchemy",
+        "database": "postgresql",
+        "auth": "jwt",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "fastapi",
+        "architecture": "modular",
+        "persistence": "sqlalchemy",
+        "database": "mysql",
+        "auth": "none",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "fastapi",
+        "architecture": "layered",
+        "persistence": "sqlalchemy",
+        "database": "mariadb",
+        "auth": "apiKey",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "express",
+        "architecture": "layered",
+        "persistence": "memory",
+        "database": None,
+        "auth": "none",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "express",
+        "architecture": "modular",
+        "persistence": "memory",
+        "database": None,
+        "auth": "jwt",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "express",
+        "architecture": "layered",
+        "persistence": "none",
+        "database": None,
+        "auth": "apiKey",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "springBoot",
+        "architecture": "layered",
+        "persistence": "memory",
+        "database": None,
+        "auth": "none",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "springBoot",
+        "architecture": "modular",
+        "persistence": "memory",
+        "database": None,
+        "auth": "jwt",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "springBoot",
+        "architecture": "layered",
+        "persistence": "none",
+        "database": None,
+        "auth": "apiKey",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "springBoot",
+        "architecture": "layered",
+        "persistence": "jpa",
+        "database": "postgresql",
+        "auth": "jwt",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "springBoot",
+        "architecture": "modular",
+        "persistence": "jpa",
+        "database": "mysql",
+        "auth": "none",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "springBoot",
+        "architecture": "layered",
+        "persistence": "jpa",
+        "database": "mariadb",
+        "auth": "apiKey",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "djangoRest",
+        "architecture": "layered",
+        "persistence": "djangoOrm",
+        "database": "sqlite",
+        "auth": "none",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "djangoRest",
+        "architecture": "modular",
+        "persistence": "djangoOrm",
+        "database": "sqlite",
+        "auth": "jwt",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "djangoRest",
+        "architecture": "layered",
+        "persistence": "djangoOrm",
+        "database": "postgresql",
+        "auth": "apiKey",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "djangoRest",
+        "architecture": "modular",
+        "persistence": "djangoOrm",
+        "database": "mysql",
+        "auth": "none",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "djangoRest",
+        "architecture": "layered",
+        "persistence": "djangoOrm",
+        "database": "mariadb",
+        "auth": "jwt",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "nestjs",
+        "architecture": "modular",
+        "persistence": "memory",
+        "database": None,
+        "auth": "none",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "nestjs",
+        "architecture": "modular",
+        "persistence": "memory",
+        "database": None,
+        "auth": "jwt",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "nestjs",
+        "architecture": "modular",
+        "persistence": "none",
+        "database": None,
+        "auth": "apiKey",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "nestjs",
+        "architecture": "modular",
+        "persistence": "typeorm",
+        "database": "postgresql",
+        "auth": "jwt",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "nestjs",
+        "architecture": "modular",
+        "persistence": "typeorm",
+        "database": "mysql",
+        "auth": "none",
+        "date": "2026-11-09",
+    },
+    {
+        "framework": "nestjs",
+        "architecture": "modular",
+        "persistence": "typeorm",
+        "database": "mariadb",
+        "auth": "apiKey",
+        "date": "2026-11-09",
+    },
+)
+
+
+def verification(settings: dict) -> str:
+    """How far a stack has been verified:
+    - verified: this exact stack passed
+    - parts: the persistence and database, the architecture and the authentication each passed with this
+      framework, but not together
+    - unverified: some part never ran
+    """
+    same = [item for item in VERIFIED if item["framework"] == settings["framework"]]
+    exact = any(
+        item["architecture"] == settings["architecture"]
+        and item["persistence"] == settings["persistence"]
+        and item["database"] == settings.get("database")
+        and item["auth"] == settings["auth"]
+        for item in same
+    )
+    if exact:
+        return "verified"
+    storage = any(
+        item["persistence"] == settings["persistence"] and item["database"] == settings.get("database") for item in same
+    )
+    architecture = any(item["architecture"] == settings["architecture"] for item in same)
+    auth = any(item["auth"] == settings["auth"] for item in same)
+    return "parts" if storage and architecture and auth else "unverified"
