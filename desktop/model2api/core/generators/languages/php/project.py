@@ -10,7 +10,11 @@ uuid ({"expression", "imports"}) and tests ({"namespace", "folder", "base", "dat
 
 import re
 
+from ...common.references import inner_object, referenced_resources
 from .php import php_class, php_name
+
+# Shared with every generator; kept importable from here for the PHP writers
+__all__ = ["inner_object", "referenced_resources"]
 
 
 def resource_names(resource: dict) -> dict:
@@ -33,36 +37,6 @@ def key_field(resource: dict) -> dict:
 def key_type(resource: dict) -> str:
     """The PHP type of the key: whole numbers are int, the rest text."""
     return "int" if resource["key"]["type"]["scalar"] == "integer" else "string"
-
-
-def inner_object(type_ref: dict) -> str | None:
-    """The embedded object a type holds, directly or as the items of a list or map."""
-    if type_ref["kind"] == "object":
-        return type_ref["name"]
-    if type_ref["kind"] == "array":
-        return inner_object(type_ref["items"])
-    if type_ref["kind"] == "map":
-        return inner_object(type_ref["value"])
-    return None
-
-
-def referenced_resources(project, resource: dict) -> list[dict]:
-    """Resources a resource refers to, directly or inside its embedded objects, other than itself."""
-    found: set[str] = set()
-
-    def visit(fields: list[dict], seen: frozenset[str]) -> None:
-        for field in fields:
-            if field.get("reference"):
-                found.add(field["reference"])
-            inner = inner_object(field["type"])
-            if inner and inner not in seen:
-                spec_object = next((item for item in project.spec["objects"] if item["name"] == inner), None)
-                if spec_object:
-                    visit(spec_object["fields"], seen | {inner})
-
-    visit(resource["fields"], frozenset())
-    found.discard(resource["name"])
-    return [item for item in project.spec["resources"] if item["name"] in found]
 
 
 _VOWEL_START = re.compile(r"^[aeiou]", re.IGNORECASE)
