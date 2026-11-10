@@ -88,6 +88,18 @@ FRAMEWORKS: tuple[dict, ...] = (
         ),
         "auth": ("none", "apiKey", "jwt"),
     },
+    {
+        "id": "aspnetCore",
+        "label": "ASP.NET Core",
+        "language": "csharp",
+        "architectures": ("layered", "modular"),
+        "persistence": (
+            {"id": "memory", "databases": ()},
+            {"id": "none", "databases": ()},
+            {"id": "efCore", "databases": ("postgresql", "mysql", "mariadb", "sqlite")},
+        ),
+        "auth": ("none", "apiKey", "jwt"),
+    },
 )
 
 DEFAULT_SETTINGS = {

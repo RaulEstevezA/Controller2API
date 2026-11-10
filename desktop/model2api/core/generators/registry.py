@@ -12,6 +12,7 @@ from .common.text import compare_key
 
 
 def _generators() -> dict:
+    from .frameworks.aspnet_core import ASPNET_CORE_GENERATOR
     from .frameworks.django_rest import DJANGO_REST_GENERATOR
     from .frameworks.express import EXPRESS_GENERATOR
     from .frameworks.fastapi import FASTAPI_GENERATOR
@@ -28,6 +29,7 @@ def _generators() -> dict:
         SPRING_BOOT_GENERATOR,
         LARAVEL_GENERATOR,
         SYMFONY_GENERATOR,
+        ASPNET_CORE_GENERATOR,
     )
     return {generator["framework"]: generator for generator in every}
 

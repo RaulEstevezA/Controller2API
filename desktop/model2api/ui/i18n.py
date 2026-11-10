@@ -281,6 +281,7 @@ _PERSISTENCE_EN = {
     "jpa": "JPA / Hibernate",
     "eloquent": "Eloquent",
     "doctrine": "Doctrine ORM",
+    "efCore": "Entity Framework Core",
 }
 
 _DATABASES = {
@@ -290,7 +291,7 @@ _DATABASES = {
     "sqlite": "SQLite",
     "mongodb": "MongoDB",
 }
-_LANGUAGES = {"python": "Python", "typescript": "TypeScript", "java": "Java", "php": "PHP"}
+_LANGUAGES = {"python": "Python", "typescript": "TypeScript", "java": "Java", "php": "PHP", "csharp": "C#"}
 
 EN = SimpleNamespace(
     language_label="Language",
