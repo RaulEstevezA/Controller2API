@@ -47,4 +47,7 @@ The runs are not a formality: they found problems no unit test would, each fixed
 - `lines` is a reserved word in MySQL and Hibernate did not quote it (Spring Boot with JPA).
 - Timestamps kept nanoseconds in the answer and microseconds in the database (Spring Boot with JPA).
 - Laravel's `RefreshDatabase` runs the migrations through Artisan, which needs Mockery in the tests (Laravel with Eloquent).
+- Doctrine DBAL needs the PostgreSQL server version before it connects; `doctrine.yaml` now sets it (Symfony with Doctrine).
+- Doctrine does not quote reserved words such as `lines` (MySQL): tables and columns are now quoted in the mapping (Symfony with Doctrine).
+- The input classes listed their `use` statements before the enums they check were added, so a body with an enum failed with a 500 (Symfony).
 - Test files that recreate the schema at the same time on one database (NestJS with TypeORM): they now take turns.
