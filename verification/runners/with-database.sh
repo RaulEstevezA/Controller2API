@@ -3,7 +3,7 @@
 # database and its network afterwards, whatever the result.
 #
 # Usage: verification/runners/with-database.sh <postgresql|mysql|mariadb> <runner> <scenario-folder>...
-# The URL uses the driver each language's generated project names in its .env.example.
+# The URL uses the driver each language's generated project names in its .env.example (.NET: a connection string).
 set -u
 
 database="$1"
@@ -21,6 +21,7 @@ case "$database" in
     url_python="postgresql+psycopg://api:$password@$container:5432/api"
     url_jdbc="jdbc:postgresql://$container:5432/api"
     url_node="postgresql://api:$password@$container:5432/api"
+    url_dotnet="Host=$container;Port=5432;Database=api;Username=api;Password=$password"
     ;;
   mysql | mariadb)
     image=$([ "$database" = mysql ] && echo "mysql:8.4" || echo "mariadb:11")
@@ -29,6 +30,7 @@ case "$database" in
     url_python="mysql+pymysql://api:$password@$container:3306/api"
     url_jdbc="jdbc:$database://$container:3306/api"
     url_node="mysql://api:$password@$container:3306/api"
+    url_dotnet="Server=$container;Port=3306;Database=api;User ID=api;Password=$password"
     ;;
   *)
     echo "Unknown database: $database" >&2
@@ -59,6 +61,7 @@ export DOCKER_NETWORK="$network"
 export TEST_DATABASE_URL="$url_python"
 export TEST_DATABASE_JDBC_URL="$url_jdbc"
 export TEST_DATABASE_NODE_URL="$url_node"
+export TEST_DATABASE_DOTNET_URL="$url_dotnet"
 export TEST_DATABASE_USER="api"
 export TEST_DATABASE_PASSWORD="$password"
 "$runner" "$@"

@@ -55,4 +55,12 @@ export const SCENARIOS = [
   { id: 'symfony-doctrine-postgresql-layered-jwt', example: 'library', settings: { framework: 'symfony', persistence: 'doctrine', database: 'postgresql', architecture: 'layered', auth: 'jwt' }, service: 'postgresql' },
   { id: 'symfony-doctrine-mysql-modular-none', example: 'store', settings: { framework: 'symfony', persistence: 'doctrine', database: 'mysql', architecture: 'modular', auth: 'none' }, edits: ['filters'], service: 'mysql' },
   { id: 'symfony-doctrine-mariadb-layered-apikey', example: 'catalog', settings: { framework: 'symfony', persistence: 'doctrine', database: 'mariadb', architecture: 'layered', auth: 'apiKey' }, service: 'mariadb' },
+  { id: 'aspnetcore-memory-layered-none', example: 'store', settings: { framework: 'aspnetCore', persistence: 'memory', architecture: 'layered', auth: 'none' }, edits: ['filters', 'custom'] },
+  { id: 'aspnetcore-memory-modular-jwt', example: 'library', settings: { framework: 'aspnetCore', persistence: 'memory', architecture: 'modular', auth: 'jwt' }, edits: ['roles'] },
+  { id: 'aspnetcore-none-layered-apikey', example: 'catalog', settings: { framework: 'aspnetCore', persistence: 'none', architecture: 'layered', auth: 'apiKey' } },
+  { id: 'aspnetcore-efcore-sqlite-layered-apikey', example: 'store', settings: { framework: 'aspnetCore', persistence: 'efCore', database: 'sqlite', architecture: 'layered', auth: 'apiKey' }, edits: ['filters'] },
+  { id: 'aspnetcore-efcore-sqlite-modular-none', example: 'catalog', settings: { framework: 'aspnetCore', persistence: 'efCore', database: 'sqlite', architecture: 'modular', auth: 'none' } },
+  { id: 'aspnetcore-efcore-postgresql-layered-jwt', example: 'library', settings: { framework: 'aspnetCore', persistence: 'efCore', database: 'postgresql', architecture: 'layered', auth: 'jwt' }, service: 'postgresql' },
+  { id: 'aspnetcore-efcore-mysql-modular-none', example: 'store', settings: { framework: 'aspnetCore', persistence: 'efCore', database: 'mysql', architecture: 'modular', auth: 'none' }, edits: ['filters'], service: 'mysql' },
+  { id: 'aspnetcore-efcore-mariadb-layered-apikey', example: 'catalog', settings: { framework: 'aspnetCore', persistence: 'efCore', database: 'mariadb', architecture: 'layered', auth: 'apiKey' }, service: 'mariadb' },
 ]

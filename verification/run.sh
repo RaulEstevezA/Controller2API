@@ -16,6 +16,7 @@ runner_of() {
     express-* | nestjs-*) echo ./runners/node.sh ;;
     springboot-*) echo ./runners/java.sh ;;
     laravel-* | symfony-*) echo ./runners/php.sh ;;
+    aspnetcore-*) echo ./runners/dotnet.sh ;;
   esac
 }
 
