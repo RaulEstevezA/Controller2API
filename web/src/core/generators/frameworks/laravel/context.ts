@@ -5,7 +5,8 @@
  */
 import type { ApiSpec, SpecField, SpecResource } from '../../../api/spec.ts'
 import type { ProjectSettings } from '../../../compatibility/stack.ts'
-import { phpClass, phpName, phpSnake } from '../../languages/php/php.ts'
+import { phpClass, phpSnake } from '../../languages/php/php.ts'
+import { resourceNames, type PhpProject } from '../../languages/php/project.ts'
 
 export type ClassKind = 'controller' | 'request' | 'resource' | 'service' | 'repository' | 'model'
 
@@ -35,21 +36,31 @@ const modular: Layout = {
   enums: () => 'App\\Modules\\Shared',
 }
 
-export interface LaravelContext {
-  spec: ApiSpec
-  settings: ProjectSettings
+export interface LaravelContext extends PhpProject {
   layout: Layout
-  pending: boolean
   eloquent: boolean
 }
 
 export function createContext(spec: ApiSpec, settings: ProjectSettings): LaravelContext {
+  const layout = settings.architecture === 'modular' ? modular : layered
   return {
     spec,
     settings,
-    layout: settings.architecture === 'modular' ? modular : layered,
+    layout,
     pending: settings.persistence === 'none',
     eloquent: settings.persistence === 'eloquent',
+    exceptions: 'App\\Exceptions',
+    support: 'App\\Support',
+    namespace: (resource, kind) => layout.resource(resource, kind),
+    classPath,
+    uuid: { expression: '(string) Str::uuid()', imports: ['Illuminate\\Support\\Str'] },
+    tests: {
+      namespace: 'Tests\\Feature',
+      folder: 'tests/Feature',
+      base: 'Tests\\TestCase',
+      data: 'Tests\\TestData',
+      dataPath: 'tests/TestData.php',
+    },
   }
 }
 
@@ -63,20 +74,16 @@ export function classPath(namespace: string, name: string): string {
 
 /** Names of a resource's classes, table and variables. */
 export function names(resource: SpecResource) {
-  const type = phpClass(resource.name)
+  const shared = resourceNames(resource)
+  const type = shared.type
   return {
-    type,
+    ...shared,
     controller: `${type}Controller`,
     store: `Store${type}Request`,
     update: `Update${type}Request`,
     resource: `${type}Resource`,
-    service: `${type}Service`,
-    repository: `${type}Repository`,
-    memory: `InMemory${type}Repository`,
-    pendingRepository: `Pending${type}Repository`,
     eloquentRepository: `Eloquent${type}Repository`,
     model: type,
-    one: phpName(resource.name),
     table: phpSnake(resource.plural.replace(/ /g, '_')),
   }
 }
@@ -91,45 +98,4 @@ export function column(field: SpecField): string {
   return phpSnake(field.wire)
 }
 
-export function keyField(resource: SpecResource): SpecField {
-  return resource.fields.find((field) => field.name === resource.key.field)!
-}
-
-/** The PHP type of the key: whole numbers are `int`, the rest text. */
-export function keyType(resource: SpecResource): string {
-  return resource.key.type.scalar === 'integer' ? 'int' : 'string'
-}
-
-/** Resources a resource refers to, directly or inside its embedded objects, other than itself. */
-export function referencedResources(context: LaravelContext, resource: SpecResource): SpecResource[] {
-  const found = new Set<string>()
-  const visit = (fields: SpecField[], seen: Set<string>) => {
-    for (const field of fields) {
-      if (field.reference) found.add(field.reference)
-      const inner = innerObject(field.type)
-      if (inner && !seen.has(inner)) {
-        const object = context.spec.objects.find((item) => item.name === inner)
-        if (object) visit(object.fields, new Set([...seen, inner]))
-      }
-    }
-  }
-  visit(resource.fields, new Set())
-  found.delete(resource.name)
-  return context.spec.resources.filter((item) => found.has(item.name))
-}
-
-/** The embedded object a type holds, directly or as the items of a list or map. */
-export function innerObject(type: SpecField['type']): string | null {
-  if (type.kind === 'object') return type.name
-  if (type.kind === 'array') return innerObject(type.items)
-  if (type.kind === 'map') return innerObject(type.value)
-  return null
-}
-
-export function article(text: string): string {
-  return /^[aeiou]/i.test(text) ? `an ${text}` : `a ${text}`
-}
-
-export function capitalize(text: string): string {
-  return text.charAt(0).toUpperCase() + text.slice(1)
-}
+export { article, capitalize, innerObject, keyField, keyType, referencedResources } from '../../languages/php/project.ts'

@@ -3,22 +3,16 @@
  * when it is chosen. It composes the modules of this folder; each writes one kind of file.
  */
 import type { GeneratedFile, Generator } from '../../common/types.ts'
-import {
-  apiRequestFile,
-  blankStringRuleFile,
-  bootstrapFiles,
-  configFile,
-  errorFiles,
-  listingFiles,
-  providerFile,
-  securityFiles,
-} from './app.ts'
+import { apiRequestFile, blankStringRuleFile, bootstrapFiles, configFile, errorRendererFile, providerFile, securityFiles } from './app.ts'
 import { createContext } from './context.ts'
-import { migrationFile, modelFile, repositoryFiles, valuesFile } from './persistence.ts'
+import { valuesFile } from '../../languages/php/storage.ts'
+import { exceptionFiles, listingFiles } from '../../languages/php/support.ts'
+import { migrationFile, modelFile, repositoryFiles } from './persistence.ts'
 import { composerFile, envExampleFile, gitignoreFile, phpunitFile, readmeFile } from './project.ts'
 import { enumFiles, requestFiles } from './requests.ts'
 import { testFiles } from './tests.ts'
-import { baseControllerFile, controllerFile, resourceFile, routesFile, serviceFile } from './web.ts'
+import { serviceFile } from '../../languages/php/service.ts'
+import { baseControllerFile, controllerFile, resourceFile, routesFile } from './web.ts'
 
 export const laravelGenerator: Generator = {
   framework: 'laravel',
@@ -28,8 +22,9 @@ export const laravelGenerator: Generator = {
     const code: (GeneratedFile | null)[] = [
       ...bootstrapFiles(context),
       configFile(context),
-      ...errorFiles(),
-      ...listingFiles(),
+      ...exceptionFiles(context),
+      errorRendererFile(),
+      ...listingFiles(context),
       valuesFile(context),
       apiRequestFile(),
       blankStringRuleFile(),
