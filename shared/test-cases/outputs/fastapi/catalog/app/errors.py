@@ -69,7 +69,7 @@ def register_error_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(_: Request, error: RequestValidationError) -> JSONResponse:
-        # Validation errors are 400, the same in every framework Model2API writes (FastAPI uses 422 by default)
+        # Validation errors are 400, the same in every framework Controller2Api writes (FastAPI uses 422 by default)
         details = [{"field": _field_of(tuple(item["loc"])), "message": item["msg"]} for item in error.errors()]
         return JSONResponse(error_body("validation_error", "The request is not valid", details), status_code=400)
 

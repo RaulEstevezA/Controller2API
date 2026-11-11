@@ -30,7 +30,7 @@ Then review the diff and port the change to `desktop/` until its tests pass.
 Shared logic lives in a `core/` folder in each version, with no interface code:
 
 - Web: `web/src/core/` (TypeScript)
-- Desktop: `desktop/model2api/core/` (Python)
+- Desktop: `desktop/controller2api/core/` (Python)
 
 A file in one `core/` has its counterpart in the other (`design/propose.ts` / `design/propose.py`). In Python, models, designs and specifications are dictionaries with the same keys as the JSON.
 
