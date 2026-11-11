@@ -18,6 +18,7 @@ runner_of() {
     laravel-* | symfony-*) echo ./runners/php.sh ;;
     aspnetcore-*) echo ./runners/dotnet.sh ;;
     ktor-*) echo ./runners/kotlin.sh ;;
+    axum-*) echo ./runners/rust.sh ;;
   esac
 }
 

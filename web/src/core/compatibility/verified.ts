@@ -84,6 +84,14 @@ export const VERIFIED: readonly VerifiedStack[] = [
   { framework: 'ktor', architecture: 'layered', persistence: 'exposed', database: 'postgresql', auth: 'jwt', date: '2026-11-10' },
   { framework: 'ktor', architecture: 'modular', persistence: 'exposed', database: 'mysql', auth: 'none', date: '2026-11-10' },
   { framework: 'ktor', architecture: 'layered', persistence: 'exposed', database: 'mariadb', auth: 'apiKey', date: '2026-11-10' },
+  { framework: 'axum', architecture: 'layered', persistence: 'memory', database: null, auth: 'none', date: '2026-11-11' },
+  { framework: 'axum', architecture: 'modular', persistence: 'memory', database: null, auth: 'jwt', date: '2026-11-11' },
+  { framework: 'axum', architecture: 'layered', persistence: 'none', database: null, auth: 'apiKey', date: '2026-11-11' },
+  { framework: 'axum', architecture: 'layered', persistence: 'seaOrm', database: 'sqlite', auth: 'apiKey', date: '2026-11-11' },
+  { framework: 'axum', architecture: 'modular', persistence: 'seaOrm', database: 'sqlite', auth: 'none', date: '2026-11-11' },
+  { framework: 'axum', architecture: 'layered', persistence: 'seaOrm', database: 'postgresql', auth: 'jwt', date: '2026-11-11' },
+  { framework: 'axum', architecture: 'modular', persistence: 'seaOrm', database: 'mysql', auth: 'none', date: '2026-11-11' },
+  { framework: 'axum', architecture: 'layered', persistence: 'seaOrm', database: 'mariadb', auth: 'apiKey', date: '2026-11-11' },
 ]
 
 /** - `verified`: this exact stack passed
