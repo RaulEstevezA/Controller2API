@@ -1,9 +1,9 @@
-# Model2API
+# Controller2Api
 
-Model2API turns data models into the code of a REST API you review before it is written, and then writes it: a project with its resources and endpoints, validation, error handling, persistence, authentication, tests, OpenAPI contract and a README to run it. Everything happens on your side, in the browser: what you paste or open is never sent anywhere, and code is analyzed, never run.
+Controller2Api turns data models into the code of a REST API you review before it is written, and then writes it: a project with its resources and endpoints, validation, error handling, persistence, authentication, tests, OpenAPI contract and a README to run it. Everything happens on your side, in the browser: what you paste or open is never sent anywhere, and code is analyzed, never run.
 
 > [!IMPORTANT]
-> Model2API is not published on the website yet. Everything on this page works, in the browser and in the desktop version.
+> Controller2Api is not published on the website yet. Everything on this page works, in the browser and in the desktop version.
 
 ```text
 Paste or open the models  →  Review the proposed endpoints  →  Choose the framework and options  →  Download the project
@@ -52,14 +52,14 @@ cd web
 npm install
 npm run dev      # development server
 npm run check    # types, lint, format and tests
-npm run build    # production build, served from /tools/Model2API/
+npm run build    # production build, served from /tools/Controller2Api/
 ```
 
 How the code is organized, and why: [docs/architecture.md](./docs/architecture.md) and [docs/decisions.md](./docs/decisions.md). How the generated projects are verified: [docs/verification.md](./docs/verification.md).
 
 ## Suggestions
 
-Ideas for improvements, bugs or a framework you would like Model2API to write for: write to [contact.raulesteveza@gmail.com](mailto:contact.raulesteveza@gmail.com).
+Ideas for improvements, bugs or a framework you would like Controller2Api to write for: write to [contact.raulesteveza@gmail.com](mailto:contact.raulesteveza@gmail.com).
 
 ## Developer
 

@@ -1,6 +1,6 @@
 # Changelog
 
-Notable changes to Model2API, the web and the desktop version together. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow [Semantic Versioning](https://semver.org/). Desktop releases will be tagged `v<version>` and published on [Releases](https://github.com/RaulEstevezA/Model2API/releases).
+Notable changes to Controller2Api, the web and the desktop version together. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow [Semantic Versioning](https://semver.org/). Desktop releases will be tagged `v<version>` and published on [Releases](https://github.com/RaulEstevezA/Controller2Api/releases).
 
 ## [Unreleased]
 
@@ -24,4 +24,4 @@ Notable changes to Model2API, the web and the desktop version together. The form
 - Web: writes Vapor 4 projects (Swift 6.4, Swift Package Manager), by layers or one folder per resource, with storage in memory, as protocols to implement, or with Fluent on PostgreSQL, MySQL, MariaDB or SQLite; request bodies checked on their JSON before they are decoded (presence, null, types, unknown fields, lengths, ranges, patterns), 405 for a method a path does not take, API key or JWT with roles; Swift Testing suites that call every endpoint. Verified in Docker with every storage and database, without warnings in the project's code.
 - Desktop: the same tool as a Python + PySide6 app for macOS, Windows and Linux: the same importers, proposals, checks, OpenAPI contract and generators, which write exactly the same files as the web version for the shared cases; the models, endpoints and project panes; project files, "Remember on this computer", and saving files, the contract or the whole project as a .zip.
 
-[Unreleased]: https://github.com/RaulEstevezA/Model2API/commits/main
+[Unreleased]: https://github.com/RaulEstevezA/Controller2Api/commits/main

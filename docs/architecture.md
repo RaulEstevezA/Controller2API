@@ -1,6 +1,6 @@
 # Architecture
 
-Model2API turns data models into the code of a REST API. Everything runs locally, in the browser or in the desktop version; there is no backend. The user's code is read by hand-written parsers and is never executed, and every proposal comes from explicit, deterministic rules that can be explained.
+Controller2Api turns data models into the code of a REST API. Everything runs locally, in the browser or in the desktop version; there is no backend. The user's code is read by hand-written parsers and is never executed, and every proposal comes from explicit, deterministic rules that can be explained.
 
 ```text
 Input text ──► Importer ──► Model ──► Analysis ──► Proposal ──► API design ──► Generator ──► files ──► Export
@@ -26,7 +26,7 @@ Every stage has a language-neutral input and output. A new input format, framewo
 ## Folders
 
 ```text
-.github/workflows/          CI and publication to raulesteveza.github.io/tools/Model2API/
+.github/workflows/          CI and publication to raulesteveza.github.io/tools/Controller2Api/
 docs/                       Project documentation (architecture, decisions, formats, how to add a generator)
 web/                        The web application (React + TypeScript + Vite)
 ├── public/                 Static files served as they are (favicon)
@@ -53,7 +53,7 @@ web/                        The web application (React + TypeScript + Vite)
     │   │   └── frameworks/ One generator per framework (fastapi/, djangoRest/, express/,
     │   │                   nestjs/, springBoot/), each with its architectures and persistence
     │   ├── export/         ZIP writer and file downloads as plain data
-    │   ├── project/        Model2API project files: versioned format, save and open
+    │   ├── project/        Controller2Api project files: versioned format, save and open
     │   └── interop/        Models received from Mapper, Model2DB and other tools
     ├── app/                Interface logic without React: workspace state, history, pending decisions
     ├── hooks/              React state on top of app/ (undo/redo, preferences, startup, handoff)
@@ -67,7 +67,7 @@ web/                        The web application (React + TypeScript + Vite)
     ├── examples/           Built-in examples with invented data, also used as test fixtures
     └── styles/tokens/      Design tokens copied from personal_web_style
 desktop/                    The desktop version (Python + PySide6)
-├── model2api/
+├── controller2api/
 │   ├── core/               Mirrors web/src/core/ module by module, with snake_case names
 │   ├── ui/                 The window: the state App.tsx and its hooks hold on the web
 │   └── assets/             Icon (same SVG as web/public/favicon.svg)
@@ -101,7 +101,7 @@ verification/               Builds, runs and calls the generated projects with t
 
 ## Desktop version
 
-`desktop/` is the same tool as a Python (PySide6) application, as in the other tools of the suite. `desktop/model2api/core/` mirrors `web/src/core/` file by file: the web uses camelCase names (`djangoRest/`), the desktop snake_case (`django_rest/`). Models and designs are plain dictionaries with the same keys as the TypeScript JSON, so both versions can be compared as JSON.
+`desktop/` is the same tool as a Python (PySide6) application, as in the other tools of the suite. `desktop/controller2api/core/` mirrors `web/src/core/` file by file: the web uses camelCase names (`djangoRest/`), the desktop snake_case (`django_rest/`). Models and designs are plain dictionaries with the same keys as the TypeScript JSON, so both versions can be compared as JSON.
 
 The web version writes the expected results to `shared/test-cases/` and the desktop tests must give the same ones, so a change in the core is made in both versions.
 
@@ -111,7 +111,7 @@ The page follows the tool layout of personal_web_style (`layouts/tool-page.md`) 
 
 ```text
 Header          Raúl Estévez                                                  EN  ES
-Presentation    icon  Model2API  [Processed locally] · subtitle · description · privacy
+Presentation    icon  Controller2Api  [Processed locally] · subtitle · description · privacy
 Project bar     Save · Open · Remember in this browser
 Workspace       ┌ Models ─────────────┐ ┌ Endpoints ───────────────────────────┐
                 │ input, detected     │ │ resources and endpoints, editable,   │

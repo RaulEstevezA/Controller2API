@@ -1,6 +1,6 @@
 # Verification
 
-Producing files is not proof that they work. Every stack Model2API offers has had a generated project built, run and called with its own tools, in Docker, by the scripts of `verification/`.
+Producing files is not proof that they work. Every stack Controller2Api offers has had a generated project built, run and called with its own tools, in Docker, by the scripts of `verification/`.
 
 ## What a run checks
 

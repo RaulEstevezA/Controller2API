@@ -1,9 +1,9 @@
-# Model2API
+# Controller2Api
 
-Model2API convierte modelos de datos en el código de una API REST que revisas antes de que se escriba, y después lo escribe: un proyecto con sus recursos y endpoints, validación, gestión de errores, persistencia, autenticación, pruebas, contrato OpenAPI y un README para ejecutarlo. Todo ocurre en tu lado, en el navegador: lo que pegas o abres no se envía a ningún sitio, y el código se analiza, nunca se ejecuta.
+Controller2Api convierte modelos de datos en el código de una API REST que revisas antes de que se escriba, y después lo escribe: un proyecto con sus recursos y endpoints, validación, gestión de errores, persistencia, autenticación, pruebas, contrato OpenAPI y un README para ejecutarlo. Todo ocurre en tu lado, en el navegador: lo que pegas o abres no se envía a ningún sitio, y el código se analiza, nunca se ejecuta.
 
 > [!IMPORTANT]
-> Model2API todavía no se ha publicado en la web. Todo lo que describe esta página funciona, en el navegador y en la versión de escritorio.
+> Controller2Api todavía no se ha publicado en la web. Todo lo que describe esta página funciona, en el navegador y en la versión de escritorio.
 
 ```text
 Pegar o abrir los modelos  →  Revisar los endpoints propuestos  →  Elegir el framework y las opciones  →  Descargar el proyecto
@@ -52,14 +52,14 @@ cd web
 npm install
 npm run dev      # servidor de desarrollo
 npm run check    # tipos, lint, formato y tests
-npm run build    # build de producción, servido desde /tools/Model2API/
+npm run build    # build de producción, servido desde /tools/Controller2Api/
 ```
 
 Cómo está organizado el código, y por qué: [docs/architecture.md](./docs/architecture.md) y [docs/decisions.md](./docs/decisions.md). Cómo se verifican los proyectos generados: [docs/verification.md](./docs/verification.md).
 
 ## Sugerencias
 
-Ideas de mejora, errores o un framework para el que te gustaría que Model2API escribiera: escribe a [contact.raulesteveza@gmail.com](mailto:contact.raulesteveza@gmail.com).
+Ideas de mejora, errores o un framework para el que te gustaría que Controller2Api escribiera: escribe a [contact.raulesteveza@gmail.com](mailto:contact.raulesteveza@gmail.com).
 
 ## Desarrollador
 
