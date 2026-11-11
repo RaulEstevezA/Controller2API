@@ -112,6 +112,18 @@ FRAMEWORKS: tuple[dict, ...] = (
         ),
         "auth": ("none", "apiKey", "jwt"),
     },
+    {
+        "id": "axum",
+        "label": "Axum",
+        "language": "rust",
+        "architectures": ("layered", "modular"),
+        "persistence": (
+            {"id": "memory", "databases": ()},
+            {"id": "none", "databases": ()},
+            {"id": "seaOrm", "databases": ("postgresql", "mysql", "mariadb", "sqlite")},
+        ),
+        "auth": ("none", "apiKey", "jwt"),
+    },
 )
 
 DEFAULT_SETTINGS = {

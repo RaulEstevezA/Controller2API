@@ -283,6 +283,7 @@ _PERSISTENCE_EN = {
     "doctrine": "Doctrine ORM",
     "efCore": "Entity Framework Core",
     "exposed": "Exposed",
+    "seaOrm": "SeaORM",
 }
 
 _DATABASES = {
@@ -299,6 +300,7 @@ _LANGUAGES = {
     "php": "PHP",
     "csharp": "C#",
     "kotlin": "Kotlin",
+    "rust": "Rust",
 }
 
 EN = SimpleNamespace(
