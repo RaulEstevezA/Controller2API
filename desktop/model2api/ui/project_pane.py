@@ -41,6 +41,7 @@ _BY_EXTENSION = {
     "cs": "csharp",
     "php": "php",
     "rs": "rust",
+    "swift": "swift",
     "json": "json",
     "yaml": "yaml",
     "yml": "yaml",

@@ -22,6 +22,7 @@ def _generators() -> dict:
     from .frameworks.nestjs import NESTJS_GENERATOR
     from .frameworks.spring_boot import SPRING_BOOT_GENERATOR
     from .frameworks.symfony import SYMFONY_GENERATOR
+    from .frameworks.vapor import VAPOR_GENERATOR
 
     every = (
         FASTAPI_GENERATOR,
@@ -34,6 +35,7 @@ def _generators() -> dict:
         ASPNET_CORE_GENERATOR,
         KTOR_GENERATOR,
         AXUM_GENERATOR,
+        VAPOR_GENERATOR,
     )
     return {generator["framework"]: generator for generator in every}
 

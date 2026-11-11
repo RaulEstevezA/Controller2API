@@ -284,6 +284,7 @@ _PERSISTENCE_EN = {
     "efCore": "Entity Framework Core",
     "exposed": "Exposed",
     "seaOrm": "SeaORM",
+    "fluent": "Fluent",
 }
 
 _DATABASES = {
@@ -301,6 +302,7 @@ _LANGUAGES = {
     "csharp": "C#",
     "kotlin": "Kotlin",
     "rust": "Rust",
+    "swift": "Swift",
 }
 
 EN = SimpleNamespace(
