@@ -50,7 +50,6 @@ export function cargoFile(context: AxumContext): GeneratedFile {
     'uuid = { version = "1", features = ["v4", "serde"] }',
     '',
     '[dev-dependencies]',
-    'http-body-util = "0.1"',
     settings.auth === 'jwt' && 'jsonwebtoken = { version = "11", default-features = false, features = ["rust_crypto"] }',
     'tower = { version = "0.5", features = ["util"] }',
     '',
@@ -68,8 +67,6 @@ export function envExampleFile(context: AxumContext): GeneratedFile {
     '',
     '# Port the API listens on',
     'PORT=8080',
-    '# Log level (error, warn, info, debug)',
-    'RUST_LOG=info',
     context.seaOrm && ['', '# Database connection', `DATABASE_URL=${DATABASE_URLS[database ?? 'postgresql']}`],
     auth === 'apiKey' && ['', '# Accepted API keys, separated by commas. Use long random values.', 'API_KEYS='],
     auth === 'jwt' && [

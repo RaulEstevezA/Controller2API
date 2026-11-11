@@ -293,9 +293,11 @@ export function dtoFile(context: AxumContext, resource: SpecResource): Generated
       `    pub ${fieldName(field)}: Option<${type}>,`,
     )
   })
+  // The bodies are written before the header: their fields add to the use declarations
+  const bodies = writes && [body('create'), body('update')]
   const content = lines(
     ...rsHeader(`Request bodies and responses of ${resource.plural}.`, uses),
-    writes && [body('create'), body('update')],
+    bodies,
     rsDoc(`${capitalize(article(resource.singular))} as the API returns it: everything but what clients only send.`),
     '#[derive(Clone, Debug, Serialize)]',
     `pub struct ${name.response} {`,
