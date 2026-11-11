@@ -15,6 +15,7 @@ For each scenario (a built-in example, a stack and some edits of the proposed de
 | `runners/dotnet.sh` | `mcr.microsoft.com/dotnet/sdk:10.0` | Restores the packages, builds the solution and runs the project's tests with xUnit (`dotnet test`) |
 | `runners/kotlin.sh` | `gradle:9.8.2-jdk21` | Compiles and runs the project's tests with Gradle, and prints how many ran |
 | `runners/rust.sh` | `rust:1.99.1` | Compiles the project with every warning treated as an error and runs its tests with Cargo (registry and compiled dependencies cached in Docker volumes), and prints how many ran |
+| `runners/swift.sh` | `swift:6.4.2-noble` | Builds the project and its tests with the Swift Package Manager, fails on any warning of the project's own code, runs its Swift Testing suites (packages and compiled dependencies cached in a Docker volume), and prints how many ran |
 
 The tests are generated with the project: every enabled endpoint is called the way a client would (create and read back, list and paginate, replace, update part, delete, missing items, invalid bodies, null where it is not allowed, missing credentials, missing roles, business operations still to write).
 

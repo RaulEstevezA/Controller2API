@@ -32,6 +32,7 @@ Pegar o abrir los modelos  →  Revisar los endpoints propuestos  →  Elegir el
 | ASP.NET Core (.NET 10) | Por capas, una carpeta por recurso | En memoria, interfaces por implementar, Entity Framework Core (PostgreSQL, MySQL, MariaDB, SQLite) | Ninguna, clave de API, JWT con roles |
 | Ktor 3 (Kotlin 2.4) | Por capas, una carpeta por recurso | En memoria, interfaces por implementar, Exposed (PostgreSQL, MySQL, MariaDB, SQLite) | Ninguna, clave de API, JWT con roles |
 | Axum 0.8 (Rust 1.99) | Por capas, una carpeta por recurso | En memoria, traits por implementar, SeaORM (PostgreSQL, MySQL, MariaDB, SQLite) | Ninguna, clave de API, JWT con roles |
+| Vapor 4 (Swift 6.4) | Por capas, una carpeta por recurso | En memoria, protocolos por implementar, Fluent (PostgreSQL, MySQL, MariaDB, SQLite) | Ninguna, clave de API, JWT con roles |
 
 Cada proyecto incluye sus propias pruebas, que llaman a todos los endpoints. Todos los frameworks, almacenamientos, bases de datos y autenticaciones de la tabla se han verificado compilando, ejecutando y probando proyectos generados en Docker ([docs/verification.md](./docs/verification.md)).
 
