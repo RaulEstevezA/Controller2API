@@ -351,10 +351,15 @@ const en = {
   // Project pane
   projectName: 'Project name',
   frameworkLabel: 'Framework',
-  languages: { python: 'Python', typescript: 'TypeScript', java: 'Java', php: 'PHP', csharp: 'C#', kotlin: 'Kotlin' } satisfies Record<
-    LanguageId,
-    string
-  >,
+  languages: {
+    python: 'Python',
+    typescript: 'TypeScript',
+    java: 'Java',
+    php: 'PHP',
+    csharp: 'C#',
+    kotlin: 'Kotlin',
+    rust: 'Rust',
+  } satisfies Record<LanguageId, string>,
   notWrittenYet: (framework: string) => `${framework} · not available yet`,
   architectureLabel: 'Architecture',
   architectures: { layered: 'By layers', modular: 'One folder per resource' } satisfies Record<ArchitectureId, string>,
@@ -372,6 +377,7 @@ const en = {
     doctrine: 'Doctrine ORM',
     efCore: 'Entity Framework Core',
     exposed: 'Exposed',
+    seaOrm: 'SeaORM',
   } satisfies Record<PersistenceId, string>,
   databaseLabel: 'Database',
   databases: { postgresql: 'PostgreSQL', mysql: 'MySQL', mariadb: 'MariaDB', sqlite: 'SQLite', mongodb: 'MongoDB' } satisfies Record<
@@ -692,7 +698,7 @@ const es: Messages = {
   },
   projectName: 'Nombre del proyecto',
   frameworkLabel: 'Framework',
-  languages: { python: 'Python', typescript: 'TypeScript', java: 'Java', php: 'PHP', csharp: 'C#', kotlin: 'Kotlin' },
+  languages: { python: 'Python', typescript: 'TypeScript', java: 'Java', php: 'PHP', csharp: 'C#', kotlin: 'Kotlin', rust: 'Rust' },
   notWrittenYet: (framework) => `${framework} · todavía no disponible`,
   architectureLabel: 'Arquitectura',
   architectures: { layered: 'Por capas', modular: 'Una carpeta por recurso' },
@@ -710,6 +716,7 @@ const es: Messages = {
     doctrine: 'Doctrine ORM',
     efCore: 'Entity Framework Core',
     exposed: 'Exposed',
+    seaOrm: 'SeaORM',
   },
   databaseLabel: 'Base de datos',
   databases: { postgresql: 'PostgreSQL', mysql: 'MySQL', mariadb: 'MariaDB', sqlite: 'SQLite', mongodb: 'MongoDB' },

@@ -10,6 +10,7 @@ import { example } from '../test/fixtures.ts'
 import { compareText } from './common/text.ts'
 import { csClass, csProperty, csString } from './languages/csharp/csharp.ts'
 import { ktClass, ktName, ktString } from './languages/kotlin/kotlin.ts'
+import { rsModule, rsName, rsString, rsType } from './languages/rust/rust.ts'
 import { findGenerator, generateProject } from './registry.ts'
 
 const EXAMPLES = ['store', 'library', 'catalog'] as const
@@ -117,5 +118,13 @@ describe('generated projects', () => {
     expect(ktClass('route')).toBe('RouteItem')
     expect(ktName('object')).toBe('`object`')
     expect(ktString('costs $5 "now"')).toBe('"costs \\$5 \\"now\\""')
+  })
+
+  it('writes Rust names and strings that compile', () => {
+    expect(rsType('path')).toBe('PathItem')
+    expect(rsName('type')).toBe('r#type')
+    expect(rsName('self')).toBe('self_')
+    expect(rsModule('match')).toBe('match_')
+    expect(rsString('say "hi"\n')).toBe('"say \\"hi\\"\\n"')
   })
 })

@@ -6,6 +6,7 @@ import type { ApiSpec } from '../api/spec.ts'
 import type { FrameworkId, ProjectSettings } from '../compatibility/stack.ts'
 import { openApiYaml } from '../openapi/build.ts'
 import type { GeneratedFile, Generator } from './common/types.ts'
+import { axumGenerator } from './frameworks/axum/index.ts'
 import { aspNetCoreGenerator } from './frameworks/aspnetCore/index.ts'
 import { djangoRestGenerator } from './frameworks/djangoRest/index.ts'
 import { expressGenerator } from './frameworks/express/index.ts'
@@ -27,6 +28,7 @@ const GENERATORS: Partial<Record<FrameworkId, Generator>> = {
   symfony: symfonyGenerator,
   aspnetCore: aspNetCoreGenerator,
   ktor: ktorGenerator,
+  axum: axumGenerator,
 }
 
 /** The generator of a framework, or undefined while it is not written. */

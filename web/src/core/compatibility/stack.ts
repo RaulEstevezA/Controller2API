@@ -7,9 +7,10 @@
  * register the generator (generators/registry.ts).
  */
 
-export type FrameworkId = 'fastapi' | 'djangoRest' | 'express' | 'nestjs' | 'springBoot' | 'laravel' | 'symfony' | 'aspnetCore' | 'ktor'
+export type FrameworkId =
+  'fastapi' | 'djangoRest' | 'express' | 'nestjs' | 'springBoot' | 'laravel' | 'symfony' | 'aspnetCore' | 'ktor' | 'axum'
 
-export type LanguageId = 'python' | 'typescript' | 'java' | 'php' | 'csharp' | 'kotlin'
+export type LanguageId = 'python' | 'typescript' | 'java' | 'php' | 'csharp' | 'kotlin' | 'rust'
 
 /** - `layered`: routes or controllers, services and repositories in one folder each
  * - `modular`: one folder per resource with its own routes, service and repository */
@@ -31,6 +32,7 @@ export type PersistenceId =
   | 'doctrine'
   | 'efCore'
   | 'exposed'
+  | 'seaOrm'
 
 export type DatabaseId = 'postgresql' | 'mysql' | 'mariadb' | 'sqlite' | 'mongodb'
 
@@ -151,6 +153,18 @@ export const FRAMEWORKS: readonly FrameworkInfo[] = [
       { id: 'memory', databases: [] },
       { id: 'none', databases: [] },
       { id: 'exposed', databases: ['postgresql', 'mysql', 'mariadb', 'sqlite'] },
+    ],
+    auth: ['none', 'apiKey', 'jwt'],
+  },
+  {
+    id: 'axum',
+    label: 'Axum',
+    language: 'rust',
+    architectures: ['layered', 'modular'],
+    persistence: [
+      { id: 'memory', databases: [] },
+      { id: 'none', databases: [] },
+      { id: 'seaOrm', databases: ['postgresql', 'mysql', 'mariadb', 'sqlite'] },
     ],
     auth: ['none', 'apiKey', 'jwt'],
   },
