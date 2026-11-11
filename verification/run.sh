@@ -19,6 +19,7 @@ runner_of() {
     aspnetcore-*) echo ./runners/dotnet.sh ;;
     ktor-*) echo ./runners/kotlin.sh ;;
     axum-*) echo ./runners/rust.sh ;;
+    vapor-*) echo ./runners/swift.sh ;;
   esac
 }
 

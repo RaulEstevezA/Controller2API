@@ -79,4 +79,12 @@ export const SCENARIOS = [
   { id: 'axum-seaorm-postgresql-layered-jwt', example: 'library', settings: { framework: 'axum', persistence: 'seaOrm', database: 'postgresql', architecture: 'layered', auth: 'jwt' }, service: 'postgresql' },
   { id: 'axum-seaorm-mysql-modular-none', example: 'store', settings: { framework: 'axum', persistence: 'seaOrm', database: 'mysql', architecture: 'modular', auth: 'none' }, edits: ['filters'], service: 'mysql' },
   { id: 'axum-seaorm-mariadb-layered-apikey', example: 'catalog', settings: { framework: 'axum', persistence: 'seaOrm', database: 'mariadb', architecture: 'layered', auth: 'apiKey' }, service: 'mariadb' },
+  { id: 'vapor-memory-layered-none', example: 'store', settings: { framework: 'vapor', persistence: 'memory', architecture: 'layered', auth: 'none' }, edits: ['filters', 'custom'] },
+  { id: 'vapor-memory-modular-jwt', example: 'library', settings: { framework: 'vapor', persistence: 'memory', architecture: 'modular', auth: 'jwt' }, edits: ['roles'] },
+  { id: 'vapor-none-layered-apikey', example: 'catalog', settings: { framework: 'vapor', persistence: 'none', architecture: 'layered', auth: 'apiKey' } },
+  { id: 'vapor-fluent-sqlite-layered-apikey', example: 'store', settings: { framework: 'vapor', persistence: 'fluent', database: 'sqlite', architecture: 'layered', auth: 'apiKey' }, edits: ['filters'] },
+  { id: 'vapor-fluent-sqlite-modular-none', example: 'catalog', settings: { framework: 'vapor', persistence: 'fluent', database: 'sqlite', architecture: 'modular', auth: 'none' } },
+  { id: 'vapor-fluent-postgresql-layered-jwt', example: 'library', settings: { framework: 'vapor', persistence: 'fluent', database: 'postgresql', architecture: 'layered', auth: 'jwt' }, service: 'postgresql' },
+  { id: 'vapor-fluent-mysql-modular-none', example: 'store', settings: { framework: 'vapor', persistence: 'fluent', database: 'mysql', architecture: 'modular', auth: 'none' }, edits: ['filters'], service: 'mysql' },
+  { id: 'vapor-fluent-mariadb-layered-apikey', example: 'catalog', settings: { framework: 'vapor', persistence: 'fluent', database: 'mariadb', architecture: 'layered', auth: 'apiKey' }, service: 'mariadb' },
 ]
