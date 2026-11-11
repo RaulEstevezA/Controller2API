@@ -1,5 +1,5 @@
 /**
- * Project bar: saving and opening Model2API projects, and the opt-in to keep the work in this browser.
+ * Project bar: saving and opening Controller2Api projects, and the opt-in to keep the work in this browser.
  */
 import { useRef } from 'react'
 import { useI18n } from '../../i18n/useI18n.ts'

@@ -1,5 +1,5 @@
 /**
- * The API design: every decision Model2API proposes for a model schema (which models become resources,
+ * The API design: every decision Controller2Api proposes for a model schema (which models become resources,
  * their keys, how related models travel, which fields the client may send or read) and the endpoints of
  * each resource, with how sure each proposal is and why.
  *

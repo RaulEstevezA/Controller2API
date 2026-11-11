@@ -28,7 +28,7 @@ function renderApp() {
 describe('App', () => {
   it('presents the tool with its name as the main heading', () => {
     renderApp()
-    expect(screen.getByRole('heading', { level: 1, name: 'Model2API' })).toBeTruthy()
+    expect(screen.getByRole('heading', { level: 1, name: 'Controller2Api' })).toBeTruthy()
   })
 
   it('links the name in the header to the website', () => {
@@ -41,7 +41,9 @@ describe('App', () => {
   it('links to the source code and to the other tools', () => {
     renderApp()
     const links = screen.getByRole('region', { name: 'Downloads and links' })
-    expect(within(links).getByRole('link', { name: 'Source code' }).getAttribute('href')).toBe('https://github.com/RaulEstevezA/Model2API')
+    expect(within(links).getByRole('link', { name: 'Source code' }).getAttribute('href')).toBe(
+      'https://github.com/RaulEstevezA/Controller2Api',
+    )
     expect(within(links).getByRole('link', { name: 'All tools' }).getAttribute('href')).toBe('https://raulesteveza.github.io/tools/')
   })
 
@@ -104,10 +106,10 @@ describe('App', () => {
   it('keeps the work in this browser only when asked, and restores it', () => {
     const first = renderApp()
     fireEvent.click(screen.getByRole('button', { name: 'Library' }))
-    expect(localStorage.getItem('model2api.workspace')).toBeNull()
+    expect(localStorage.getItem('controller2api.workspace')).toBeNull()
     fireEvent.click(screen.getByRole('checkbox', { name: 'Remember in this browser' }))
     vi.advanceTimersByTime(700)
-    expect(JSON.parse(localStorage.getItem('model2api.workspace')!).format).toBe('model2api-project')
+    expect(JSON.parse(localStorage.getItem('controller2api.workspace')!).format).toBe('controller2api-project')
     first.unmount()
     renderApp()
     expect(screen.getByText('Your work kept in this browser has been restored.')).toBeTruthy()

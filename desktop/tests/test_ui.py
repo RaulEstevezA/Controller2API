@@ -6,9 +6,9 @@ import zipfile
 
 from PySide6.QtWidgets import QApplication, QLabel
 
-from model2api.core.compatibility.stack import FRAMEWORKS
-from model2api.examples import EXAMPLES
-from model2api.ui.i18n import EN, ES
+from controller2api.core.compatibility.stack import FRAMEWORKS
+from controller2api.examples import EXAMPLES
+from controller2api.ui.i18n import EN, ES
 
 NOTE = "export interface Note { title: string; body: string }"
 
@@ -141,10 +141,10 @@ def test_a_project_is_saved_and_opened_again(window, tmp_path):
     window.models_pane.set_text(NOTE)
     window.endpoints_pane.controls["key:Note"].accept.click()
     window.session.set_settings(framework="express", name="notes")
-    target = tmp_path / "notes.model2api.json"
+    target = tmp_path / "notes.controller2api.json"
     window.project_bar.save_project(str(target))
     saved = json.loads(target.read_text(encoding="utf-8"))
-    assert saved["format"] == "model2api-project"
+    assert saved["format"] == "controller2api-project"
     window.load_example("store")
     window.project_bar.open_project(str(target))
     session = window.session
@@ -158,7 +158,7 @@ def test_a_file_that_is_not_a_project_is_reported(window, tmp_path):
     target = tmp_path / "other.json"
     target.write_text("[1, 2]", encoding="utf-8")
     window.project_bar.open_project(str(target))
-    assert "not a Model2API project" in window.project_bar.message.text()
+    assert "not a Controller2Api project" in window.project_bar.message.text()
 
 
 def test_the_work_is_kept_only_when_asked(window):

@@ -6,12 +6,12 @@ import json
 
 import pytest
 
-from model2api.core.api.spec import resolve_api
-from model2api.core.compatibility.stack import DEFAULT_SETTINGS, FRAMEWORKS, normalize_settings
-from model2api.core.design.edit import add_custom_endpoint, decide, update_endpoint
-from model2api.core.design.propose import propose_design
-from model2api.core.importers.registry import parse_input
-from model2api.examples import EXAMPLES, find_example
+from controller2api.core.api.spec import resolve_api
+from controller2api.core.compatibility.stack import DEFAULT_SETTINGS, FRAMEWORKS, normalize_settings
+from controller2api.core.design.edit import add_custom_endpoint, decide, update_endpoint
+from controller2api.core.design.propose import propose_design
+from controller2api.core.importers.registry import parse_input
+from controller2api.examples import EXAMPLES, find_example
 
 from .conftest import SHARED_CASES
 
@@ -30,7 +30,7 @@ def apply_edit(design: dict, edit: dict) -> dict:
 
 
 def files_of(example_id: str, settings: dict, edits: list[dict]) -> dict[str, str]:
-    from model2api.core.generators.registry import generate_project
+    from controller2api.core.generators.registry import generate_project
 
     example = find_example(example_id)
     outcome = parse_input(example["text"], example["format"])
@@ -55,7 +55,7 @@ def compare(files: dict[str, str], expected: dict[str, str]) -> None:
 def read_tree(folder) -> dict[str, str]:
     paths = [path for path in folder.rglob("*") if path.is_file()]
     files = {path.relative_to(folder).as_posix(): path.read_text(encoding="utf-8") for path in paths}
-    from model2api.core.generators.common.text import compare_key
+    from controller2api.core.generators.common.text import compare_key
 
     return dict(sorted(files.items(), key=lambda item: compare_key(item[0])))
 
@@ -76,7 +76,7 @@ def test_variants(path):
 
 
 def skip_unless_ported(framework_id: str) -> None:
-    from model2api.core.generators.registry import find_generator
+    from controller2api.core.generators.registry import find_generator
 
     if find_generator(framework_id) is None:
         pytest.skip(f"the {framework_id} generator is not ported yet")

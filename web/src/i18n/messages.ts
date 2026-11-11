@@ -70,7 +70,7 @@ const en = {
   processedLocally: 'Processed locally',
   tagline: 'Turn data models into the code of a REST API you can run',
   introDescription:
-    'Paste or open your models. Model2API proposes the endpoints of the API, explains each proposal and lets you change them. Choose the framework and download a project ready to run, with its tests and OpenAPI contract.',
+    'Paste or open your models. Controller2Api proposes the endpoints of the API, explains each proposal and lets you change them. Choose the framework and download a project ready to run, with its tests and OpenAPI contract.',
   linksLabel: 'Downloads and links',
   downloadDesktop: 'Download for desktop',
   downloadFor: (platform: string) => `Download for ${platform}`,
@@ -78,7 +78,7 @@ const en = {
   otherArchitecture: (architecture: string) => `${architecture} version`,
   downloadNote: 'Desktop version for Windows, macOS and Linux. It is not signed, so the first time your system will show a warning.',
   howToOpen: 'How to open it',
-  howToOpenUrl: 'https://github.com/RaulEstevezA/Model2API/blob/main/desktop/README_en.md#opening-it-the-first-time',
+  howToOpenUrl: 'https://github.com/RaulEstevezA/Controller2Api/blob/main/desktop/README_en.md#opening-it-the-first-time',
   sourceCode: 'Source code',
   allTools: 'All tools',
   license: 'MIT License',
@@ -412,9 +412,9 @@ const en = {
   projectLoaded: (name: string) => `“${name}” opened.`,
   projectError: (error: ProjectError) =>
     ({
-      notJson: 'The file is not a Model2API project: it is not JSON.',
-      notProject: 'The file is not a Model2API project.',
-      newerVersion: 'The project was saved by a newer version of Model2API.',
+      notJson: 'The file is not a Controller2Api project: it is not JSON.',
+      notProject: 'The file is not a Controller2Api project.',
+      newerVersion: 'The project was saved by a newer version of Controller2Api.',
       noInput: 'The project holds no models.',
     })[error],
 }
@@ -427,7 +427,7 @@ const es: Messages = {
   processedLocally: 'Procesado en local',
   tagline: 'Convierte modelos de datos en el código de una API REST que puedes ejecutar',
   introDescription:
-    'Pega o abre tus modelos. Model2API propone los endpoints de la API, explica cada propuesta y te deja cambiarlos. Elige el framework y descarga un proyecto listo para ejecutar, con sus pruebas y su contrato OpenAPI.',
+    'Pega o abre tus modelos. Controller2Api propone los endpoints de la API, explica cada propuesta y te deja cambiarlos. Elige el framework y descarga un proyecto listo para ejecutar, con sus pruebas y su contrato OpenAPI.',
   linksLabel: 'Descargas y enlaces',
   downloadDesktop: 'Descargar para escritorio',
   downloadFor: (platform) => `Descargar para ${platform}`,
@@ -435,7 +435,7 @@ const es: Messages = {
   otherArchitecture: (architecture) => `Versión ${architecture}`,
   downloadNote: 'Versión de escritorio para Windows, macOS y Linux. No está firmada, así que la primera vez el sistema mostrará un aviso.',
   howToOpen: 'Cómo abrirla',
-  howToOpenUrl: 'https://github.com/RaulEstevezA/Model2API/blob/main/desktop/README_es.md#abrirla-la-primera-vez',
+  howToOpenUrl: 'https://github.com/RaulEstevezA/Controller2Api/blob/main/desktop/README_es.md#abrirla-la-primera-vez',
   sourceCode: 'Código fuente',
   allTools: 'Todas las herramientas',
   license: 'Licencia MIT',
@@ -756,9 +756,9 @@ const es: Messages = {
   projectLoaded: (name) => `«${name}» abierto.`,
   projectError: (error) =>
     ({
-      notJson: 'El archivo no es un proyecto de Model2API: no es JSON.',
-      notProject: 'El archivo no es un proyecto de Model2API.',
-      newerVersion: 'El proyecto se guardó con una versión más reciente de Model2API.',
+      notJson: 'El archivo no es un proyecto de Controller2Api: no es JSON.',
+      notProject: 'El archivo no es un proyecto de Controller2Api.',
+      newerVersion: 'El proyecto se guardó con una versión más reciente de Controller2Api.',
       noInput: 'El proyecto no contiene modelos.',
     })[error],
 }

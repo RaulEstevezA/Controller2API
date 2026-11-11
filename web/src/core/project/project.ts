@@ -1,5 +1,5 @@
 /**
- * Model2API project files: the input as written, the reviewed design and the project settings, so the
+ * Controller2Api project files: the input as written, the reviewed design and the project settings, so the
  * review can continue later or on another computer. A file is untrusted input: it is validated piece by
  * piece, and a damaged decision or endpoint is dropped (the proposal fills it again) instead of trusted.
  */
@@ -8,7 +8,7 @@ import { DEFAULT_SETTINGS, normalizeSettings, type ProjectSettings } from '../co
 import { findParser } from '../importers/registry.ts'
 import type { InputFormatId } from '../importers/types.ts'
 
-export const PROJECT_FORMAT = 'model2api-project'
+export const PROJECT_FORMAT = 'controller2api-project'
 export const PROJECT_VERSION = 1
 
 export interface ProjectInput {
@@ -18,7 +18,7 @@ export interface ProjectInput {
   fileName?: string
 }
 
-export interface Model2ApiProject {
+export interface Controller2ApiProject {
   format: typeof PROJECT_FORMAT
   version: typeof PROJECT_VERSION
   /** ISO date of the save, for display */
@@ -30,14 +30,14 @@ export interface Model2ApiProject {
 
 export type ProjectError = 'notJson' | 'notProject' | 'newerVersion' | 'noInput'
 
-export type ReadProject = { ok: true; project: Model2ApiProject } | { ok: false; error: ProjectError }
+export type ReadProject = { ok: true; project: Controller2ApiProject } | { ok: false; error: ProjectError }
 
 export function createProject(
   input: ProjectInput,
   design: ApiDesign | null,
   settings: ProjectSettings,
   now = new Date(),
-): Model2ApiProject {
+): Controller2ApiProject {
   return {
     format: PROJECT_FORMAT,
     version: PROJECT_VERSION,
@@ -48,9 +48,9 @@ export function createProject(
   }
 }
 
-/** File name of a saved project: `shop-api.model2api.json`. */
+/** File name of a saved project: `shop-api.controller2api.json`. */
 export function projectFileName(settings: ProjectSettings): string {
-  return `${settings.name}.model2api.json`
+  return `${settings.name}.controller2api.json`
 }
 
 type Json = Record<string, unknown>

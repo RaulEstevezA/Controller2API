@@ -6,7 +6,7 @@ import { useCallback, useMemo } from 'react'
 import { DEFAULT_SETTINGS, normalizeSettings, type ProjectSettings } from '../core/compatibility/stack.ts'
 import { useStoredState } from './useStoredState.ts'
 
-export const SETTINGS_KEY = 'model2api.settings'
+export const SETTINGS_KEY = 'controller2api.settings'
 
 export function useProjectSettings(): [ProjectSettings, (change: Partial<ProjectSettings>) => void] {
   const [stored, setStored] = useStoredState<ProjectSettings>(SETTINGS_KEY, () => DEFAULT_SETTINGS)

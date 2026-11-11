@@ -9,8 +9,8 @@ set -u
 database="$1"
 runner="$2"
 shift 2
-network="model2api-verify-$$"
-container="model2api-db-$$"
+network="controller2api-verify-$$"
+container="controller2api-db-$$"
 password="verify-only"
 
 case "$database" in

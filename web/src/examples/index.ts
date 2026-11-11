@@ -1,5 +1,5 @@
 /**
- * Built-in examples: invented models that show what Model2API reads and proposes. They are also the
+ * Built-in examples: invented models that show what Controller2Api reads and proposes. They are also the
  * fixtures of the tests of the specification, the OpenAPI contract and every generator.
  */
 import type { InputFormatId } from '../core/importers/types.ts'

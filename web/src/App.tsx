@@ -20,7 +20,7 @@ import { ProjectPane } from './components/project/ProjectPane.tsx'
 import { resolveApi } from './core/api/spec.ts'
 import { pendingDecisions } from './core/design/edit.ts'
 import { generateProject } from './core/generators/registry.ts'
-import { createProject, projectFileName, readProject, type Model2ApiProject } from './core/project/project.ts'
+import { createProject, projectFileName, readProject, type Controller2ApiProject } from './core/project/project.ts'
 import { findExample, type ExampleId } from './examples/index.ts'
 import { useApiDesign } from './hooks/useApiDesign.ts'
 import { useProjectSettings } from './hooks/useProjectSettings.ts'
@@ -32,7 +32,7 @@ import './App.css'
 type Message = { text: string; kind: 'ok' | 'error' } | null
 
 /** What the page opens with: the work kept in this browser when the user asked for it, or nothing. */
-function startup(): Model2ApiProject | null {
+function startup(): Controller2ApiProject | null {
   return typeof localStorage === 'undefined' ? null : loadSaved(localStorage)
 }
 

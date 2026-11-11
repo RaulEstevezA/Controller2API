@@ -2,8 +2,8 @@
 
 import json
 
-from model2api.core.compatibility.stack import FRAMEWORKS, databases_for
-from model2api.core.compatibility.verified import VERIFIED, verification
+from controller2api.core.compatibility.stack import FRAMEWORKS, databases_for
+from controller2api.core.compatibility.verified import VERIFIED, verification
 
 
 def stack(framework: str, architecture: str, persistence: str, database: str | None, auth: str) -> dict:

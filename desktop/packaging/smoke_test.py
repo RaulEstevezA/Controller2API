@@ -1,4 +1,4 @@
-"""Checks that the packaged app works: run as `Model2API --smoke-test`.
+"""Checks that the packaged app works: run as `Controller2Api --smoke-test`.
 
 PyInstaller only bundles what it sees imported, so a module loaded in an unusual way can be missing from the
 executable even though every test passes. This opens the window, loads every example, reads a YAML document,
@@ -15,8 +15,8 @@ from PySide6.QtCore import QEvent, QTimer
 
 
 def check(window) -> None:
-    from model2api.core.compatibility.stack import FRAMEWORKS
-    from model2api.examples import EXAMPLES
+    from controller2api.core.compatibility.stack import FRAMEWORKS
+    from controller2api.examples import EXAMPLES
 
     session = window.session
     for example in EXAMPLES:
@@ -35,13 +35,13 @@ def check(window) -> None:
         window.project_pane.save_zip(str(archive))
         with zipfile.ZipFile(archive) as opened:
             assert len(opened.namelist()) == len(session.files)
-        target = Path(folder) / "shop-api.model2api.json"
+        target = Path(folder) / "shop-api.controller2api.json"
         window.project_bar.save_project(str(target))
-        assert json.loads(target.read_text(encoding="utf-8"))["format"] == "model2api-project"
+        assert json.loads(target.read_text(encoding="utf-8"))["format"] == "controller2api-project"
 
 
 def main() -> None:
-    from model2api.ui.app import create_app
+    from controller2api.ui.app import create_app
 
     app, window = create_app([])
     window.show()

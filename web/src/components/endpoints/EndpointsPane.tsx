@@ -1,5 +1,5 @@
 /**
- * Endpoints pane: the API Model2API proposes for the models, to review and change. It lists what waits for
+ * Endpoints pane: the API Controller2Api proposes for the models, to review and change. It lists what waits for
  * the user and the problems that leave an endpoint out of the code, with undo, redo and reset.
  */
 import { decisionElementId, endpointElementId, focusElement } from '../../app/review.ts'

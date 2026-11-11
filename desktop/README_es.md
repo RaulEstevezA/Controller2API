@@ -1,6 +1,6 @@
-# Model2API · Escritorio
+# Controller2Api · Escritorio
 
-Versión de escritorio de Model2API: Python + PySide6.
+Versión de escritorio de Controller2Api: Python + PySide6.
 
 Hace lo mismo que la versión web, en tu equipo y sin navegador: pasa los mismos casos de prueba de [`shared/test-cases/`](../shared/README.md), propone los mismos endpoints y escribe exactamente los mismos archivos de proyecto para cada framework y opción.
 
@@ -10,20 +10,20 @@ Qué hace la herramienta y su filosofía están en el [README principal](../READ
 
 | Sistema | Archivo |
 |---|---|
-| macOS (Apple Silicon) | [Model2API-macOS.dmg](https://github.com/RaulEstevezA/Model2API/releases/latest/download/Model2API-macOS.dmg) |
-| Windows (x64) | [Model2API-Windows.zip](https://github.com/RaulEstevezA/Model2API/releases/latest/download/Model2API-Windows.zip) |
-| Windows (ARM64) | [Model2API-Windows-ARM64.zip](https://github.com/RaulEstevezA/Model2API/releases/latest/download/Model2API-Windows-ARM64.zip) |
-| Linux (x64) | [Model2API-Linux.tar.gz](https://github.com/RaulEstevezA/Model2API/releases/latest/download/Model2API-Linux.tar.gz) |
-| Linux (ARM64, Ubuntu 24.04 o más nueva) | [Model2API-Linux-ARM64.tar.gz](https://github.com/RaulEstevezA/Model2API/releases/latest/download/Model2API-Linux-ARM64.tar.gz) |
+| macOS (Apple Silicon) | [Controller2Api-macOS.dmg](https://github.com/RaulEstevezA/Controller2Api/releases/latest/download/Controller2Api-macOS.dmg) |
+| Windows (x64) | [Controller2Api-Windows.zip](https://github.com/RaulEstevezA/Controller2Api/releases/latest/download/Controller2Api-Windows.zip) |
+| Windows (ARM64) | [Controller2Api-Windows-ARM64.zip](https://github.com/RaulEstevezA/Controller2Api/releases/latest/download/Controller2Api-Windows-ARM64.zip) |
+| Linux (x64) | [Controller2Api-Linux.tar.gz](https://github.com/RaulEstevezA/Controller2Api/releases/latest/download/Controller2Api-Linux.tar.gz) |
+| Linux (ARM64, Ubuntu 24.04 o más nueva) | [Controller2Api-Linux-ARM64.tar.gz](https://github.com/RaulEstevezA/Controller2Api/releases/latest/download/Controller2Api-Linux-ARM64.tar.gz) |
 
-Todas las versiones están en [Releases](https://github.com/RaulEstevezA/Model2API/releases). Los enlaces funcionan en cuanto se publique la primera versión.
+Todas las versiones están en [Releases](https://github.com/RaulEstevezA/Controller2Api/releases). Los enlaces funcionan en cuanto se publique la primera versión.
 
 > [!NOTE]
 > La aplicación empaquetada se ha compilado y comprobado en **macOS** (Apple Silicon). Las versiones de Windows y Linux las compila GitHub Actions y pasan los tests y una prueba de arranque automática, pero nadie las ha usado todavía en un equipo real. Si encuentras algún problema, escríbeme a [contact.raulesteveza@gmail.com](mailto:contact.raulesteveza@gmail.com).
 
-- **macOS:** abre el `.dmg` y arrastra Model2API a Aplicaciones.
-- **Windows:** descomprime el `.zip` y ejecuta `Model2API.exe` dentro de la carpeta `Model2API`.
-- **Linux:** descomprime con `tar -xzf Model2API-Linux.tar.gz` (o `Model2API-Linux-ARM64.tar.gz`) y ejecuta `Model2API/Model2API`. En algunas distribuciones hace falta instalar `libxcb-cursor0`. La versión ARM64 necesita una distribución de 2024 o más nueva (glibc 2.39, como Ubuntu 24.04).
+- **macOS:** abre el `.dmg` y arrastra Controller2Api a Aplicaciones.
+- **Windows:** descomprime el `.zip` y ejecuta `Controller2Api.exe` dentro de la carpeta `Controller2Api`.
+- **Linux:** descomprime con `tar -xzf Controller2Api-Linux.tar.gz` (o `Controller2Api-Linux-ARM64.tar.gz`) y ejecuta `Controller2Api/Controller2Api`. En algunas distribuciones hace falta instalar `libxcb-cursor0`. La versión ARM64 necesita una distribución de 2024 o más nueva (glibc 2.39, como Ubuntu 24.04).
 
 ### Abrirla la primera vez
 
@@ -52,23 +52,23 @@ source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 python -m pytest                   # tests (casos compartidos de shared/test-cases/)
 ruff check .                       # análisis estático
-python -m model2api                 # abrir la aplicación
+python -m controller2api                 # abrir la aplicación
 ```
 
 ## Generar el ejecutable
 
 ```bash
 pip install -e ".[build]"
-pyinstaller packaging/model2api.spec
-dist/Model2API.app/Contents/MacOS/Model2API --smoke-test   # macOS; dist/Model2API/Model2API en los demás
+pyinstaller packaging/controller2api.spec
+dist/Controller2Api.app/Contents/MacOS/Controller2Api --smoke-test   # macOS; dist/Controller2Api/Controller2Api en los demás
 ```
 
-El resultado queda en `dist/`: `Model2API.app` en macOS y una carpeta `Model2API` con el ejecutable en Windows y Linux. PyInstaller no compila para otros sistemas: cada uno se genera en su propio sistema operativo. `--smoke-test` abre la ventana, carga todos los ejemplos, escribe el proyecto de cada framework, lee un documento YAML y guarda un `.zip` y un proyecto, para comprobar que no falta nada en el paquete.
+El resultado queda en `dist/`: `Controller2Api.app` en macOS y una carpeta `Controller2Api` con el ejecutable en Windows y Linux. PyInstaller no compila para otros sistemas: cada uno se genera en su propio sistema operativo. `--smoke-test` abre la ventana, carga todos los ejemplos, escribe el proyecto de cada framework, lee un documento YAML y guarda un `.zip` y un proyecto, para comprobar que no falta nada en el paquete.
 
 ## Estructura
 
 ```
-model2api/
+controller2api/
   core/          La misma lógica que web/src/core/, módulo a módulo: modelo, importadores, análisis, diseño,
                  validación, compatibilidad, OpenAPI, generadores, exportación y proyectos
   ui/            La ventana (PySide6): paneles de modelos, endpoints y proyecto, barra de proyecto, textos y tema

@@ -17,22 +17,22 @@ describe('project files', () => {
     const project = createProject({ format: 'typescript', text: EXAMPLES[0].text }, design, settings, new Date('2026-11-09T10:00:00Z'))
     const read = readProject(JSON.stringify(project))
     expect(read).toEqual({ ok: true, project })
-    expect(projectFileName(settings)).toBe('shop-api.model2api.json')
+    expect(projectFileName(settings)).toBe('shop-api.controller2api.json')
   })
 
   it('refuses what is not a project', () => {
     expect(readProject('nope')).toEqual({ ok: false, error: 'notJson' })
     expect(readProject('{"format": "model2db-project", "version": 1}')).toEqual({ ok: false, error: 'notProject' })
-    expect(readProject('{"format": "model2api-project", "version": 99, "input": {"text": ""}}')).toEqual({
+    expect(readProject('{"format": "controller2api-project", "version": 99, "input": {"text": ""}}')).toEqual({
       ok: false,
       error: 'newerVersion',
     })
-    expect(readProject('{"format": "model2api-project", "version": 1}')).toEqual({ ok: false, error: 'noInput' })
+    expect(readProject('{"format": "controller2api-project", "version": 1}')).toEqual({ ok: false, error: 'noInput' })
   })
 
   it('drops damaged parts and normalizes the settings', () => {
     const text = JSON.stringify({
-      format: 'model2api-project',
+      format: 'controller2api-project',
       version: 1,
       input: { text: 'interface A { id: number }', format: 'cobol' },
       design: {

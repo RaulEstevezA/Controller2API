@@ -1,4 +1,4 @@
-# Ignore rules for Model2API.
+# Ignore rules for Controller2Api.
 # Based on the shared rules of the personal_web_style tools (Model2DB, Mapper),
 # extended with Java because generated Spring Boot projects are built locally
 # during verification.

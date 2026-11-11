@@ -13,9 +13,9 @@ export type Architecture = 'x64' | 'arm64'
 
 /** Release asset of each build. macOS has a single build, for Apple Silicon. */
 const ASSETS: Record<DesktopPlatform, Partial<Record<Architecture, string>>> = {
-  macOS: { arm64: 'Model2API-macOS.dmg' },
-  Windows: { x64: 'Model2API-Windows.zip', arm64: 'Model2API-Windows-ARM64.zip' },
-  Linux: { x64: 'Model2API-Linux.tar.gz', arm64: 'Model2API-Linux-ARM64.tar.gz' },
+  macOS: { arm64: 'Controller2Api-macOS.dmg' },
+  Windows: { x64: 'Controller2Api-Windows.zip', arm64: 'Controller2Api-Windows-ARM64.zip' },
+  Linux: { x64: 'Controller2Api-Linux.tar.gz', arm64: 'Controller2Api-Linux-ARM64.tar.gz' },
 }
 
 /**
