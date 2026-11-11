@@ -14,6 +14,7 @@ For each scenario (a built-in example, a stack and some edits of the proposed de
 | `runners/php.sh` | `php:8.5-cli` with the PostgreSQL and MySQL drivers and Composer, built once | Installs the dependencies with Composer, checks the syntax of every file (`php -l`), runs the project's tests with PHPUnit |
 | `runners/dotnet.sh` | `mcr.microsoft.com/dotnet/sdk:10.0` | Restores the packages, builds the solution and runs the project's tests with xUnit (`dotnet test`) |
 | `runners/kotlin.sh` | `gradle:9.8.2-jdk21` | Compiles and runs the project's tests with Gradle, and prints how many ran |
+| `runners/rust.sh` | `rust:1.99.1` | Compiles the project with every warning treated as an error and runs its tests with Cargo (registry and compiled dependencies cached in Docker volumes), and prints how many ran |
 
 The tests are generated with the project: every enabled endpoint is called the way a client would (create and read back, list and paginate, replace, update part, delete, missing items, invalid bodies, null where it is not allowed, missing credentials, missing roles, business operations still to write).
 

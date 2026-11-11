@@ -31,6 +31,7 @@ Paste or open the models  →  Review the proposed endpoints  →  Choose the fr
 | Symfony 8.1 (PHP 8.4+) | By layers, one folder per resource | In memory, interfaces to implement, Doctrine ORM (PostgreSQL, MySQL, MariaDB, SQLite) | None, API key, JWT with roles |
 | ASP.NET Core (.NET 10) | By layers, one folder per resource | In memory, interfaces to implement, Entity Framework Core (PostgreSQL, MySQL, MariaDB, SQLite) | None, API key, JWT with roles |
 | Ktor 3 (Kotlin 2.4) | By layers, one folder per resource | In memory, interfaces to implement, Exposed (PostgreSQL, MySQL, MariaDB, SQLite) | None, API key, JWT with roles |
+| Axum 0.8 (Rust 1.99) | By layers, one folder per resource | In memory, traits to implement, SeaORM (PostgreSQL, MySQL, MariaDB, SQLite) | None, API key, JWT with roles |
 
 Each project ships its own tests, which call every endpoint. Every framework, storage, database and authentication above has been verified by building, running and testing generated projects in Docker ([docs/verification.md](./docs/verification.md)).
 
