@@ -57,6 +57,7 @@ export function languageOfFile(path: string): string {
     cs: 'csharp',
     php: 'php',
     rs: 'rust',
+    swift: 'swift',
     json: 'json',
     yaml: 'yaml',
     yml: 'yaml',

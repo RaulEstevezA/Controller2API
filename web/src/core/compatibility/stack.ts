@@ -8,9 +8,9 @@
  */
 
 export type FrameworkId =
-  'fastapi' | 'djangoRest' | 'express' | 'nestjs' | 'springBoot' | 'laravel' | 'symfony' | 'aspnetCore' | 'ktor' | 'axum'
+  'fastapi' | 'djangoRest' | 'express' | 'nestjs' | 'springBoot' | 'laravel' | 'symfony' | 'aspnetCore' | 'ktor' | 'axum' | 'vapor'
 
-export type LanguageId = 'python' | 'typescript' | 'java' | 'php' | 'csharp' | 'kotlin' | 'rust'
+export type LanguageId = 'python' | 'typescript' | 'java' | 'php' | 'csharp' | 'kotlin' | 'rust' | 'swift'
 
 /** - `layered`: routes or controllers, services and repositories in one folder each
  * - `modular`: one folder per resource with its own routes, service and repository */
@@ -33,6 +33,7 @@ export type PersistenceId =
   | 'efCore'
   | 'exposed'
   | 'seaOrm'
+  | 'fluent'
 
 export type DatabaseId = 'postgresql' | 'mysql' | 'mariadb' | 'sqlite' | 'mongodb'
 
@@ -165,6 +166,18 @@ export const FRAMEWORKS: readonly FrameworkInfo[] = [
       { id: 'memory', databases: [] },
       { id: 'none', databases: [] },
       { id: 'seaOrm', databases: ['postgresql', 'mysql', 'mariadb', 'sqlite'] },
+    ],
+    auth: ['none', 'apiKey', 'jwt'],
+  },
+  {
+    id: 'vapor',
+    label: 'Vapor',
+    language: 'swift',
+    architectures: ['layered', 'modular'],
+    persistence: [
+      { id: 'memory', databases: [] },
+      { id: 'none', databases: [] },
+      { id: 'fluent', databases: ['postgresql', 'mysql', 'mariadb', 'sqlite'] },
     ],
     auth: ['none', 'apiKey', 'jwt'],
   },

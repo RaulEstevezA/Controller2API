@@ -11,6 +11,7 @@ import { compareText } from './common/text.ts'
 import { csClass, csProperty, csString } from './languages/csharp/csharp.ts'
 import { ktClass, ktName, ktString } from './languages/kotlin/kotlin.ts'
 import { rsModule, rsName, rsString, rsType } from './languages/rust/rust.ts'
+import { swName, swString, swType } from './languages/swift/swift.ts'
 import { findGenerator, generateProject } from './registry.ts'
 
 const EXAMPLES = ['store', 'library', 'catalog'] as const
@@ -126,5 +127,12 @@ describe('generated projects', () => {
     expect(rsName('self')).toBe('self_')
     expect(rsModule('match')).toBe('match_')
     expect(rsString('say "hi"\n')).toBe('"say \\"hi\\"\\n"')
+  })
+
+  it('writes Swift names and strings that compile', () => {
+    expect(swType('task')).toBe('TaskItem')
+    expect(swName('default')).toBe('`default`')
+    expect(swName('self')).toBe('self_')
+    expect(swString('say "hi"\n')).toBe('"say \\"hi\\"\\n"')
   })
 })
